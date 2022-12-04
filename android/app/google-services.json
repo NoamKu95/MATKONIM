@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "791472486350",
+    "project_id": "matkonim-2734f",
+    "storage_bucket": "matkonim-2734f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791472486350:android:521d3a8d7db155c25b1d9f",
+        "android_client_info": {
+          "package_name": "com.matkonim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791472486350-hah1mvl7pnvb2hm9l073v8oohjire8fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvzv0q7XpGnoKQviD4YN65K_4dzJJsqIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791472486350-hah1mvl7pnvb2hm9l073v8oohjire8fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

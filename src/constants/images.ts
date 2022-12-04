@@ -1,0 +1,17 @@
+export const images = {
+  loginBackground: require('../assets/images/login-background.png'),
+  chickenBlack: require('../assets/images/chicken-black-background.webp'),
+  saladYellow: require('../assets/images/salad-yellow-background.jpeg'),
+  saladOrange: require('../assets/images/salad-orange-background.jpeg'),
+  saladPink: require('../assets/images/salad-pink-background.jpeg'),
+  salmonPink: require('../assets/images/salmon-pink-background.jpeg'),
+  cocktailBlack: require('../assets/images/cocktail-black-background.jpeg'),
+  cakeGreen: require('../assets/images/cake-green-background.jpeg'),
+  appetizerYellow: require('../assets/images/appetizer-yellow-background.jpeg'),
+  soupGreen: require('../assets/images/soup-green-background.jpeg'),
+  pastaPurple: require('../assets/images/pasta-purple-background.jpeg'),
+  pastaPink: require('../assets/images/pasta-pink-background.jpeg'),
+  steakBlue: require('../assets/images/steak-blue-background.webp'),
+  chickenRed: require('../assets/images/chicken-red-background.webp'),
+  cocktailOrange: require('../assets/images/cocktail_orange_background.png'),
+};

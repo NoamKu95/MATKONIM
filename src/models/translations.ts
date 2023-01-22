@@ -1,14 +1,13 @@
 export interface TranslationsUnion {
   fallback: 'he';
   he: Translation;
+  en: Translation;
 }
 
 export interface Translation {
   appName: string;
   tabs: {
     Home: string;
-    MyOpa: string;
-    Map: string;
     ActionButton: string;
     Profile: string;
   };
@@ -93,7 +92,6 @@ export interface Translation {
     saveButton: string;
     loaderText: string;
     imageUploadingText: string;
-    clearForm: string;
   };
 }
 

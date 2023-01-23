@@ -1,3 +1,4 @@
+// Outer imports:
 import React, { useEffect, useState } from "react";
 import {
   Image,
@@ -7,11 +8,15 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { colors } from "../../constants/colors";
-import { icons } from "../../constants/icons";
-import RegularText from "../text/RegularText";
 import i18n from "../../translations/i18n";
 import { HE } from "../../models/translations";
+
+// Inner imports:
+import { colors } from "../../constants/colors";
+import { icons } from "../../constants/icons";
+
+// Components:
+import RegularText from "../text/RegularText";
 
 interface Props {
   textValue: string;
@@ -50,24 +55,25 @@ const CustomTextInput = ({
 }: Props) => {
   const [text, setText] = useState(textValue);
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (text != null) {
-        onChangeText(text);
-      }
-    }, 1500);
+  // useEffect(() => {
+  //   console.log("text2 " + text); // does print
 
-    return () => clearTimeout(delayDebounceFn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
+  //   const delayDebounceFn = setTimeout(() => {
+  //     console.log("text3 " + text); // not print
+  //     if (text != null) {
+  //       onChangeText(text);
+  //     }
+  //   }, 7);
+
+  //   return () => clearTimeout(delayDebounceFn);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [text]);
 
   return (
     <View style={styles.container}>
       <TextInput
         style={[styles.textInput, { color: textColor, backgroundColor }]}
-        onChangeText={(newTxt) => {
-          setText(newTxt);
-        }}
+        onChangeText={(newTxt) => onChangeText(newTxt)} // setText(newTxt)}
         defaultValue={textValue}
         placeholder={placeholderText}
         placeholderTextColor={placeholderTextColor}

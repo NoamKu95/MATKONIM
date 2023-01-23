@@ -174,6 +174,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
   },
+  sectionContainer: {
+    position: "absolute",
+    bottom: "0%",
+    width: "100%",
+    paddingHorizontal: 8,
+  },
 
   // LOADER
   loader: {
@@ -220,12 +226,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     borderColor: colors.darkLime,
-  },
-
-  sectionContainer: {
-    position: "absolute",
-    bottom: "0%",
-    width: "100%",
-    paddingHorizontal: 8,
   },
 });

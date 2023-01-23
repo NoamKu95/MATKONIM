@@ -9,7 +9,9 @@ import {
   setPasswordWarning,
   setShowLogin,
   setShowRegister,
+  setUserEmail,
   setUserName,
+  setUserPassword,
 } from './authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../../translations/i18n';
@@ -150,6 +152,7 @@ export const validateEmail =
         return false;
       } else {
         dispatch(setEmailWarning(null));
+        dispatch(setUserEmail(email));
         return true;
       }
     } else {
@@ -169,6 +172,7 @@ export const validatePassword =
         return false;
       } else {
         dispatch(setPasswordWarning(null));
+        dispatch(setUserPassword(password));
         return true;
       }
     } else {

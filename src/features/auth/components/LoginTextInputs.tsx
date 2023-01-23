@@ -20,8 +20,8 @@ import {
 
 const LoginTextInputs = () => {
   const dispatch = useAppDispatch();
-  const [email, setEmail] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>(null);
+  const email = useAppSelector((state) => state.auth.userEmail);
+  const password = useAppSelector((state) => state.auth.userPassword);
   const emailWarning = useAppSelector((state) => state.auth.emailWarning);
   const passwordWarning = useAppSelector((state) => state.auth.passwordWarning);
   const [isPasswordCensored, setIsPasswordCensored] = useState(true);

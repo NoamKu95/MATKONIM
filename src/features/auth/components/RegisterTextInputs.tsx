@@ -30,7 +30,7 @@ const RegisterTextInputs = () => {
   const [isPasswordCensored, setIsPasswordCensored] = useState(true);
 
   return (
-    <View>
+    <View style={styles.registerSectionContainer}>
       <CustomTextInput
         textValue={surname ?? ""}
         placeholderText={i18n.t("auth.registerSection.namePlaceholder")}
@@ -78,7 +78,7 @@ const RegisterTextInputs = () => {
 export default RegisterTextInputs;
 
 const styles = StyleSheet.create({
-  loginSectionContainer: {
+  registerSectionContainer: {
     bottom: "0%",
     paddingHorizontal: 8,
   },

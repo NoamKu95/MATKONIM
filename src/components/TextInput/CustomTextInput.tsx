@@ -55,7 +55,7 @@ const CustomTextInput = ({
       if (text != null) {
         onChangeText(text);
       }
-    }, 500);
+    }, 1500);
 
     return () => clearTimeout(delayDebounceFn);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,8 +110,7 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     position: "absolute",
-    right: i18n.locale === HE ? 24 : 0,
-    left: i18n.locale === HE ? 0 : 24,
+    right: 24,
     top: 20,
   },
   warningContainer: {

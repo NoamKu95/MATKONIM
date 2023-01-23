@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from "react";
+// Outer imports:
+import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import BoldText from "../../../components/text/BoldText";
+
+// Inner imports:
 import { colors } from "../../../constants/colors";
+
+// Components:
+import BoldText from "../../../components/text/BoldText";
+
+// Redux:
 import { useAppDispatch } from "../../../store/store";
 import { updateAuthSection } from "../state/authActions";
 

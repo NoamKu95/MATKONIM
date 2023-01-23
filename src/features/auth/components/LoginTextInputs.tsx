@@ -1,10 +1,17 @@
+// Outer imports:
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import i18n from "../../../translations/i18n";
+
+// Inner imports:
+import { colors } from "../../../constants/colors";
+
+// Components:
 import ActionButton from "../../../components/Buttons/ActionButton";
 import CustomTextInput from "../../../components/TextInput/CustomTextInput";
-import { colors } from "../../../constants/colors";
+
+// Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
-import i18n from "../../../translations/i18n";
 import {
   logUserIn,
   validateEmail,

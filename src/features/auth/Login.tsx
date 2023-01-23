@@ -5,19 +5,10 @@ import {
   ImageBackground,
   StyleSheet,
   Dimensions,
-  Pressable,
   Keyboard,
 } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import {
-  logUserIn,
-  printCurrentUser,
-  registerUser,
-  updateAuthSection,
-  validateEmail,
-  validateName,
-  validatePassword,
-} from "./state/authActions";
+import { updateAuthSection } from "./state/authActions";
 import LinearGradient from "react-native-linear-gradient";
 import i18n from "../../translations/i18n";
 

@@ -111,7 +111,7 @@ export const translations: TranslationsUnion = {
       signup: 'Signup',
       mainTitle: 'Browse your favorite recipes easily',
       secondaryTitle:
-        'Save all of your recipes in one place - accessible anytime & anywhere',
+        'Save all of your recipes in one place,\naccessible anytime & anywhere',
       loginSection: {
         emailPlaceholder: 'Your email adress',
         passwordPlaceholder: 'Your password',

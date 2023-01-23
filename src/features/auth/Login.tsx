@@ -29,26 +29,17 @@ import { colors } from "../../constants/colors";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import ActionButton from "../../components/Buttons/ActionButton";
-import CustomTextInput from "../../components/TextInput/CustomTextInput";
 import Loader from "../../components/Loader";
-import { textInputTypes } from "../../models/types";
+import LoginTextInputs from "./components/LoginTextInputs";
+import RegisterTextInputs from "./components/RegisterTextInputs";
+import SectionSwapButton from "./components/SectionSwapButton";
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.auth.isLoading);
   const showLogin = useAppSelector((state) => state.auth.isShowLogin);
   const showRegister = useAppSelector((state) => state.auth.isShowRegistration);
-
-  const emailWarning = useAppSelector((state) => state.auth.emailWarning);
-  const passwordWarning = useAppSelector((state) => state.auth.passwordWarning);
-  const nameWarning = useAppSelector((state) => state.auth.nameWarning);
-
-  const [email, setEmail] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>(null);
-  const [surname, setSurname] = useState<string | null>(null);
-
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [isPasswordCensored, setIsPasswordCensored] = useState(true);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -146,114 +137,25 @@ const Login = () => {
 
   const renderLoginSection = () => {
     return (
-      <View style={styles.loginSectionContainer}>
-        {renderEmailTextInput()}
-        {renderPasswordTextInput()}
-        <ActionButton
-          buttonText={i18n.t("auth.login")}
-          buttonColors={[colors.darkGreen, colors.lime]}
-          buttonTextColor={colors.white}
-          buttonTextSize={18}
-          buttonContainerStyle={styles.loginButtonStyle}
-          onPress={() => {
-            dispatch(logUserIn(email, password));
-          }}
+      <View style={styles.sectionContainer}>
+        <LoginTextInputs />
+        <SectionSwapButton
+          text={i18n.t("auth.loginSection.goRegister")}
+          moveToSection={"registration"}
         />
-        {renderSectionSwapButton(
-          i18n.t("auth.loginSection.goRegister"),
-          "registration"
-        )}
       </View>
     );
   };
 
   const renderRegistrationSection = () => {
     return (
-      <View style={styles.loginSectionContainer}>
-        <CustomTextInput
-          textValue={surname ?? ""}
-          placeholderText={i18n.t("auth.registerSection.namePlaceholder")}
-          warningText={nameWarning}
-          isShowWarning={nameWarning !== null}
-          onChangeText={(newTxt) => {
-            dispatch(validateName(newTxt));
-          }}
+      <View style={styles.sectionContainer}>
+        <RegisterTextInputs />
+        <SectionSwapButton
+          text={i18n.t("auth.registerSection.goLogin")}
+          moveToSection={"login"}
         />
-        {renderEmailTextInput()}
-        {renderPasswordTextInput()}
-        <ActionButton
-          buttonText={i18n.t("auth.signup")}
-          buttonColors={[colors.darkGreen, colors.lime]}
-          buttonTextColor={colors.white}
-          buttonTextSize={18}
-          buttonContainerStyle={styles.loginButtonStyle}
-          onPress={() => {
-            dispatch(registerUser(email, password, surname));
-          }}
-        />
-        {renderSectionSwapButton(
-          i18n.t("auth.registerSection.goLogin"),
-          "login"
-        )}
       </View>
-    );
-  };
-
-  const renderEmailTextInput = () => {
-    return (
-      <CustomTextInput
-        textValue={email ?? ""}
-        placeholderText={i18n.t("auth.loginSection.emailPlaceholder")}
-        warningText={emailWarning}
-        isShowWarning={emailWarning !== null}
-        onChangeText={(newTxt) => {
-          dispatch(validateEmail(newTxt));
-        }}
-        keyboardType={"email-address"}
-      />
-    );
-  };
-
-  const renderPasswordTextInput = () => {
-    return (
-      <CustomTextInput
-        textValue={password ?? ""}
-        placeholderText={i18n.t("auth.loginSection.passwordPlaceholder")}
-        warningText={passwordWarning}
-        isShowWarning={passwordWarning !== null}
-        onChangeText={(newTxt) => {
-          dispatch(validatePassword(newTxt));
-        }}
-        isCensored={isPasswordCensored}
-        iconOnPress={() => setIsPasswordCensored(!isPasswordCensored)}
-      />
-    );
-  };
-
-  const clearAllTextInputs = () => {
-    setEmail(null);
-    setPassword(null);
-    setSurname(null);
-  };
-
-  const renderSectionSwapButton = (text: string, moveToSection: string) => {
-    return (
-      <Pressable
-        style={styles.bottomMiniButton}
-        onPress={() => {
-          clearAllTextInputs();
-          setIsPasswordCensored(true);
-          dispatch(updateAuthSection(moveToSection));
-        }}
-      >
-        <BoldText
-          children={text}
-          size={12}
-          color={colors.darkGreen}
-          textAlign="center"
-          lineHeight={16}
-        />
-      </Pressable>
     );
   };
 
@@ -328,12 +230,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: colors.darkLime,
   },
-  bottomMiniButton: {
-    paddingTop: 16,
-  },
 
-  // LOGIN SECTION
-  loginSectionContainer: {
+  sectionContainer: {
     position: "absolute",
     bottom: "0%",
     width: "100%",

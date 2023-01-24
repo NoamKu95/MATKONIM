@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Image,
   KeyboardTypeOptions,
@@ -6,11 +6,11 @@ import {
   StyleSheet,
   TextInput,
   View,
-} from 'react-native';
-import {notInitialized} from 'react-redux/es/utils/useSyncExternalStore';
-import {colors} from '../../constants/colors';
-import {icons} from '../../constants/icons';
-import RegularText from '../text/RegularText';
+} from "react-native";
+import { notInitialized } from "react-redux/es/utils/useSyncExternalStore";
+import { colors } from "../../constants/colors";
+import { icons } from "../../constants/icons";
+import RegularText from "../text/RegularText";
 
 interface Props {
   textValue: string;
@@ -39,18 +39,18 @@ const CustomTextInput = ({
   placeholderTextColor = colors.transparentBlack3,
   warningText,
   isShowWarning = false,
-  warningTextColor = 'red',
+  warningTextColor = "red",
   warningTextSize = 12,
   backgroundColor = colors.white,
   onChangeText,
-  keyboardType = 'default',
+  keyboardType = "default",
   isCensored = false,
   iconOnPress = null,
 }: Props) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={[styles.textInput, {color: textColor, backgroundColor}]}
+        style={[styles.textInput, { color: textColor, backgroundColor }]}
         onChangeText={onChangeText}
         value={textValue}
         placeholder={placeholderText}
@@ -62,8 +62,9 @@ const CustomTextInput = ({
       />
       {iconOnPress !== null && (
         <Pressable
-          style={[styles.iconWrapper, {opacity: isCensored ? 0.25 : 1}]}
-          onPress={iconOnPress}>
+          style={[styles.iconWrapper, { opacity: isCensored ? 0.25 : 1 }]}
+          onPress={iconOnPress}
+        >
           <Image source={icons.openEye} resizeMethod="resize" />
         </Pressable>
       )}
@@ -72,7 +73,7 @@ const CustomTextInput = ({
           children={warningText}
           size={warningTextSize}
           color={isShowWarning ? warningTextColor : colors.transparent}
-          textAlign="left"
+          textAlign={i18n.locale === "he" ? "left" : "right"}
           lineHeight={16}
         />
       </View>
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   iconWrapper: {
-    position: 'absolute',
+    position: "absolute",
     right: 24,
     top: 20,
   },

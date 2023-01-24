@@ -55,25 +55,22 @@ const CustomTextInput = ({
 }: Props) => {
   const [text, setText] = useState(textValue);
 
-  // useEffect(() => {
-  //   console.log("text2 " + text); // does print
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (text != null) {
+        onChangeText(text);
+      }
+    }, 1500);
 
-  //   const delayDebounceFn = setTimeout(() => {
-  //     console.log("text3 " + text); // not print
-  //     if (text != null) {
-  //       onChangeText(text);
-  //     }
-  //   }, 7);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [text]);
+    return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
 
   return (
     <View style={styles.container}>
       <TextInput
         style={[styles.textInput, { color: textColor, backgroundColor }]}
-        onChangeText={(newTxt) => onChangeText(newTxt)} // setText(newTxt)}
+        onChangeText={(newTxt) => setText(newTxt)}
         defaultValue={textValue}
         placeholder={placeholderText}
         placeholderTextColor={placeholderTextColor}

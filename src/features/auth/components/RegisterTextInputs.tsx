@@ -37,7 +37,9 @@ const RegisterTextInputs = () => {
         warningText={nameWarning}
         isShowWarning={nameWarning !== null}
         onChangeText={(newTxt) => {
-          dispatch(validateName(newTxt));
+          if (newTxt !== "" && newTxt !== surname) {
+            dispatch(validateName(newTxt));
+          }
         }}
       />
       <CustomTextInput
@@ -46,7 +48,9 @@ const RegisterTextInputs = () => {
         warningText={emailWarning}
         isShowWarning={emailWarning !== null}
         onChangeText={(newTxt) => {
-          dispatch(validateEmail(newTxt));
+          if (newTxt !== "" && newTxt !== email) {
+            dispatch(validateEmail(newTxt));
+          }
         }}
         keyboardType={"email-address"}
       />
@@ -56,7 +60,9 @@ const RegisterTextInputs = () => {
         warningText={passwordWarning}
         isShowWarning={passwordWarning !== null}
         onChangeText={(newTxt) => {
-          dispatch(validatePassword(newTxt));
+          if (newTxt !== "" && newTxt !== password) {
+            dispatch(validatePassword(newTxt));
+          }
         }}
         isCensored={isPasswordCensored}
         iconOnPress={() => setIsPasswordCensored(!isPasswordCensored)}

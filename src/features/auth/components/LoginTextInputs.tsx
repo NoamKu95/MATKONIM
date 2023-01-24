@@ -34,7 +34,9 @@ const LoginTextInputs = () => {
         warningText={emailWarning}
         isShowWarning={emailWarning !== null}
         onChangeText={(newTxt) => {
-          dispatch(validateEmail(newTxt));
+          if (newTxt !== "" && newTxt !== email) {
+            dispatch(validateEmail(newTxt));
+          }
         }}
         keyboardType={"email-address"}
       />
@@ -44,7 +46,9 @@ const LoginTextInputs = () => {
         warningText={passwordWarning}
         isShowWarning={passwordWarning !== null}
         onChangeText={(newTxt) => {
-          dispatch(validatePassword(newTxt));
+          if (newTxt !== "" && newTxt !== password) {
+            dispatch(validatePassword(newTxt));
+          }
         }}
         isCensored={isPasswordCensored}
         iconOnPress={() => setIsPasswordCensored(!isPasswordCensored)}

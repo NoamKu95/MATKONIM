@@ -9,7 +9,9 @@ import {
   setPasswordWarning,
   setShowLogin,
   setShowRegister,
+  setUserEmail,
   setUserName,
+  setUserPassword,
 } from "./authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../translations/i18n";
@@ -95,6 +97,15 @@ const registerNetworkEventListener = () => {
 
 // =============== LOGIN =============== //
 
+enum ValidationErrors {
+  emptyEmail = "יש להזין כתובת אימייל",
+  invalidEmail = "מייל אינו תקין",
+  emptyPassword = "יש להזין סיסמה",
+  weakPassword = "סיסמה אינה חזקה מספיק",
+  emptyUsername = "יש להזין שם או כינוי",
+  shortUsername = "כינוי קצר מדי",
+}
+
 export const updateAuthSection =
   (newSection: string): AppThunk =>
   async (dispatch) => {
@@ -156,14 +167,15 @@ export const validateEmail =
     if (email) {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
       if (!reg.test(email.trim())) {
-        dispatch(setEmailWarning("מייל אינו תקין"));
+        dispatch(setEmailWarning(ValidationErrors.invalidEmail));
         return false;
       } else {
         dispatch(setEmailWarning(null));
+        dispatch(setUserEmail(email));
         return true;
       }
     } else {
-      dispatch(setEmailWarning("יש להזין כתובת אימייל"));
+      dispatch(setEmailWarning(ValidationErrors.emptyEmail));
       return false;
     }
   };
@@ -172,17 +184,23 @@ export const validatePassword =
   (password: string | null): AppThunk =>
   async (dispatch) => {
     if (password) {
-      var reg =
-        /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
-      if (!reg.test(password.trim())) {
-        dispatch(setPasswordWarning("סיסמה אינה חזקה מספיק"));
+      if (password === "") {
+        dispatch(setPasswordWarning(ValidationErrors.emptyPassword));
         return false;
       } else {
-        dispatch(setPasswordWarning(null));
-        return true;
+        var reg =
+          /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+        if (!reg.test(password.trim())) {
+          dispatch(setPasswordWarning(ValidationErrors.weakPassword));
+          return false;
+        } else {
+          dispatch(setPasswordWarning(null));
+          dispatch(setUserPassword(password));
+          return true;
+        }
       }
     } else {
-      dispatch(setPasswordWarning("יש להזין סיסמה"));
+      dispatch(setPasswordWarning(ValidationErrors.emptyPassword));
       return false;
     }
   };
@@ -192,17 +210,17 @@ export const validateName =
   async (dispatch) => {
     if (name) {
       if (name.length === 0) {
-        dispatch(setNameWarning("יש להזין שם או כינוי"));
+        dispatch(setNameWarning(ValidationErrors.emptyUsername));
         return false;
       } else if (name.length < 2) {
-        dispatch(setNameWarning("כינוי קצר מדי"));
+        dispatch(setNameWarning(ValidationErrors.shortUsername));
         return false;
       } else {
         dispatch(setNameWarning(null));
         return true;
       }
     } else {
-      dispatch(setNameWarning("יש להזין שם או כינוי"));
+      dispatch(setNameWarning(ValidationErrors.emptyUsername));
       return false;
     }
   };

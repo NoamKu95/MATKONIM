@@ -90,7 +90,7 @@ const Login = () => {
           <RegularText
             children={i18n.t("auth.secondaryTitle")}
             size={18}
-            color={colors.lightLime}
+            color={colors.gray2}
             textAlign="left"
             lineHeight={32}
           />

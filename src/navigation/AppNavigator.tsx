@@ -1,19 +1,20 @@
-import * as React from 'react';
-import {StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import * as React from "react";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Navigation
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
-import {navigationRef} from './RootNavigation';
-import {RootStackParamList, Screens} from '../constants/screens';
-import TabsNavigator from '../navigation/TabsNavigator';
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { navigationRef } from "./RootNavigation";
+import { RootStackParamList, Screens } from "../constants/screens";
+import TabsNavigator from "../navigation/TabsNavigator";
 
 // Screens
 // import Onboarding from '../features/onboarding/Onboarding';
-import LoginScreen from '../features/auth/Login';
-import RecipeScreen from '../features/recipe/RecipePage';
-import LaunchScreen from '../features/auth/LaunchScreen';
+import LoginScreen from "../features/auth/Login";
+import RecipeScreen from "../features/recipe/RecipePage";
+import LaunchScreen from "../features/auth/LaunchScreen";
+import NoInternetScreen from "../features/errorHandling/NoInternetScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -22,13 +23,14 @@ const AppNavigator = () => {
     <>
       <SafeAreaView
         style={styles.bottomAreaView}
-        edges={['left', 'right', 'bottom']}>
+        edges={["left", "right", "bottom"]}
+      >
         <NavigationContainer ref={navigationRef}>
           <Stack.Navigator initialRouteName={Screens.SPLASH}>
             <Stack.Screen
               name={Screens.SPLASH}
               component={LaunchScreen}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             {/* <Stack.Screen
               name={Screens.ONBOARDING}
@@ -38,17 +40,22 @@ const AppNavigator = () => {
             <Stack.Screen
               name={Screens.LOGIN}
               component={LoginScreen}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name={Screens.TABS}
               component={TabsNavigator}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name={Screens.RECIPE}
               component={RecipeScreen}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name={Screens.NO_INTERNET}
+              component={NoInternetScreen}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>

@@ -3,13 +3,14 @@ import {
   combineReducers,
   Action,
   ThunkAction,
-} from '@reduxjs/toolkit';
-import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
-import addRecipeSlice from '../features/addRecipe/state/addRecipeSlice';
-import authSlice from '../features/auth/state/authSlice';
-import homeSlice from '../features/home/state/homeSlice';
-import recipeSlice from '../features/recipe/state/recipeSlice';
-import searchSlice from '../features/search/state/searchSlice';
+} from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import addRecipeSlice from "../features/addRecipe/state/addRecipeSlice";
+import authSlice from "../features/auth/state/authSlice";
+import errorHandlingSlice from "../features/errorHandling/state/errorHandlingSlice";
+import homeSlice from "../features/home/state/homeSlice";
+import recipeSlice from "../features/recipe/state/recipeSlice";
+import searchSlice from "../features/search/state/searchSlice";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -18,6 +19,7 @@ export const store = configureStore({
     recipe: recipeSlice,
     search: searchSlice,
     addRecipe: addRecipeSlice,
+    errorHandling: errorHandlingSlice,
   }),
 });
 

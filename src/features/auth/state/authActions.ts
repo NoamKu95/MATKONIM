@@ -1,4 +1,4 @@
-import { resetTo } from "../../../navigation/RootNavigation";
+import { navigate, resetTo } from "../../../navigation/RootNavigation";
 import { AppThunk } from "../../../store/store";
 import {
   resetAuthState,
@@ -16,6 +16,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../translations/i18n";
 import auth from "../../../../firebase";
+import NetInfo from "@react-native-community/netinfo";
 
 const asyncStorageKeys = {
   IS_DELETE_REQUESTED: "isDeleteUserRequested",
@@ -33,6 +34,7 @@ export const appInit =
   (onAppIsReady: (state: boolean) => void): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     try {
+      registerNetworkEventListener();
       auth.onAuthStateChanged(async (user) => {
         try {
           const shouldNavigateToOnboarding = await !checkUserSeenOnboarding();
@@ -83,6 +85,14 @@ export const detectLanguage = (): AppThunk => (dispatch) => {
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }
+};
+
+const registerNetworkEventListener = () => {
+  NetInfo.addEventListener((listener) => {
+    if (!listener.isConnected) {
+      navigate("NoInternet");
+    }
+  });
 };
 
 // =============== LOGIN =============== //

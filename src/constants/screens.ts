@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Search: undefined;
   Recipe: undefined;
   GeneralSettings: undefined;
+  NoInternet: undefined;
 };
 
 export const Screens: {
@@ -16,14 +17,16 @@ export const Screens: {
   SEARCH: keyof RootStackParamList;
   RECIPE: keyof RootStackParamList;
   GENERAL_SETTINGS: keyof RootStackParamList;
+  NO_INTERNET: keyof RootStackParamList;
 } = {
-  SPLASH: 'Splash',
-  LOGIN: 'Login',
-  ONBOARDING: 'Onboarding',
-  TABS: 'Tabs',
-  SEARCH: 'Search',
-  RECIPE: 'Recipe',
-  GENERAL_SETTINGS: 'GeneralSettings',
+  SPLASH: "Splash",
+  LOGIN: "Login",
+  ONBOARDING: "Onboarding",
+  TABS: "Tabs",
+  SEARCH: "Search",
+  RECIPE: "Recipe",
+  GENERAL_SETTINGS: "GeneralSettings",
+  NO_INTERNET: "NoInternet",
 };
 
 export type RootTabsParamList = {
@@ -38,8 +41,8 @@ export const TabsScreens: {
   ADD_RECIPE: keyof RootTabsParamList;
   PROFILE: keyof RootTabsParamList;
 } = {
-  HOME: 'Home',
-  SEARCH: 'Search',
-  ADD_RECIPE: 'AddRecipe',
-  PROFILE: 'Profile',
+  HOME: "Home",
+  SEARCH: "Search",
+  ADD_RECIPE: "AddRecipe",
+  PROFILE: "Profile",
 };

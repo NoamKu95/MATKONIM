@@ -3,6 +3,7 @@ import React from 'react';
 import {Fonts} from '../../constants/fonts';
 import {colors} from '../../constants/colors';
 import i18n from '../../translations/i18n';
+import { HE } from '../../models/translations';
 
 interface BoldTextProps {
   color?: string;
@@ -22,7 +23,7 @@ const BoldText = ({
   letterSpacing = 0,
 }: BoldTextProps) => {
   const isHebrew =
-    i18n.locale === 'he' || i18n.locale === 'he-IL' ? true : false;
+  i18n.locale === HE ? true : false;
   const dynamicStyleObject: TextStyle = {
     color: color ? color : colors.black,
     fontSize: size,

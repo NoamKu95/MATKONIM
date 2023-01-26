@@ -1,22 +1,23 @@
-import {setIsFetching, setRecipes} from './homeSlice';
-import {AppThunk} from '../../../store/store';
-import {Recipe} from '../../../models/recipe';
-import {setFilteredRecipes} from '../../search/state/searchSlice';
-import {fetchRecipesOfUser} from '../../../managers/firestoreManager';
-import {getCurrentUserID} from '../../auth/state/authActions';
-import {collections} from '../../../models/types';
+import { fetchRecipesOfUser } from "../../../managers/firestoreManager";
+
+// Models:
+import { Recipe } from "../../../models/recipe";
+import { collections } from "../../../models/types";
+
+// Redux:
+import { AppThunk } from "../../../store/store";
+import { setIsFetching, setRecipes } from "./homeSlice";
+import { getCurrentUserID } from "../../auth/state/authActions";
+import { setFilteredRecipes } from "../../search/state/searchSlice";
 
 export const getRecipesForHomepage =
   (): AppThunk => async (dispatch, getState) => {
     try {
       dispatch(setIsFetching(true));
-
-      let x: Recipe[] = await fetchRecipesOfUser(
-        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
+      let recipes = await fetchRecipesOfUser(
+        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`
       );
-
-      dispatch(setRecipes(x));
-      dispatch(setFilteredRecipes(x));
+      console.log(recipes); // undefined
     } catch (error) {
       console.log(error); // TODO: Error Handling
     } finally {

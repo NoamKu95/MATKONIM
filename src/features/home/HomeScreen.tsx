@@ -29,34 +29,10 @@ import { HE } from "../../models/translations";
 const Home = () => {
   const dispatch = useAppDispatch();
   const language = useAppSelector((state) => state.auth.language);
-
-  // const recentRecipes = useAppSelector((state) => state.home.recentRecipes);
-  const recentRecipes: Recipe[] = [
-    {
-      id: "1",
-      name: "recp 1",
-      image: "",
-      duration: "1 hour",
-      serving: 5,
-      category: "pasta",
-      ingredients: [],
-      preparationSteps: [],
-    },
-    {
-      id: "2",
-      name: "recp 2",
-      image: "",
-      duration: "1 hour",
-      serving: 5,
-      category: "pasta",
-      ingredients: [],
-      preparationSteps: [],
-    },
-  ];
+  const recipes = useAppSelector((state) => state.home.recipes);
 
   useEffect(() => {
-    // dispatch(getRecipesForHomepage());
-    // dispatch(getRecenlyAddedRecipes());
+    dispatch(getRecipesForHomepage());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -98,7 +74,7 @@ const Home = () => {
           />
         </View>
         <FlatList
-          data={recentRecipes}
+          data={recipes}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item: Recipe) => `${item.name}`}
@@ -111,9 +87,9 @@ const Home = () => {
   const renderRecipeCard = (row: { item: Recipe; index: number }) => {
     return (
       <RecipeCard
-        key={row.index}
+        key={row.item.id}
         recipe={row.item}
-        isLastIndex={row.index === recentRecipes.length - 1}
+        isLastIndex={row.index === recipes.length - 1}
         onPress={() => {
           dispatch(setSelectedRecipe(row.item));
           navigate("Recipe");
@@ -136,10 +112,11 @@ const Home = () => {
         </View>
         {CATEGORIES.map((row) => {
           return (
-            <View style={styles.categoryRowContainer}>
+            <View style={styles.categoryRowContainer} key={row[0].id}>
               {row.map((category) => {
                 return (
                   <CategoryCard
+                    key={category.id}
                     category={category}
                     image={category.image}
                     width={category.isWideImage ? "49%" : "24%"}
@@ -162,7 +139,7 @@ const Home = () => {
       <ScrollView nestedScrollEnabled={true}>
         {renderSearchBar()}
         {renderCallout()}
-        {recentRecipes.length > 0 && renderRecentlyAddedSection()}
+        {recipes.length > 0 && renderRecentlyAddedSection()}
         {renderCategoriesSquares()}
       </ScrollView>
     </View>

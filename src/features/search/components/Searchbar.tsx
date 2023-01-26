@@ -1,22 +1,22 @@
-import React, {useEffect} from 'react';
-import {TextInput, StyleSheet, View, Pressable, Image} from 'react-native';
-import {updateSearchPhrase} from '../state/searchActions';
-import {useAppDispatch, useAppSelector} from '../../../store/store';
-import i18n from '../../../translations/i18n';
-import {icons} from '../../../constants/icons';
-import {colors} from '../../../constants/colors';
+import React, { useEffect } from "react";
+import { TextInput, StyleSheet, View, Pressable, Image } from "react-native";
+import { updateSearchPhrase } from "../state/searchActions";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import i18n from "../../../translations/i18n";
+import { icons } from "../../../constants/icons";
+import { colors } from "../../../constants/colors";
 
-const isHebrew = i18n.locale === 'he' || i18n.locale === 'he-IL' ? true : false;
+const isHebrew = i18n.locale === "he" || i18n.locale === "he-IL" ? true : false;
 
 interface Props {
   placeHolderText: string;
   searchHandler: (text: string) => void;
 }
 
-const Searchbar = ({placeHolderText, searchHandler}: Props) => {
+const Searchbar = ({ placeHolderText, searchHandler }: Props) => {
   const dispatch = useAppDispatch();
 
-  const searchText = useAppSelector(state => state.search.searchPhrase);
+  const searchText = useAppSelector((state) => state.search.searchPhrase);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -37,7 +37,7 @@ const Searchbar = ({placeHolderText, searchHandler}: Props) => {
     <View style={styles.searchBarContainer}>
       <TextInput
         style={styles.textInput}
-        onChangeText={newTxt => changeSearchText(newTxt)}
+        onChangeText={(newTxt) => changeSearchText(newTxt)}
         value={searchText}
         placeholder={placeHolderText}
         placeholderTextColor={colors.transparentBlack5}
@@ -45,8 +45,9 @@ const Searchbar = ({placeHolderText, searchHandler}: Props) => {
       />
 
       <Pressable
-        onPress={() => searchHandler(searchText ?? '')}
-        style={styles.iconWrapper}>
+        onPress={() => searchHandler(searchText ?? "")}
+        style={styles.iconWrapper}
+      >
         <Image source={icons.search} style={styles.icon} />
       </Pressable>
     </View>
@@ -57,9 +58,8 @@ export default Searchbar;
 
 const styles = StyleSheet.create({
   searchBarContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 50,
-    marginHorizontal: 8,
     borderRadius: 12,
     backgroundColor: colors.lightGray,
     marginTop: 24,
@@ -68,19 +68,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 8,
 
-    textAlign: isHebrew ? 'right' : 'left',
+    textAlign: isHebrew ? "right" : "left",
     color: colors.black,
-    width: '100%',
+    width: "100%",
   },
   searchBarImage: {
     width: 20,
     height: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   iconWrapper: {
-    position: 'absolute',
-    right: '5%',
-    top: '25%',
+    position: "absolute",
+    right: "5%",
+    top: "25%",
   },
   icon: {
     height: 20,

@@ -1,5 +1,5 @@
 // Outer imports:
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,18 +7,19 @@ import {
   StyleSheet,
   GestureResponderEvent,
   Pressable,
-} from 'react-native';
-import {colors} from '../../constants/colors';
-import {images} from '../../constants/images';
+} from "react-native";
+import { colors } from "../../constants/colors";
+import { images } from "../../constants/images";
+import { paddings } from "../../constants/paddings";
 
 // Inner imports:
 
 // Types:
-import {Recipe} from '../../models/recipe';
+import { Recipe } from "../../models/recipe";
 
 // Components:
-import CardInfo from '../InfoSquares/CardInfo';
-import RegularText from '../text/RegularText';
+import CardInfo from "../InfoSquares/CardInfo";
+import RegularText from "../text/RegularText";
 
 interface Props {
   recipe: Recipe;
@@ -34,7 +35,13 @@ const RecipeCard: React.FC<Props> = ({
   return (
     <Pressable
       onPress={onPress}
-      style={isLastIndex ? styles.containerLastIndex : styles.container}>
+      style={[
+        styles.container,
+        isLastIndex
+          ? { marginLeft: 4, marginRight: 12 }
+          : { marginLeft: 12, marginRight: 4 },
+      ]}
+    >
       <Image
         source={{
           uri: recipe.image,
@@ -62,16 +69,8 @@ const styles = StyleSheet.create({
   container: {
     height: 250,
     width: 250,
-    marginRight: 4,
     borderRadius: 12,
-    marginLeft: 8,
-  },
-  containerLastIndex: {
-    height: 250,
-    width: 250,
-    marginLeft: 4,
-    borderRadius: 12,
-    marginRight: 8,
+    backgroundColor: "lightgreen",
   },
   backgroundImage: {
     width: 250,
@@ -79,11 +78,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   categoryContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     left: 15,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
+    paddingHorizontal: paddings._16px,
+    paddingVertical: paddings._4px,
     backgroundColor: colors.transparentGray,
     borderRadius: 12,
   },

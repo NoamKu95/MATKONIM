@@ -1,47 +1,73 @@
 // Outer imports:
-import React, {useEffect} from 'react';
-import {View, StyleSheet, FlatList, Dimensions, ScrollView} from 'react-native';
-import i18n from '../../translations/i18n';
+import React, { useEffect } from "react";
+import { View, StyleSheet, FlatList, ScrollView } from "react-native";
+import i18n from "../../translations/i18n";
 
 // Redux:
-import {useAppDispatch, useAppSelector} from '../../store/store';
-import {getRecipesForHomepage} from './state/homeActions';
-import {setSelectedRecipe} from '../recipe/state/recipeSlice';
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { getRecipesForHomepage } from "./state/homeActions";
+import { setSelectedRecipe } from "../recipe/state/recipeSlice";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import {navigate} from '../../navigation/RootNavigation';
+import { colors } from "../../constants/colors";
+import { navigate } from "../../navigation/RootNavigation";
 
 // Types:
-import {Recipe} from '../../models/recipe';
-import {CategoryCards} from '../../models/category';
+import { Recipe } from "../../models/recipe";
+import { CATEGORIES } from "../../models/category";
 
 // Components:
-import BoldText from '../../components/text/BoldText';
-import Callout from '../../components/Callout';
-import Searchbar from '../search/components/Searchbar';
-import RecipeCard from '../../components/Cards/RecipeCard';
-import CategoryCard from '../../components/Cards/CategoryCard';
-import {setCategoryFilter} from '../search/state/searchSlice';
+import BoldText from "../../components/text/BoldText";
+import Callout from "../../components/Callout";
+import Searchbar from "../search/components/Searchbar";
+import RecipeCard from "../../components/Cards/RecipeCard";
+import CategoryCard from "../../components/Cards/CategoryCard";
+import { setCategoryFilter } from "../search/state/searchSlice";
+import { paddings } from "../../constants/paddings";
+import { HE } from "../../models/translations";
 
 const Home = () => {
   const dispatch = useAppDispatch();
+  const language = useAppSelector((state) => state.auth.language);
 
-  const recipes = useAppSelector(state => state.home.recipes);
+  // const recentRecipes = useAppSelector((state) => state.home.recentRecipes);
+  const recentRecipes: Recipe[] = [
+    {
+      id: "1",
+      name: "recp 1",
+      image: "",
+      duration: "1 hour",
+      serving: 5,
+      category: "pasta",
+      ingredients: [],
+      preparationSteps: [],
+    },
+    {
+      id: "2",
+      name: "recp 2",
+      image: "",
+      duration: "1 hour",
+      serving: 5,
+      category: "pasta",
+      ingredients: [],
+      preparationSteps: [],
+    },
+  ];
 
   useEffect(() => {
-    dispatch(getRecipesForHomepage());
+    // dispatch(getRecipesForHomepage());
+    // dispatch(getRecenlyAddedRecipes());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // MARK: Render Functions
-
   const renderSearchBar = () => {
     return (
-      <Searchbar
-        placeHolderText={i18n.t('homepage.search')}
-        searchHandler={() => {}} // TODO: add handler
-      />
+      <View style={styles.searchbarContainer}>
+        <Searchbar
+          placeHolderText={i18n.t("homepage.search")}
+          searchHandler={() => {}} // TODO: add handler
+        />
+      </View>
     );
   };
 
@@ -49,10 +75,10 @@ const Home = () => {
     return (
       <View style={styles.calloutWrapper}>
         <Callout
-          mainText={i18n.t('homepage.callout.mainText')}
-          buttonText={i18n.t('homepage.callout.pressableText')}
+          mainText={i18n.t("homepage.callout.mainText")}
+          buttonText={i18n.t("homepage.callout.pressableText")}
           onPress={() => {
-            navigate('Search');
+            navigate("Search");
           }}
         />
       </View>
@@ -62,17 +88,17 @@ const Home = () => {
   const renderRecentlyAddedSection = () => {
     return (
       <>
-        <View style={styles.recentlyAddedTitleContainer}>
+        <View style={styles.titleContainer}>
           <BoldText
-            children={i18n.t('homepage.recentlyAddedTitle')}
+            children={i18n.t("homepage.recentlyAddedTitle")}
             color={colors.black}
             size={16}
-            textAlign="left"
+            textAlign={language === HE ? "left" : "right"}
             letterSpacing={1}
           />
         </View>
         <FlatList
-          data={recipes}
+          data={recentRecipes}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item: Recipe) => `${item.name}`}
@@ -82,14 +108,15 @@ const Home = () => {
     );
   };
 
-  const renderRecipeCard = (row: {item: Recipe; index: number}) => {
+  const renderRecipeCard = (row: { item: Recipe; index: number }) => {
     return (
       <RecipeCard
+        key={row.index}
         recipe={row.item}
-        isLastIndex={row.index === recipes.length - 1}
+        isLastIndex={row.index === recentRecipes.length - 1}
         onPress={() => {
           dispatch(setSelectedRecipe(row.item));
-          navigate('Recipe');
+          navigate("Recipe");
         }}
       />
     );
@@ -98,27 +125,27 @@ const Home = () => {
   const renderCategoriesSquares = () => {
     return (
       <View style={styles.categoriesWrapper}>
-        <View style={styles.categoriesTitle}>
+        <View style={styles.titleContainer}>
           <BoldText
-            children={i18n.t('homepage.categories')}
+            children={i18n.t("homepage.categories")}
             color={colors.black}
             size={16}
-            textAlign="left"
+            textAlign={language === HE ? "left" : "right"}
             letterSpacing={1}
           />
         </View>
-        {CategoryCards.map(row => {
+        {CATEGORIES.map((row) => {
           return (
             <View style={styles.categoryRowContainer}>
-              {row.map(category => {
+              {row.map((category) => {
                 return (
                   <CategoryCard
                     category={category}
                     image={category.image}
-                    width={category.isWideImage ? '49%' : '24%'}
+                    width={category.isWideImage ? "49%" : "24%"}
                     onPress={() => {
                       dispatch(setCategoryFilter(category.name));
-                      navigate('Search');
+                      navigate("Search");
                     }}
                   />
                 );
@@ -135,7 +162,7 @@ const Home = () => {
       <ScrollView nestedScrollEnabled={true}>
         {renderSearchBar()}
         {renderCallout()}
-        {recipes.length > 0 && renderRecentlyAddedSection()}
+        {recentRecipes.length > 0 && renderRecentlyAddedSection()}
         {renderCategoriesSquares()}
       </ScrollView>
     </View>
@@ -148,59 +175,32 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: colors.white,
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: "100%",
+    height: "100%",
   },
 
   // SEARCHBAR
-  searchBarContainer: {
-    flexDirection: 'row-reverse',
-    height: 50,
-    marginHorizontal: 8,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-    backgroundColor: colors.lightGray,
+  searchbarContainer: {
+    paddingHorizontal: paddings._12px,
   },
-  searchBarImage: {
-    width: 20,
-    height: 20,
-    alignSelf: 'center',
-  },
-  searchBarText: {
-    marginLeft: 24,
+
+  // TITLES
+  titleContainer: {
+    paddingHorizontal: paddings._12px,
+    paddingVertical: paddings._16px,
   },
 
   //CALLOUT
   calloutWrapper: {
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-  },
-
-  // RECENTLY ADDED
-  recentlyAddedTitleContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 16,
-  },
-  recentlyAddedTitle: {
-    marginHorizontal: 8,
-    color: 'black',
+    padding: paddings._12px,
   },
 
   // CATEGORIES
-  categoriesHeaderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-    marginHorizontal: 8,
-  },
   categoriesWrapper: {
-    paddingHorizontal: 8,
-  },
-  categoriesTitle: {
-    paddingVertical: 16,
+    paddingHorizontal: paddings._12px,
   },
   categoryRowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

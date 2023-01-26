@@ -2,21 +2,18 @@ import { navigate, resetTo } from "../../../navigation/RootNavigation";
 import { AppThunk } from "../../../store/store";
 import {
   resetAuthState,
-  setEmailWarning,
   setIsLoading,
   setLanguage,
-  setNameWarning,
-  setPasswordWarning,
   setShowLogin,
   setShowRegister,
-  setUserEmail,
   setUserName,
-  setUserPassword,
 } from "./authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../translations/i18n";
 import auth from "../../../../firebase";
 import NetInfo from "@react-native-community/netinfo";
+import { HE } from "../../../models/translations";
+import { validateEmail, validatePassword } from "../../../utils/validators";
 
 const asyncStorageKeys = {
   IS_DELETE_REQUESTED: "isDeleteUserRequested",
@@ -76,8 +73,7 @@ export const saveOnboardingFinished = () => {
 
 export const detectLanguage = (): AppThunk => (dispatch) => {
   try {
-    const currentLanguage = i18n.locale;
-    if (currentLanguage === "he" || currentLanguage === "he-IL") {
+    if (i18n.locale === HE) {
       dispatch(setLanguage("he"));
     } else {
       dispatch(setLanguage("en"));
@@ -96,15 +92,6 @@ const registerNetworkEventListener = () => {
 };
 
 // =============== LOGIN =============== //
-
-enum ValidationErrors {
-  emptyEmail = "יש להזין כתובת אימייל",
-  invalidEmail = "מייל אינו תקין",
-  emptyPassword = "יש להזין סיסמה",
-  weakPassword = "סיסמה אינה חזקה מספיק",
-  emptyUsername = "יש להזין שם או כינוי",
-  shortUsername = "כינוי קצר מדי",
-}
 
 export const updateAuthSection =
   (newSection: string): AppThunk =>
@@ -158,70 +145,6 @@ export const registerUser =
       }
     } else {
       return;
-    }
-  };
-
-export const validateEmail =
-  (email: string | null): AppThunk =>
-  async (dispatch) => {
-    if (email) {
-      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (!reg.test(email.trim())) {
-        dispatch(setEmailWarning(ValidationErrors.invalidEmail));
-        return false;
-      } else {
-        dispatch(setEmailWarning(null));
-        dispatch(setUserEmail(email));
-        return true;
-      }
-    } else {
-      dispatch(setEmailWarning(ValidationErrors.emptyEmail));
-      return false;
-    }
-  };
-
-export const validatePassword =
-  (password: string | null): AppThunk =>
-  async (dispatch) => {
-    if (password) {
-      if (password === "") {
-        dispatch(setPasswordWarning(ValidationErrors.emptyPassword));
-        return false;
-      } else {
-        var reg =
-          /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
-        if (!reg.test(password.trim())) {
-          dispatch(setPasswordWarning(ValidationErrors.weakPassword));
-          return false;
-        } else {
-          dispatch(setPasswordWarning(null));
-          dispatch(setUserPassword(password));
-          return true;
-        }
-      }
-    } else {
-      dispatch(setPasswordWarning(ValidationErrors.emptyPassword));
-      return false;
-    }
-  };
-
-export const validateName =
-  (name: string | null): AppThunk =>
-  async (dispatch) => {
-    if (name) {
-      if (name.length === 0) {
-        dispatch(setNameWarning(ValidationErrors.emptyUsername));
-        return false;
-      } else if (name.length < 2) {
-        dispatch(setNameWarning(ValidationErrors.shortUsername));
-        return false;
-      } else {
-        dispatch(setNameWarning(null));
-        return true;
-      }
-    } else {
-      dispatch(setNameWarning(ValidationErrors.emptyUsername));
-      return false;
     }
   };
 

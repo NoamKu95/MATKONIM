@@ -12,12 +12,12 @@ import CustomTextInput from "../../../components/TextInput/CustomTextInput";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { registerUser } from "../state/authActions";
 import {
-  registerUser,
   validateEmail,
   validateName,
   validatePassword,
-} from "../state/authActions";
+} from "../../../utils/validators";
 
 const RegisterTextInputs = () => {
   const dispatch = useAppDispatch();

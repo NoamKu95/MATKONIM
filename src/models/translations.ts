@@ -98,6 +98,14 @@ export interface Translation {
     noInternetTitle: string;
     noInternetDescription: string;
     noInternetButtonLabel: string;
+    validationErrors: {
+      emptyEmail: string;
+      invalidEmail: string;
+      emptyPassword: string;
+      weakPassword: string;
+      emptyUsername: string;
+      shortUsername: string;
+    };
   };
 }
 

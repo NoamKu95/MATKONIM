@@ -12,11 +12,8 @@ import CustomTextInput from "../../../components/TextInput/CustomTextInput";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
-import {
-  logUserIn,
-  validateEmail,
-  validatePassword,
-} from "../state/authActions";
+import { logUserIn } from "../state/authActions";
+import { validateEmail, validatePassword } from "../../../utils/validators";
 
 const LoginTextInputs = () => {
   const dispatch = useAppDispatch();

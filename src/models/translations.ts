@@ -1,5 +1,5 @@
 export interface TranslationsUnion {
-  fallback: 'he';
+  fallback: "he";
   he: Translation;
   en: Translation;
 }
@@ -93,14 +93,20 @@ export interface Translation {
     loaderText: string;
     imageUploadingText: string;
   };
+  errorHandling: {
+    somethingWentWrong: string;
+    noInternetTitle: string;
+    noInternetDescription: string;
+    noInternetButtonLabel: string;
+  };
 }
 
 // representations of Hebrew language in different devices
 export enum Hebrew {
-  WI = 'wi',
-  IW = 'iw',
-  HE = 'he',
+  WI = "wi",
+  IW = "iw",
+  HE = "he",
 }
 
-export const HE = 'he';
-export const EN = 'en';
+export const HE = "he";
+export const EN = "en";

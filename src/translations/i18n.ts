@@ -1,197 +1,209 @@
-import {I18n} from 'i18n-js';
-import {I18nManager, NativeModules, Platform} from 'react-native';
-import {EN, HE, Hebrew, TranslationsUnion} from '../models/translations';
+import { I18n } from "i18n-js";
+import { I18nManager, NativeModules, Platform } from "react-native";
+import { EN, HE, Hebrew, TranslationsUnion } from "../models/translations";
 
 export const translations: TranslationsUnion = {
-  fallback: 'he',
+  fallback: "he",
   he: {
-    appName: 'MATKONIM',
+    appName: "MATKONIM",
     tabs: {
-      Home: 'בית',
-      ActionButton: 'פעולות',
-      Profile: 'פרופיל',
+      Home: "בית",
+      ActionButton: "פעולות",
+      Profile: "פרופיל",
     },
     auth: {
-      login: 'התחברות',
-      signup: 'הרשמה',
-      mainTitle: 'דפדפו במתכונים המועדפים עליכם בקלות',
+      login: "התחברות",
+      signup: "הרשמה",
+      mainTitle: "דפדפו במתכונים המועדפים עליכם בקלות",
       secondaryTitle:
-        'שמרו את כל המתכונים שלכם במקום אחד נוח לגישה בכל זמן ובכל מקום',
+        "שמרו את כל המתכונים שלכם במקום אחד נוח לגישה בכל זמן ובכל מקום",
       loginSection: {
-        emailPlaceholder: 'כתובת המייל שלך',
-        passwordPlaceholder: 'הסיסמה שלך',
-        goRegister: 'לא פתחת חשבון עדיין?',
+        emailPlaceholder: "כתובת המייל שלך",
+        passwordPlaceholder: "הסיסמה שלך",
+        goRegister: "לא פתחת חשבון עדיין?",
       },
       registerSection: {
-        namePlaceholder: 'השם / כינוי שלך',
-        emailPlaceholder: 'כתובת המייל שלך',
-        passwordPlaceholder: 'הסיסמה שלך',
-        goLogin: 'כבר יש לך חשבון?',
+        namePlaceholder: "השם / כינוי שלך",
+        emailPlaceholder: "כתובת המייל שלך",
+        passwordPlaceholder: "הסיסמה שלך",
+        goLogin: "כבר יש לך חשבון?",
       },
     },
     homepage: {
-      whatCookingToday: 'מה אנחנו מבשלים היום?',
-      hiThere: 'היי',
+      whatCookingToday: "מה אנחנו מבשלים היום?",
+      hiThere: "היי",
       callout: {
         mainText:
-          'שמרו את כל המתכונים שלכם נגישים במקום אחד ודפדפו בהם בכל זמן ובכל מקום',
-        pressableText: 'כל המתכונים',
+          "שמרו את כל המתכונים שלכם נגישים במקום אחד ודפדפו בהם בכל זמן ובכל מקום",
+        pressableText: "כל המתכונים",
       },
-      search: 'מה אנחנו מבשלים היום?',
-      recentlyAddedTitle: 'נוספו לאחרונה',
-      categories: 'קטגוריות',
+      search: "מה אנחנו מבשלים היום?",
+      recentlyAddedTitle: "נוספו לאחרונה",
+      categories: "קטגוריות",
     },
     search: {
-      mainTitle: 'חפש במתכונים שלך',
-      secondaryTitle: 'לגלות מחדש את המנות הטעימות שלך',
-      searchPlaceholder: 'מה אנחנו מבשלים היום?',
-      leadingText: 'מביאים את המתכונים עבורך',
+      mainTitle: "חפש במתכונים שלך",
+      secondaryTitle: "לגלות מחדש את המנות הטעימות שלך",
+      searchPlaceholder: "מה אנחנו מבשלים היום?",
+      leadingText: "מביאים את המתכונים עבורך",
       noResults: `לא מצאנו תוצאות מתאימות\nכדאי לנסות חיפוש אחר`,
     },
     recipeCard: {
-      servings: 'סועדים',
+      servings: "סועדים",
     },
     recipe: {
-      ingredients: 'מצרכים',
-      preparationSteps: 'שלבי הכנה',
+      ingredients: "מצרכים",
+      preparationSteps: "שלבי הכנה",
     },
     profile: {
-      logout: 'התנתקות',
-      heyUser: 'היי, ',
+      logout: "התנתקות",
+      heyUser: "היי, ",
       personalText:
-        'איזה כיף שבחרת להשתמש באפליקציית מתכונים! אם נהנית זה הזמן לזרוק מילה טובה לחברים :)',
+        "איזה כיף שבחרת להשתמש באפליקציית מתכונים! אם נהנית זה הזמן לזרוק מילה טובה לחברים :)",
     },
     addRecipe: {
-      mainTitle: 'הוספת מתכון חדש',
+      mainTitle: "הוספת מתכון חדש",
       subtitleText:
-        'יש לך מתכון חדש להוסיף? מרגש!\nאוטוטו הוא לנצח אצלך בנייד במרחק הקלקה',
-      infoTitle: 'מידע בסיסי',
-      recipeNameLabel: 'שם המתכון',
-      recipeNameExample: 'לדוגמה: פסטה שמנת עם ברוקולי',
-      recipeDurationLabel: 'משך הכנה',
-      recipeDurationExample: 'לדוגמה: 1.5 שעות',
-      recipeServingsLabel: 'כמות מנות',
-      recipeServingsExample: 'לדוגמה: 4',
+        "יש לך מתכון חדש להוסיף? מרגש!\nאוטוטו הוא לנצח אצלך בנייד במרחק הקלקה",
+      infoTitle: "מידע בסיסי",
+      recipeNameLabel: "שם המתכון",
+      recipeNameExample: "לדוגמה: פסטה שמנת עם ברוקולי",
+      recipeDurationLabel: "משך הכנה",
+      recipeDurationExample: "לדוגמה: 1.5 שעות",
+      recipeServingsLabel: "כמות מנות",
+      recipeServingsExample: "לדוגמה: 4",
 
-      ingredientsTitle: 'מצרכים נדרשים',
+      ingredientsTitle: "מצרכים נדרשים",
       ingredientsSubTitle:
-        'כדי שנדע מה צריך כשהולכים לעשות סופר בבית של ההורים',
-      ingredientNameLabel: 'שם המצרך',
-      ingredientNameExample: 'לדוגמה: גבינת צ׳דר מגורדת',
-      ingredientAmountLabel: 'כמות נדרשת',
-      ingredientAmountExample: 'לדוגמה: 250',
-      ingredientAddButton: 'הוספת מצרך',
+        "כדי שנדע מה צריך כשהולכים לעשות סופר בבית של ההורים",
+      ingredientNameLabel: "שם המצרך",
+      ingredientNameExample: "לדוגמה: גבינת צ׳דר מגורדת",
+      ingredientAmountLabel: "כמות נדרשת",
+      ingredientAmountExample: "לדוגמה: 250",
+      ingredientAddButton: "הוספת מצרך",
 
-      prepStepsTitle: 'שלבי הכנה',
-      prepStepsSubTitle: 'משקיעים בהנחיות ברורות עכשיו - מבשלים בקלות אחר כך',
-      prepSteps_StepLabel: 'הנחיות לשלב',
-      prepSteps_StepExample: 'לדוגמה: קוצצים בצל לקוביות קטנות',
-      prepStepsAddButton: 'הוספת שלב',
+      prepStepsTitle: "שלבי הכנה",
+      prepStepsSubTitle: "משקיעים בהנחיות ברורות עכשיו - מבשלים בקלות אחר כך",
+      prepSteps_StepLabel: "הנחיות לשלב",
+      prepSteps_StepExample: "לדוגמה: קוצצים בצל לקוביות קטנות",
+      prepStepsAddButton: "הוספת שלב",
 
-      categoriesTitle: 'קטגוריית המתכון',
-      categoriesSubTitle: 'כדי למצוא את המתכון יותר בקלות במועד מאוחר יותר',
+      categoriesTitle: "קטגוריית המתכון",
+      categoriesSubTitle: "כדי למצוא את המתכון יותר בקלות במועד מאוחר יותר",
 
-      recipeImageTitle: 'בחירת תמונה',
-      recipeImageSubTitle: 'תמונה טובה תמיד עושה חשק',
+      recipeImageTitle: "בחירת תמונה",
+      recipeImageSubTitle: "תמונה טובה תמיד עושה חשק",
 
-      saveButton: 'שמירת מתכון',
-      loaderText: 'עובדים על לשמור לך את המתכון!',
-      imageUploadingText: 'מעלים את התמונה שלך לענן - ',
+      saveButton: "שמירת מתכון",
+      loaderText: "עובדים על לשמור לך את המתכון!",
+      imageUploadingText: "מעלים את התמונה שלך לענן - ",
+    },
+    errorHandling: {
+      somethingWentWrong: "אופס, נראה שמשהו השתבש",
+      noInternetTitle: "אין אינטרנט",
+      noInternetDescription:
+        "אופס, נראה שיש מחסור באינטרנט במכשיר שלך כרגע!\n\nיש לבדוק את הנושא ולוודא שחיבור האינטרנט חזר ויציב לפני שממשיכים חזרה לאפליקציה, אחרת היא עלולה לא לפעול כמו שצריך",
+      noInternetButtonLabel: "סידרתי את הנושא, אפשר לחזור",
     },
   },
   en: {
-    appName: 'MATKONIM',
+    appName: "MATKONIM",
     tabs: {
-      Home: 'Home',
-      ActionButton: 'Actions',
-      Profile: 'Profile',
+      Home: "Home",
+      ActionButton: "Actions",
+      Profile: "Profile",
     },
     auth: {
-      login: 'Login',
-      signup: 'Signup',
-      mainTitle: 'Browse your favorite recipes easily',
+      login: "Login",
+      signup: "Signup",
+      mainTitle: "Browse your favorite recipes easily",
       secondaryTitle:
-        'Save all of your recipes in one place,\naccessible anytime & anywhere',
+        "Save all of your recipes in one place,\naccessible anytime & anywhere",
       loginSection: {
-        emailPlaceholder: 'Your email adress',
-        passwordPlaceholder: 'Your password',
-        goRegister: 'Not registered yet?',
+        emailPlaceholder: "Your email adress",
+        passwordPlaceholder: "Your password",
+        goRegister: "Not registered yet?",
       },
       registerSection: {
-        namePlaceholder: 'Your name / nickname',
-        emailPlaceholder: 'Your email adress',
-        passwordPlaceholder: 'Your password',
-        goLogin: 'Already have an account?',
+        namePlaceholder: "Your name / nickname",
+        emailPlaceholder: "Your email adress",
+        passwordPlaceholder: "Your password",
+        goLogin: "Already have an account?",
       },
     },
     homepage: {
-      whatCookingToday: 'What are we cooking today?',
-      hiThere: 'Hey',
+      whatCookingToday: "What are we cooking today?",
+      hiThere: "Hey",
       callout: {
         mainText:
-          'Save all of your recipes in one place - accessible anytime & anywhere',
-        pressableText: 'All recipes',
+          "Save all of your recipes in one place - accessible anytime & anywhere",
+        pressableText: "All recipes",
       },
-      search: 'What are we cooking today?',
-      recentlyAddedTitle: 'Added recently',
-      categories: 'Categories',
+      search: "What are we cooking today?",
+      recentlyAddedTitle: "Added recently",
+      categories: "Categories",
     },
     search: {
-      mainTitle: 'Browse your recipes',
-      secondaryTitle: 'Re-discover your delicious dishes',
-      searchPlaceholder: 'What are we cooking today?',
-      leadingText: 'Fetching recipes for you',
+      mainTitle: "Browse your recipes",
+      secondaryTitle: "Re-discover your delicious dishes",
+      searchPlaceholder: "What are we cooking today?",
+      leadingText: "Fetching recipes for you",
       noResults: `We couldn't find any matching results\nYou should try a different search`,
     },
     recipeCard: {
-      servings: 'Servings',
+      servings: "Servings",
     },
     recipe: {
-      ingredients: 'Ingredients',
-      preparationSteps: 'Preperation steps',
+      ingredients: "Ingredients",
+      preparationSteps: "Preperation steps",
     },
     profile: {
-      logout: 'Logout',
-      heyUser: 'Hey, ',
+      logout: "Logout",
+      heyUser: "Hey, ",
       personalText:
-        'Happy to see your are using the MATKONIM app :) If you enjoy the app, please recommend to your friends',
+        "Happy to see your are using the MATKONIM app :) If you enjoy the app, please recommend to your friends",
     },
     addRecipe: {
-      mainTitle: 'Add new recipe',
+      mainTitle: "Add new recipe",
       subtitleText:
-        'Have a new recipe to add? Exciting!\nIn no time it will forever be one click away',
-      infoTitle: 'Basic info',
-      recipeNameLabel: 'Recipe name',
-      recipeNameExample: 'example: rose pasta with champignon mushrooms',
-      recipeDurationLabel: 'Duration',
-      recipeDurationExample: 'example: 1.5 hours',
-      recipeServingsLabel: 'Servings',
-      recipeServingsExample: 'example: 4',
+        "Have a new recipe to add? Exciting!\nIn no time it will forever be one click away",
+      infoTitle: "Basic info",
+      recipeNameLabel: "Recipe name",
+      recipeNameExample: "example: rose pasta with champignon mushrooms",
+      recipeDurationLabel: "Duration",
+      recipeDurationExample: "example: 1.5 hours",
+      recipeServingsLabel: "Servings",
+      recipeServingsExample: "example: 4",
 
-      ingredientsTitle: 'Required ingredients',
-      ingredientsSubTitle:
-        'So we can know what to barrow from the neighbors',
-      ingredientNameLabel: 'Ingredient name',
-      ingredientNameExample: 'example: cheder cheese',
-      ingredientAmountLabel: 'Required amount',
-      ingredientAmountExample: 'example: 250',
-      ingredientAddButton: 'Add ingredient',
+      ingredientsTitle: "Required ingredients",
+      ingredientsSubTitle: "So we can know what to barrow from the neighbors",
+      ingredientNameLabel: "Ingredient name",
+      ingredientNameExample: "example: cheder cheese",
+      ingredientAmountLabel: "Required amount",
+      ingredientAmountExample: "example: 250",
+      ingredientAddButton: "Add ingredient",
 
-      prepStepsTitle: 'Preperation steps',
-      prepStepsSubTitle: 'Clear instructions now = easy cooking later!',
-      prepSteps_StepLabel: 'Step instructions',
-      prepSteps_StepExample: 'example: chop the onion into small cubes',
-      prepStepsAddButton: 'Add step',
+      prepStepsTitle: "Preperation steps",
+      prepStepsSubTitle: "Clear instructions now = easy cooking later!",
+      prepSteps_StepLabel: "Step instructions",
+      prepSteps_StepExample: "example: chop the onion into small cubes",
+      prepStepsAddButton: "Add step",
 
       categoriesTitle: `Recipe's category`,
-      categoriesSubTitle: 'So we can easily find the recipe later',
+      categoriesSubTitle: "So we can easily find the recipe later",
 
-      recipeImageTitle: 'Pick image',
-      recipeImageSubTitle: 'A good photo always gives the munchies',
+      recipeImageTitle: "Pick image",
+      recipeImageSubTitle: "A good photo always gives the munchies",
 
-      saveButton: 'Save recipe',
-      loaderText: 'Working on saving your new recipe!',
-      imageUploadingText: 'uploading your image to the could',
+      saveButton: "Save recipe",
+      loaderText: "Working on saving your new recipe!",
+      imageUploadingText: "uploading your image to the could",
+    },
+    errorHandling: {
+      somethingWentWrong: "Oops, Something went wrong",
+      noInternetTitle: "No Internet Connection",
+      noInternetDescription: "Oops, looks like you're out of internet!",
+      noInternetButtonLabel: "Internet is back, let's go",
     },
   },
 };
@@ -199,9 +211,9 @@ export const translations: TranslationsUnion = {
 // get the device's language
 export const findLng = () => {
   let lng = EN;
-  if (Platform.OS === 'android') {
+  if (Platform.OS === "android") {
     lng = NativeModules.I18nManager.localeIdentifier;
-  } else if (Platform.OS === 'ios') {
+  } else if (Platform.OS === "ios") {
     lng = NativeModules.SettingsManager.settings.AppleLanguages[0];
   }
   if (lng && isHebrew(lng)) {
@@ -222,5 +234,5 @@ const isHebrew = (lng: string) => {
 const i18n = new I18n(translations);
 i18n.locale = findLng(); // determine language of app
 i18n.enableFallback = true;
-I18nManager.forceRTL(i18n.locale === 'he'); // to make sure elements are aligned to the right and not only the texts are in Hebrew
+I18nManager.forceRTL(i18n.locale === "he"); // to make sure elements are aligned to the right and not only the texts are in Hebrew
 export default i18n;

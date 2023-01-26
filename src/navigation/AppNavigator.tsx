@@ -15,6 +15,7 @@ import LoginScreen from "../features/auth/Login";
 import RecipeScreen from "../features/recipe/RecipePage";
 import LaunchScreen from "../features/auth/LaunchScreen";
 import NoInternetScreen from "../features/errorHandling/NoInternetScreen";
+import ErrorPopUp from "../features/errorHandling/ErrorPopup";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -58,6 +59,7 @@ const AppNavigator = () => {
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
+          <ErrorPopUp />
         </NavigationContainer>
       </SafeAreaView>
     </>

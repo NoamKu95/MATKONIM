@@ -1,13 +1,13 @@
 import { batch } from "react-redux";
-import { MyServerError } from "../../../models/errors";
+import { MyErrorData } from "../../../models/errors";
 import { AppThunk } from "../../../store/store";
-import { setErrorMessage, setIsError } from "./errorHandlingSlice";
+import { setError, setIsError } from "./errorHandlingSlice";
 
 export const generalErrorHandler =
-  (axiosError: MyServerError): AppThunk =>
+  (axiosError: MyErrorData): AppThunk =>
   (dispatch, getState) => {
     batch(() => {
-      dispatch(setErrorMessage(axiosError.response?.data?.errorToClient));
+      dispatch(setError(axiosError));
       dispatch(setIsError(true));
     });
   };

@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MyErrorTypes } from "../../../models/errors";
+import { MyErrorData, MyErrorTypes } from "../../../models/errors";
 
 export interface ErrorHandlingState {
   isError: boolean;
   errorType: MyErrorTypes;
   errorMessage: string;
+  errorIcon: any;
 }
 
 const initialState: ErrorHandlingState = {
   isError: false,
-  errorType: MyErrorTypes.ERROR_CASE_1,
+  errorType: MyErrorTypes.NO_INTERNET,
   errorMessage: "",
+  errorIcon: "",
 };
 
 export const ErrorHandlingSlice = createSlice({
@@ -20,20 +22,14 @@ export const ErrorHandlingSlice = createSlice({
     setIsError: (state, action: PayloadAction<boolean>) => {
       state.isError = action.payload;
     },
-    setErrorType: (state, action: PayloadAction<MyErrorTypes>) => {
-      state.errorType = action.payload;
-    },
-    setErrorMessage: (state, action: PayloadAction<string | undefined>) => {
-      if (action.payload) {
-        state.errorMessage = action.payload;
-      } else {
-        state.errorMessage = "";
-      }
+    setError: (state, action: PayloadAction<MyErrorData>) => {
+      state.errorType = action.payload.type;
+      state.errorIcon = action.payload.icon;
+      state.errorMessage = action.payload.message;
     },
   },
 });
 
-export const { setIsError, setErrorType, setErrorMessage } =
-  ErrorHandlingSlice.actions;
+export const { setIsError, setError } = ErrorHandlingSlice.actions;
 
 export default ErrorHandlingSlice.reducer;

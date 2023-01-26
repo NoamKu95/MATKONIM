@@ -104,6 +104,14 @@ export const translations: TranslationsUnion = {
       noInternetDescription:
         "אופס, נראה שיש מחסור באינטרנט במכשיר שלך כרגע!\n\nיש לבדוק את הנושא ולוודא שחיבור האינטרנט חזר ויציב לפני שממשיכים חזרה לאפליקציה, אחרת היא עלולה לא לפעול כמו שצריך",
       noInternetButtonLabel: "סידרתי את הנושא, אפשר לחזור",
+      validationErrors: {
+        emptyEmail: "יש להזין כתובת אימייל",
+        invalidEmail: "מייל אינו תקין",
+        emptyPassword: "יש להזין סיסמה",
+        weakPassword: "סיסמה אינה חזקה מספיק",
+        emptyUsername: "יש להזין שם או כינוי",
+        shortUsername: "כינוי קצר מדי",
+      },
     },
   },
   en: {
@@ -204,6 +212,14 @@ export const translations: TranslationsUnion = {
       noInternetTitle: "No Internet Connection",
       noInternetDescription: "Oops, looks like you're out of internet!",
       noInternetButtonLabel: "Internet is back, let's go",
+      validationErrors: {
+        emptyEmail: "An email adress is required",
+        invalidEmail: "Invalid email adress",
+        emptyPassword: "A password is required",
+        weakPassword: "Password isn't strong enough",
+        emptyUsername: "A nickname is required",
+        shortUsername: "Nickname is too short",
+      },
     },
   },
 };

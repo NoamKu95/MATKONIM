@@ -1,6 +1,6 @@
 // Outer imports:
-import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import React, { useEffect } from "react";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Modal from "react-native-modal";
 
 // Inner imports:
@@ -17,6 +17,8 @@ import RegularText from "../../components/text/RegularText";
 import { MyErrorTypes } from "../../models/errors";
 import { icons } from "../../constants/icons";
 import i18n from "../../translations/i18n";
+import BoldText from "../../components/text/BoldText";
+import CloseIcon from "../../assets/icons/svg/closeIcon";
 
 const ErrorPopUp = () => {
   const dispatch = useAppDispatch();
@@ -25,33 +27,21 @@ const ErrorPopUp = () => {
   const errorMessage = useAppSelector(
     (state) => state.errorHandling.errorMessage
   );
+  const errorIcon = useAppSelector((state) => state.errorHandling.errorIcon);
 
   const modalContentByErrorType: { [key in MyErrorTypes]: JSX.Element } = {
-    [MyErrorTypes.ERROR_CASE_1]: (
+    [MyErrorTypes.NO_INTERNET]: (
       <View style={styles.modalContent}>
-        {icons.abstract_shape1}
-        <RegularText size={15} color={colors.black} textAlign="center">
+        <Image
+          source={errorIcon ? errorIcon : icons.sad_face}
+          resizeMethod="resize"
+          style={{ height: 70, width: 70 }}
+        />
+        <BoldText size={15} color={colors.black} textAlign="center">
           {errorMessage
             ? errorMessage
             : i18n.t("errorHandling.somethingWentWrong")}
-        </RegularText>
-        {/* <BigButton
-          buttonLabel={i18n.t("errorHandling.toHomePage")}
-          onPress={() => {
-            dispatch(setIsError(false));
-            resetTo("Tabs");
-          }}
-        /> */}
-      </View>
-    ),
-    [MyErrorTypes.ERROR_CASE_2]: (
-      <View style={styles.modalContent}>
-        {icons.abstract_shape1}
-        <RegularText size={15} color={colors.black} textAlign="center">
-          {errorMessage
-            ? errorMessage
-            : i18n.t("errorHandling.somethingWentWrong")}
-        </RegularText>
+        </BoldText>
         {/* <BigButton
           buttonLabel={i18n.t("errorHandling.toCustomerService")}
           onPress={() => {
@@ -77,7 +67,7 @@ const ErrorPopUp = () => {
           onPress={() => dispatch(setIsError(false))}
           hitSlop={5}
         >
-          {icons.close_circle}
+          <CloseIcon />
         </Pressable>
         {modalContentByErrorType[errorType]}
       </View>
@@ -102,7 +92,13 @@ const styles = StyleSheet.create({
   modalContent: {
     alignItems: "center",
     height: "90%",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
-  closeButton: { width: "8%" },
+  closeButton: {
+    width: "8%",
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
 });

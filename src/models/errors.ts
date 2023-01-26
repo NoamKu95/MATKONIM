@@ -2,16 +2,11 @@ import { AxiosError } from "axios";
 
 // list of all the possible errors that we want to handle
 export enum MyErrorTypes {
-  ERROR_CASE_1 = 1,
-  ERROR_CASE_2,
+  NO_INTERNET = 1,
 }
 
-// the general structure of the ServerErrorData
-export interface MyServerErrorData {
+export interface MyErrorData {
   type: MyErrorTypes;
-  errorToClient?: string;
-  errorToDeveloper?: string;
-  status?: number;
+  icon: any; // ask Chen
+  message: string;
 }
-
-export interface MyServerError extends AxiosError<MyErrorTypes> {}

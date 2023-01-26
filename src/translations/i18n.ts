@@ -99,6 +99,7 @@ export const translations: TranslationsUnion = {
       imageUploadingText: "מעלים את התמונה שלך לענן - ",
     },
     errorHandling: {
+      somethingWentWrong: "אופס, נראה שמשהו השתבש",
       noInternetTitle: "אין אינטרנט",
       noInternetDescription:
         "אופס, נראה שיש מחסור באינטרנט במכשיר שלך כרגע!\n\nיש לבדוק את הנושא ולוודא שחיבור האינטרנט חזר ויציב לפני שממשיכים חזרה לאפליקציה, אחרת היא עלולה לא לפעול כמו שצריך",
@@ -199,6 +200,7 @@ export const translations: TranslationsUnion = {
       imageUploadingText: "uploading your image to the could",
     },
     errorHandling: {
+      somethingWentWrong: "Oops, Something went wrong",
       noInternetTitle: "No Internet Connection",
       noInternetDescription: "Oops, looks like you're out of internet!",
       noInternetButtonLabel: "Internet is back, let's go",

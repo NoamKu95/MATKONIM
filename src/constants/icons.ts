@@ -18,4 +18,5 @@ export const icons = {
   no_results: require("../assets/icons/no_results.png"),
   abstract_shape1: require("../assets/icons/abstract-shape.png"),
   no_internet: require("../assets/icons/no-signal.png"),
+  sad_face: require("../assets/icons/sad-face.png"),
 };

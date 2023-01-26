@@ -94,6 +94,7 @@ export interface Translation {
     imageUploadingText: string;
   };
   errorHandling: {
+    somethingWentWrong: string;
     noInternetTitle: string;
     noInternetDescription: string;
     noInternetButtonLabel: string;

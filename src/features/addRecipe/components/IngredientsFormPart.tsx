@@ -26,6 +26,7 @@ import { addIngredientToNewRecipe } from "../state/addRecipeActions";
 import { validateNumber, validateText } from "../../../utils/validators";
 import { InputsValidationErrors } from "../../../models/errors";
 import { defineErrorMessage } from "../../errorHandling/state/errorHandlingActions";
+import { HE } from "../../../models/translations";
 
 interface BasicInfoProps {
   renderTitlesOfSection: (
@@ -163,17 +164,22 @@ const IngredientsFormPart = ({
           keyboardType={"number-pad"}
         />
         <View style={styles.ingsChipsContainer}>
-          {measurements.map((item) => {
+          {measurements.map((item: { name: string; englishName: string }) => {
             return (
               <Chip
-                key={item}
-                text={item}
-                isSelected={item === ingredientMeasure}
+                key={item.name}
+                text={i18n.locale === HE ? item.name : item.englishName}
+                isSelected={
+                  item.name === ingredientMeasure ||
+                  item.englishName === ingredientMeasure
+                }
+                onPress={() => {
+                  updateMeasureChip(
+                    i18n.locale === HE ? item.name : item.englishName
+                  );
+                }}
                 bgColor={colors.lightGreen}
                 selectedBgColor={colors.darkLime}
-                onPress={() => {
-                  updateMeasureChip(item);
-                }}
               />
             );
           })}

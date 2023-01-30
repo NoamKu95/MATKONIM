@@ -40,7 +40,6 @@ import ImageSelectionFormPart from "./components/ImageSelectionFormPart";
 
 const AddRecipe = () => {
   const dispatch = useAppDispatch();
-
   const isLoading = useAppSelector((state) => state.addRecipe.isLoading);
   const loadingText = useAppSelector((state) => state.addRecipe.loadingText);
   const recipeName = useAppSelector((state) => state.addRecipe.recipeName);
@@ -75,7 +74,7 @@ const AddRecipe = () => {
 
   // ======================LISTENERS============================
 
-  // Disable / Enable form save button
+  // Disable / Enable form's save button
   useEffect(() => {
     if (validateFormInputs()) {
       setIsSaveAvailable(true);
@@ -93,7 +92,20 @@ const AddRecipe = () => {
     imageUri,
   ]);
 
-  // =====================HELPER FUNCTIONS=======================
+  const validateFormInputs = (): boolean => {
+    return (
+      recipeName !== null &&
+      recipeNameWarning === null &&
+      recipeDuration !== null &&
+      recipeDurationWarning === null &&
+      recipeServings !== null &&
+      recipeServingsWarning === null &&
+      recipeCategory !== null &&
+      ingredients.length > 0 &&
+      recipePreparationSteps.length > 0 &&
+      imageUri !== null
+    );
+  };
 
   const renderTitlesOfSection = (title: string, subtitle: string | null) => {
     return (
@@ -152,21 +164,6 @@ const AddRecipe = () => {
     } else {
       dispatch(updateStateValueWithNumber(parseInt(newTxt, 10), textInputType));
     }
-  };
-
-  const validateFormInputs = (): boolean => {
-    return (
-      recipeName !== null &&
-      recipeNameWarning === null &&
-      recipeDuration !== null &&
-      recipeDurationWarning === null &&
-      recipeServings !== null &&
-      recipeServingsWarning === null &&
-      recipeCategory !== null &&
-      ingredients.length > 0 &&
-      recipePreparationSteps.length > 0 &&
-      imageUri !== null
-    );
   };
 
   const validateSections = () => {

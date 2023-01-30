@@ -1,55 +1,58 @@
 // Outer imports:
-import React from 'react';
-import {View, StyleSheet, Pressable, Dimensions, Image} from 'react-native';
-import i18n from '../../translations/i18n';
+import React from "react";
+import { View, StyleSheet, Pressable, Dimensions, Image } from "react-native";
+import i18n from "../../translations/i18n";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import LogoutIcon from '../../assets/icons/svg/LogoutIcon';
+import { colors } from "../../constants/colors";
+import { icons } from "../../constants/icons";
+import { paddings } from "../../constants/paddings";
+import LogoutIcon from "../../assets/icons/svg/LogoutIcon";
 
 // Redux:
-import {useAppDispatch, useAppSelector} from '../../store/store';
-import {signOutFromFirebase} from '../auth/state/authActions';
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { signOutFromFirebase } from "../auth/state/authActions";
 
 // Components:
-import RegularText from '../../components/text/RegularText';
-import BoldText from '../../components/text/BoldText';
-import {images} from '../../constants/images';
-import {icons} from '../../constants/icons';
+import RegularText from "../../components/text/RegularText";
+import BoldText from "../../components/text/BoldText";
+import { HE } from "../../models/translations";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
-  const userSurname = useAppSelector(state => state.auth.userName);
-
-  const renderSheet = () => {
-    return (
-      <View style={styles.sheetContainer}>
-        {renderHeyUser()}
-        {renderLogout()}
-      </View>
-    );
-  };
+  const userSurname = useAppSelector((state) => state.auth.userName);
 
   const renderHeyUser = () => {
     return (
       <>
         <View style={styles.textsContainer}>
-          <BoldText
-            children={`${i18n.t('profile.heyUser')} ${userSurname ?? ''}`}
-            size={24}
-            color={colors.darkLime}
-            textAlign="left"
-            lineHeight={32}
-          />
+          <View style={styles.heyUser}>
+            <BoldText
+              children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
+              size={24}
+              color={colors.darkLime}
+              textAlign="left"
+              lineHeight={32}
+            />
+          </View>
           <RegularText
-            children={i18n.t('profile.personalText')}
+            children={i18n.t("profile.personalText")}
             size={16}
             color={colors.gray}
             textAlign="left"
-            lineHeight={24}
+            lineHeight={32}
           />
         </View>
       </>
+    );
+  };
+
+  const renderWhiteSheet = () => {
+    return (
+      <View style={styles.sheetContainer}>
+        {renderHeyUser()}
+        {renderLogout()}
+      </View>
     );
   };
 
@@ -60,12 +63,13 @@ const ProfileScreen = () => {
           style={styles.logoutContainer}
           onPress={() => {
             dispatch(signOutFromFirebase);
-          }}>
+          }}
+        >
           <View style={styles.iconWrapper}>
             <LogoutIcon />
           </View>
           <BoldText
-            children={i18n.t('profile.logout')}
+            children={i18n.t("profile.logout")}
             size={14}
             color={colors.lime}
             textAlign="left"
@@ -81,20 +85,22 @@ const ProfileScreen = () => {
         <View style={styles.userDetailsContainer}>
           <Image
             source={icons.abstract_shape1}
-            resizeMethod={'resize'}
+            resizeMethod={"resize"}
             style={styles.userIcon}
           />
-          <View style={{flexDirection: 'column'}}>
-            <BoldText
-              children="נעם קורצר"
-              size={32}
-              color={colors.white}
-              textAlign="right"
-              lineHeight={32}
-            />
+          <View style={{ flexDirection: "column" }}>
+            <View style={styles.userNameText}>
+              <BoldText
+                children="Noam Kurtzer"
+                size={32}
+                color={colors.white}
+                textAlign="right"
+                lineHeight={32}
+              />
+            </View>
             <View style={styles.recipesNumberWrapper}>
               <RegularText
-                children="כמות מתכונים: 24"
+                children="No. of recipes: 24"
                 size={16}
                 color={colors.white}
                 textAlign="left"
@@ -109,7 +115,7 @@ const ProfileScreen = () => {
   return (
     <View style={styles.mainContainer}>
       {renderHeader()}
-      {renderSheet()}
+      {renderWhiteSheet()}
     </View>
   );
 };
@@ -122,20 +128,25 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lime,
   },
   sheetContainer: {
-    marginTop: '20%',
-    height: Dimensions.get('window').height,
+    marginTop: "20%",
+    height: Dimensions.get("window").height,
     backgroundColor: colors.white,
-    borderTopRightRadius: 50,
-    borderTopLeftRadius: 50,
-    paddingHorizontal: 12,
-    paddingVertical: 32,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
+    paddingHorizontal: paddings._16px,
+    paddingVertical: paddings._32px,
+  },
+
+  heyUser: {
+    paddingBottom: paddings._8px,
   },
 
   // USER DETAILS
   userDetailsContainer: {
-    paddingTop: 32,
-    paddingHorizontal: 12,
-    flexDirection: 'row',
+    paddingTop: paddings._32px,
+    paddingHorizontal: paddings._24px,
+    justifyContent: "space-around",
+    flexDirection: "row",
   },
   userIcon: {
     width: 80,
@@ -143,29 +154,32 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 2,
     borderColor: colors.transparentBlack9,
-    backgroundColor: colors.transparentBlack1,
-    marginHorizontal: 32,
+    backgroundColor: colors.blue,
+  },
+  userNameText: {
+    paddingBottom: paddings._8px,
   },
   recipesNumberWrapper: {
-    padding: 8,
-    alignSelf: 'center',
+    alignSelf: "center",
+    alignContent: "center",
     borderWidth: 1.5,
     borderColor: colors.white,
-    alignContent: 'center',
-    marginVertical: 8,
+    padding: paddings._8px,
   },
 
   textsContainer: {
-    paddingVertical: 12,
+    paddingVertical: paddings._12px,
   },
 
   // LOGOUT
   logoutContainer: {
-    paddingVertical: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingVertical: paddings._8px,
+    flexDirection: "row",
+    alignItems: "center",
   },
   iconWrapper: {
-    paddingRight: 8,
+    paddingRight: i18n.locale === HE ? paddings._8px : 0,
+    paddingLeft: i18n.locale === HE ? 0 : paddings._8px,
+    transform: i18n.locale === HE ? [{ scaleX: 1 }] : [{ scaleX: -1 }],
   },
 });

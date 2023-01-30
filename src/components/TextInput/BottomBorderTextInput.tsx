@@ -1,8 +1,16 @@
-import React from 'react';
-import {KeyboardTypeOptions, StyleSheet, TextInput, View} from 'react-native';
-import {colors} from '../../constants/colors';
-import BoldText from '../text/BoldText';
-import RegularText from '../text/RegularText';
+// Outer imports:
+import React from "react";
+import { KeyboardTypeOptions, StyleSheet, TextInput, View } from "react-native";
+import i18n from "../../translations/i18n";
+
+// Inner imports:
+import { colors } from "../../constants/colors";
+import { HE } from "../../models/translations";
+
+// Components:
+import BoldText from "../text/BoldText";
+import RegularText from "../text/RegularText";
+import { paddings } from "../../constants/paddings";
 
 interface Props {
   textValue: string;
@@ -38,25 +46,25 @@ const BottomBorderTextInput = ({
   labelTextSize = 14,
 
   warningText,
-  warningTextColor = 'red',
+  warningTextColor = "red",
   warningTextSize = 12,
 
   backgroundColor = colors.white,
   onChangeText,
-  keyboardType = 'default',
+  keyboardType = "default",
 }: Props) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={[
           styles.textInput,
-          {color: textColor, backgroundColor, fontSize: textSize},
+          { color: textColor, backgroundColor, fontSize: textSize },
         ]}
         onChangeText={onChangeText}
         value={textValue}
         placeholder={placeholderText}
         placeholderTextColor={placeholderTextColor}
-        textAlign="right"
+        textAlign={i18n.locale === HE ? "right" : "left"}
         maxLength={25}
         keyboardType={keyboardType}
       />
@@ -87,19 +95,19 @@ export default BottomBorderTextInput;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: paddings._8px,
+    paddingHorizontal: paddings._8px,
   },
   textInput: {
     borderRadius: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: paddings._12px,
     borderBottomWidth: 1,
     borderBottomColor: colors.darkLime,
   },
   labelWarningContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: paddings._12px,
+    paddingVertical: paddings._8px,
   },
 });

@@ -186,7 +186,7 @@ export const translations: TranslationsUnion = {
         "Have a new recipe to add? Exciting!\nIn no time it will forever be one click away",
       infoTitle: "Basic info",
       recipeNameLabel: "Recipe name",
-      recipeNameExample: "example: rose pasta with champignon mushrooms",
+      recipeNameExample: "example: rose pasta with mushrooms",
       recipeDurationLabel: "Duration",
       recipeDurationExample: "example: 1.5 hours",
       recipeServingsLabel: "Servings",

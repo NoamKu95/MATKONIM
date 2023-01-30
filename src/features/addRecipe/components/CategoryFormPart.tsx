@@ -1,21 +1,23 @@
 // Outer imports:
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Chip from "../../../components/Chip";
-
-// Types:
-import { colors } from "../../../constants/colors";
-import { CATEGORIES } from "../../../models/category";
-import { useAppDispatch, useAppSelector } from "../../../store/store";
 import i18n from "../../../translations/i18n";
+
+// Inner imports:
+import { colors } from "../../../constants/colors";
+import { paddings } from "../../../constants/paddings";
+import { CATEGORIES } from "../../../models/category";
+import { HE } from "../../../models/translations";
+
+// Redux:
+import { useAppDispatch, useAppSelector } from "../../../store/store";
 import {
   setRecipeCategory,
   setRecipeCategoryWarning,
 } from "../state/addRecipeSlice";
 
-// Redux:
-
 // Components:
+import Chip from "../../../components/Chip";
 
 interface BasicInfoProps {
   renderTitlesOfSection: (
@@ -59,13 +61,13 @@ const CategoryFormPart = ({
           return (
             <Chip
               key={category.id}
-              text={category.name}
+              text={i18n.locale === HE ? category.name : category.englishName}
               isSelected={category.name === recipeCategory}
-              bgColor={colors.lightGreen}
-              selectedBgColor={colors.darkLime}
               onPress={() => {
                 updateCategoryChip(category.name);
               }}
+              bgColor={colors.lightGreen}
+              selectedBgColor={colors.darkLime}
             />
           );
         })}
@@ -79,13 +81,13 @@ export default CategoryFormPart;
 
 const styles = StyleSheet.create({
   categorySectionContainer: {
-    paddingVertical: 12,
+    paddingVertical: paddings._12px,
   },
   chipsContainer: {
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
+    paddingHorizontal: paddings._8px,
+    paddingVertical: paddings._8px,
   },
 });

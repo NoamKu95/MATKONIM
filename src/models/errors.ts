@@ -10,3 +10,10 @@ export interface MyErrorData {
   icon: any; // ask Chen
   message: string;
 }
+
+export enum InputsValidationErrors {
+  NULL_VALUE = 1,
+  TOO_SHORT,
+  SPECIAL_CHARACTERS,
+  BELOW_ZERO,
+}

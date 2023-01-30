@@ -5,44 +5,40 @@ import {
   setUserEmail,
   setUserPassword,
 } from "../features/auth/state/authSlice";
+import { InputsValidationErrors } from "../models/errors";
 import { AppThunk } from "../store/store";
 import i18n from "../translations/i18n";
 
-export enum ValidationError {
-  nullValue,
-  tooShort,
-  specialCharacters,
-  belowZero,
-}
-
-export const validateText = (text: string | null): ValidationError | null => {
+export const validateText = (
+  text: string | null
+): InputsValidationErrors | null => {
   if (text !== null) {
     if (text.length < 2) {
-      return ValidationError.tooShort;
+      return InputsValidationErrors.TOO_SHORT;
     } else {
       let reg = /^[^!-\/:-@\[-`{-~]+$/;
       if (!reg.test(text.trim())) {
-        return ValidationError.specialCharacters;
+        return InputsValidationErrors.SPECIAL_CHARACTERS;
       } else {
         return null;
       }
     }
   } else {
-    return ValidationError.nullValue;
+    return InputsValidationErrors.NULL_VALUE;
   }
 };
 
 export const validateNumber = (
   value: number | null
-): ValidationError | null => {
+): InputsValidationErrors | null => {
   if (value !== null) {
     if (value <= 0) {
-      return ValidationError.belowZero;
+      return InputsValidationErrors.BELOW_ZERO;
     } else {
       return null;
     }
   } else {
-    return ValidationError.nullValue;
+    return InputsValidationErrors.NULL_VALUE;
   }
 };
 

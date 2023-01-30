@@ -105,6 +105,15 @@ export interface Translation {
       weakPassword: string;
       emptyUsername: string;
       shortUsername: string;
+      mandatoryField: string;
+      specialCharactersIssue: string;
+      contentTooShort: string;
+      numBelowZero: string;
+      PrepStepSectionError: string;
+      IngredientsSectionError: string;
+      CategorySectionError: string;
+      ImageSelectionSectionError: string;
+      formIncomplete: string;
     };
   };
 }

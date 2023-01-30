@@ -13,10 +13,13 @@ import i18n from "../../translations/i18n";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getRecipesForHomepage } from "./state/homeActions";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
+import { setCategoryFilter } from "../search/state/searchSlice";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 import { navigate } from "../../navigation/RootNavigation";
+import { HE } from "../../models/translations";
 
 // Types:
 import { Recipe } from "../../models/recipe";
@@ -28,11 +31,9 @@ import Callout from "../../components/Callout";
 import Searchbar from "../search/components/Searchbar";
 import RecipeCard from "../../components/Cards/RecipeCard";
 import CategoryCard from "../../components/Cards/CategoryCard";
-import { setCategoryFilter } from "../search/state/searchSlice";
 
 const Home = () => {
   const dispatch = useAppDispatch();
-
   const recipes = useAppSelector((state) => state.home.recipes);
 
   useEffect(() => {
@@ -40,14 +41,14 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // MARK: Render Functions
-
   const renderSearchBar = () => {
     return (
-      <Searchbar
-        placeHolderText={i18n.t("homepage.search")}
-        searchHandler={() => {}} // TODO: add handler
-      />
+      <View style={styles.searchbarContainer}>
+        <Searchbar
+          placeHolderText={i18n.t("homepage.search")}
+          searchHandler={() => {}} // TODO: add handler
+        />
+      </View>
     );
   };
 
@@ -159,21 +160,9 @@ const styles = StyleSheet.create({
   },
 
   // SEARCHBAR
-  searchBarContainer: {
-    flexDirection: "row-reverse",
-    height: 50,
-    marginHorizontal: 8,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-    backgroundColor: colors.lightGray,
-  },
-  searchBarImage: {
-    width: 20,
-    height: 20,
-    alignSelf: "center",
-  },
-  searchBarText: {
-    marginLeft: 24,
+  searchbarContainer: {
+    paddingTop: paddings._24px,
+    paddingHorizontal: paddings._8px,
   },
 
   //CALLOUT
@@ -184,26 +173,16 @@ const styles = StyleSheet.create({
 
   // RECENTLY ADDED
   recentlyAddedTitleContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 16,
-  },
-  recentlyAddedTitle: {
-    marginHorizontal: 8,
-    color: "black",
+    paddingHorizontal: paddings._8px,
+    paddingVertical: paddings._16px,
   },
 
   // CATEGORIES
-  categoriesHeaderContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    marginHorizontal: 8,
-  },
   categoriesWrapper: {
-    paddingHorizontal: 8,
+    paddingHorizontal: paddings._8px,
   },
   categoriesTitle: {
-    paddingVertical: 16,
+    paddingVertical: paddings._16px,
   },
   categoryRowContainer: {
     flexDirection: "row",

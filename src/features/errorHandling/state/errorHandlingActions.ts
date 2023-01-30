@@ -17,13 +17,13 @@ export { setIsError };
 export const defineErrorMessage = (error: InputsValidationErrors): string => {
   switch (error) {
     case InputsValidationErrors.NULL_VALUE:
-      return i18n.t("errorHandling.mandatoryField");
+      return i18n.t("errorHandling.validationErrors.mandatoryField");
     case InputsValidationErrors.SPECIAL_CHARACTERS:
-      return i18n.t("errorHandling.specialCharactersIssue");
+      return i18n.t("errorHandling.validationErrors.specialCharactersIssue");
     case InputsValidationErrors.TOO_SHORT:
-      return i18n.t("errorHandling.contentTooShort");
+      return i18n.t("errorHandling.validationErrors.contentTooShort");
     case InputsValidationErrors.BELOW_ZERO:
-      return i18n.t("errorHandling.numBelowZero");
+      return i18n.t("errorHandling.validationErrors.numBelowZero");
     default:
       return "";
   }

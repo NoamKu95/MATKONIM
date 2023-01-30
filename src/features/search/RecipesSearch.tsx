@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+// Outer imports:
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,40 +7,44 @@ import {
   FlatList,
   Image,
   Keyboard,
-} from 'react-native';
-import i18n from '../../translations/i18n';
+} from "react-native";
+import i18n from "../../translations/i18n";
 
 // Redux:
-import {useAppDispatch, useAppSelector} from '../../store/store';
-import {getRecipesFromServer, updateSearchResults} from './state/searchActions';
-import {setCategoryFilter} from './state/searchSlice';
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import {
+  getRecipesFromServer,
+  updateSearchResults,
+} from "./state/searchActions";
+import { setCategoryFilter } from "./state/searchSlice";
 
 // Types:
-import {Recipe} from '../../models/recipe';
+import { Recipe } from "../../models/recipe";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import {icons} from '../../constants/icons';
-import {navigate} from '../../navigation/RootNavigation';
-import {CATEGORIES} from '../../models/category';
+import { colors } from "../../constants/colors";
+import { icons } from "../../constants/icons";
+import { paddings } from "../../constants/paddings";
+import { navigate } from "../../navigation/RootNavigation";
+import { CATEGORIES } from "../../models/category";
+import { HE } from "../../models/translations";
 
 // Components:
-import RegularText from '../../components/text/RegularText';
-import BoldText from '../../components/text/BoldText';
-import Loader from '../../components/Loader';
-import Chip from '../../components/Chip';
-import Searchbar from './components/Searchbar';
-import SearchCard from '../../components/Cards/SearchCard';
-
-const isHebrew = i18n.locale === 'he' || i18n.locale === 'he-IL' ? true : false;
+import RegularText from "../../components/text/RegularText";
+import BoldText from "../../components/text/BoldText";
+import Loader from "../../components/Loader";
+import Chip from "../../components/Chip";
+import Searchbar from "./components/Searchbar";
+import SearchCard from "../../components/Cards/SearchCard";
+import { setSelectedRecipe } from "../recipe/state/recipeSlice";
 
 const RecipesSearch = () => {
   const dispatch = useAppDispatch();
-
-  const isFetching = useAppSelector(state => state.home.isFetching);
-  const searchCategory = useAppSelector(state => state.search.searchCategory);
-  const filteredRecipes = useAppSelector(state => state.search.filteredRecipes);
-
+  const isFetching = useAppSelector((state) => state.home.isFetching);
+  const searchCategory = useAppSelector((state) => state.search.searchCategory);
+  const filteredRecipes = useAppSelector(
+    (state) => state.search.filteredRecipes
+  );
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -50,16 +55,16 @@ const RecipesSearch = () => {
   // Keyboard listener
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true); // or some other action
-      },
+      }
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false); // or some other action
-      },
+      }
     );
 
     return () => {
@@ -85,21 +90,21 @@ const RecipesSearch = () => {
     filterRecipesBasedOnSearch();
   };
 
-  // MARK: Render Functions
-
-  const renderTitles = () => {
+  const renderHeader = () => {
     return (
       <View style={styles.titlesWrapper}>
-        <BoldText
-          children={i18n.t('search.mainTitle')}
-          size={24}
-          color={colors.black}
-          textAlign="center"
-          lineHeight={24}
-        />
+        <View style={styles.mainTitle}>
+          <BoldText
+            children={i18n.t("search.mainTitle")}
+            size={24}
+            color={colors.black}
+            textAlign="center"
+            lineHeight={24}
+          />
+        </View>
         <RegularText
-          children={i18n.t('search.secondaryTitle')}
-          size={12}
+          children={i18n.t("search.secondaryTitle")}
+          size={14}
           color={colors.darkLime}
           textAlign="center"
         />
@@ -109,28 +114,30 @@ const RecipesSearch = () => {
 
   const renderSearchbar = () => {
     return (
-      <Searchbar
-        placeHolderText={i18n.t('search.searchPlaceholder')}
-        searchHandler={filterRecipesBasedOnSearch}
-      />
+      <View style={styles.searchbarContainer}>
+        <Searchbar
+          placeHolderText={i18n.t("search.searchPlaceholder")}
+          searchHandler={filterRecipesBasedOnSearch}
+        />
+      </View>
     );
   };
 
   const renderCategories = () => {
     return (
       <View style={styles.chipsContainer}>
-        {CATEGORIES.map(category => {
+        {CATEGORIES.map((category) => {
           return (
             <Chip
               key={category.id}
-              text={category.name}
+              text={i18n.locale === HE ? category.name : category.englishName}
               textSize={12}
-              isSelected={category.name === searchCategory}
-              bgColor={colors.lightGreen}
-              selectedBgColor={colors.darkLime}
               onPress={() => {
                 updateCategoryChip(category.name);
               }}
+              isSelected={category.name === searchCategory}
+              bgColor={colors.lightGreen}
+              selectedBgColor={colors.darkLime}
             />
           );
         })}
@@ -153,32 +160,34 @@ const RecipesSearch = () => {
     );
   };
 
-  const renderRecipeCard = ({item}: {item: Recipe}) => {
+  const renderRecipeCard = ({ item }: { item: Recipe }) => {
     return (
       <SearchCard
         recipe={item}
         onPress={() => {
-          // dispatch(setSelectedRecipe(item));
-          navigate('Recipe');
+          dispatch(setSelectedRecipe(item));
+          navigate("Recipe");
         }}
       />
     );
   };
 
   const renderNoResults = () => {
-    return (
-      <View style={styles.noResultsComntainer}>
+    return isKeyboardVisible ? (
+      <></>
+    ) : (
+      <View style={styles.noResultsContainer}>
         <Image
           source={icons.no_results}
-          resizeMethod={'resize'}
+          resizeMethod={"resize"}
           style={styles.icon}
         />
         <BoldText
-          children={i18n.t('search.noResults')}
-          size={22}
+          children={i18n.t("search.noResults")}
+          size={20}
           color={colors.darkLime}
           textAlign="center"
-          lineHeight={36}
+          lineHeight={32}
         />
       </View>
     );
@@ -186,17 +195,15 @@ const RecipesSearch = () => {
 
   return (
     <View style={styles.safeArea}>
-      {renderTitles()}
+      {renderHeader()}
       {renderSearchbar()}
       {renderCategories()}
       {isFetching ? (
-        <Loader text={i18n.t('search.loadingText')} />
+        <Loader text={i18n.t("search.loadingText")} />
       ) : filteredRecipes.length !== 0 ? (
         renderSearchResultsList()
-      ) : !isKeyboardVisible ? (
-        renderNoResults()
       ) : (
-        <></>
+        renderNoResults()
       )}
     </View>
   );
@@ -212,47 +219,53 @@ const styles = StyleSheet.create({
 
   // HEADER
   titlesWrapper: {
-    alignItems: 'center',
-    paddingTop: 24,
+    alignItems: "center",
+    paddingTop: paddings._24px,
+    paddingBottom: paddings._16px,
   },
-  mainTitle: {},
-  secondaryTitle: {
-    paddingTop: 8,
+  mainTitle: {
+    paddingBottom: paddings._8px,
+  },
+
+  // SEARCHBAR
+  searchbarContainer: {
+    paddingHorizontal: paddings._8px,
   },
 
   // CATEGORIES
   chipsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    paddingHorizontal: 8,
-    paddingVertical: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: paddings._8px,
+    paddingVertical: paddings._8px,
   },
 
   // RECIPES LIST
   listWrapper: {
-    paddingVertical: 24,
-    paddingBottom: isHebrew
-      ? Dimensions.get('window').height * 0.32
-      : Dimensions.get('window').height * 0.35,
+    paddingVertical: paddings._24px,
+    paddingBottom:
+      i18n.locale === HE
+        ? Dimensions.get("window").height * 0.32
+        : Dimensions.get("window").height * 0.35,
   },
   list: {
-    height: '81.5%',
+    height: "81.5%",
   },
 
   // NO RESULTS
-  noResultsComntainer: {
-    position: 'absolute',
-    top: '55%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  noResultsContainer: {
+    position: "absolute",
+    top: "55%",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "space-between",
     height: 150,
   },
   icon: {
     width: 70,
     height: 70,
     opacity: 0.7,
-    transform: [{scaleX: -1}],
+    transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
   },
 });

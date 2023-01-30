@@ -13,6 +13,7 @@ import { colors } from "../../constants/colors";
 
 // Types:
 import { Category } from "../../models/category";
+import { HE } from "../../models/translations";
 import i18n from "../../translations/i18n";
 import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
@@ -39,9 +40,7 @@ const CategoryCard: React.FC<Props> = ({
       >
         <View style={styles.textContainer}>
           <ShrinkingBoldText
-            children={
-              i18n.locale === "he" ? category.name : category.englishName
-            }
+            children={i18n.locale === HE ? category.name : category.englishName}
             color={colors.white}
             size={20}
             textAlign="center"

@@ -1,5 +1,5 @@
 export interface TranslationsUnion {
-  fallback: 'he';
+  fallback: "he";
   he: Translation;
   en: Translation;
 }
@@ -93,14 +93,37 @@ export interface Translation {
     loaderText: string;
     imageUploadingText: string;
   };
+  errorHandling: {
+    somethingWentWrong: string;
+    noInternetTitle: string;
+    noInternetDescription: string;
+    noInternetButtonLabel: string;
+    validationErrors: {
+      emptyEmail: string;
+      invalidEmail: string;
+      emptyPassword: string;
+      weakPassword: string;
+      emptyUsername: string;
+      shortUsername: string;
+      mandatoryField: string;
+      specialCharactersIssue: string;
+      contentTooShort: string;
+      numBelowZero: string;
+      PrepStepSectionError: string;
+      IngredientsSectionError: string;
+      CategorySectionError: string;
+      ImageSelectionSectionError: string;
+      formIncomplete: string;
+    };
+  };
 }
 
 // representations of Hebrew language in different devices
 export enum Hebrew {
-  WI = 'wi',
-  IW = 'iw',
-  HE = 'he',
+  WI = "wi",
+  IW = "iw",
+  HE = "he",
 }
 
-export const HE = 'he';
-export const EN = 'en';
+export const HE = "he";
+export const EN = "en";

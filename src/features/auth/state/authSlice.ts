@@ -2,6 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface AuthState {
   userName: string | null;
+  userEmail: string | null;
+  userPassword: string | null;
   isShowLogin: boolean;
   isShowRegistration: boolean;
   emailWarning: string | null;
@@ -13,6 +15,8 @@ export interface AuthState {
 
 const initialState: AuthState = {
   userName: null,
+  userEmail: null,
+  userPassword: null,
   isShowLogin: false,
   isShowRegistration: false,
   emailWarning: null,
@@ -35,6 +39,12 @@ export const AuthSlice = createSlice({
     },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
+    },
+    setUserEmail: (state, action: PayloadAction<string>) => {
+      state.userEmail = action.payload;
+    },
+    setUserPassword: (state, action: PayloadAction<string>) => {
+      state.userPassword = action.payload;
     },
     resetAuthState: state => {
       state.isLoading = false;
@@ -80,8 +90,9 @@ export const AuthSlice = createSlice({
 
 export const {
   setIsLoading,
-  setUser,
   setUserName,
+  setUserEmail,
+  setUserPassword,
   resetAuthState,
   setShowLogin,
   setShowRegister,

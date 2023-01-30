@@ -1,28 +1,28 @@
-import {resetTo} from '../../../navigation/RootNavigation';
-import {AppThunk} from '../../../store/store';
+import { navigate, resetTo } from "../../../navigation/RootNavigation";
+import { AppThunk } from "../../../store/store";
 import {
   resetAuthState,
-  setEmailWarning,
   setIsLoading,
   setLanguage,
-  setNameWarning,
-  setPasswordWarning,
   setShowLogin,
   setShowRegister,
   setUserName,
-} from './authSlice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import i18n from '../../../translations/i18n';
-import auth from '../../../../firebase';
+} from "./authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "../../../translations/i18n";
+import auth from "../../../../firebase";
+import NetInfo from "@react-native-community/netinfo";
+import { HE } from "../../../models/translations";
+import { validateEmail, validatePassword } from "../../../utils/validators";
 
 const asyncStorageKeys = {
-  IS_DELETE_REQUESTED: 'isDeleteUserRequested',
-  DID_SEE_ONBOARDING: 'onboardingSeen',
+  IS_DELETE_REQUESTED: "isDeleteUserRequested",
+  DID_SEE_ONBOARDING: "onboardingSeen",
 };
 
 const authSections = {
-  LOGIN: 'login',
-  REGISTer: 'registration',
+  LOGIN: "login",
+  REGISTer: "registration",
 };
 
 // =============== APP INIT =============== //
@@ -31,17 +31,18 @@ export const appInit =
   (onAppIsReady: (state: boolean) => void): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     try {
-      auth.onAuthStateChanged(async user => {
+      registerNetworkEventListener();
+      auth.onAuthStateChanged(async (user) => {
         try {
           const shouldNavigateToOnboarding = await !checkUserSeenOnboarding();
           if (shouldNavigateToOnboarding) {
-            resetTo('Onboarding');
+            resetTo("Onboarding");
             onAppIsReady(true);
           } else if (user && user.email) {
-            resetTo('Tabs');
+            resetTo("Tabs");
             onAppIsReady(true);
           } else if (!user) {
-            resetTo('Login');
+            resetTo("Login");
             onAppIsReady(true);
           }
         } catch (error) {
@@ -57,7 +58,7 @@ export const appInit =
 
 const checkUserSeenOnboarding = async () => {
   const didSee = await AsyncStorage.getItem(
-    asyncStorageKeys.DID_SEE_ONBOARDING,
+    asyncStorageKeys.DID_SEE_ONBOARDING
   );
   if (didSee == null) {
     return false;
@@ -67,27 +68,34 @@ const checkUserSeenOnboarding = async () => {
 };
 
 export const saveOnboardingFinished = () => {
-  AsyncStorage.setItem(asyncStorageKeys.DID_SEE_ONBOARDING, 'true');
+  AsyncStorage.setItem(asyncStorageKeys.DID_SEE_ONBOARDING, "true");
 };
 
-export const detectLanguage = (): AppThunk => dispatch => {
+export const detectLanguage = (): AppThunk => (dispatch) => {
   try {
-    const currentLanguage = i18n.locale;
-    if (currentLanguage === 'he' || currentLanguage === 'he-IL') {
-      dispatch(setLanguage('he'));
+    if (i18n.locale === HE) {
+      dispatch(setLanguage("he"));
     } else {
-      dispatch(setLanguage('en'));
+      dispatch(setLanguage("en"));
     }
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }
 };
 
+const registerNetworkEventListener = () => {
+  NetInfo.addEventListener((listener) => {
+    if (!listener.isConnected) {
+      navigate("NoInternet");
+    }
+  });
+};
+
 // =============== LOGIN =============== //
 
 export const updateAuthSection =
   (newSection: string): AppThunk =>
-  async dispatch => {
+  async (dispatch) => {
     if (newSection === authSections.LOGIN) {
       dispatch(setShowLogin(true));
     } else {
@@ -97,7 +105,7 @@ export const updateAuthSection =
 
 export const logUserIn =
   (email: string | null, password: string | null): AppThunk =>
-  dispatch => {
+  (dispatch) => {
     if (validateEmail(email) && validatePassword(password)) {
       try {
         dispatch(setIsLoading(true));
@@ -115,9 +123,9 @@ export const registerUser =
   (
     email: string | null,
     password: string | null,
-    surname: string | null,
+    surname: string | null
   ): AppThunk =>
-  async dispatch => {
+  async (dispatch) => {
     if (
       validateEmail(email) &&
       validatePassword(password) &&
@@ -127,9 +135,9 @@ export const registerUser =
         dispatch(setIsLoading(true));
         await auth.createUserWithEmailAndPassword(
           email!.trim(),
-          password!.trim(),
+          password!.trim()
         );
-        await auth.currentUser?.updateProfile({displayName: surname});
+        await auth.currentUser?.updateProfile({ displayName: surname });
         dispatch(setUserName(surname));
       } catch (error) {
         dispatch(setIsLoading(false));
@@ -137,63 +145,6 @@ export const registerUser =
       }
     } else {
       return;
-    }
-  };
-
-export const validateEmail =
-  (email: string | null): AppThunk =>
-  async dispatch => {
-    if (email) {
-      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (!reg.test(email.trim())) {
-        dispatch(setEmailWarning('מייל אינו תקין'));
-        return false;
-      } else {
-        dispatch(setEmailWarning(null));
-        return true;
-      }
-    } else {
-      dispatch(setEmailWarning('יש להזין כתובת אימייל'));
-      return false;
-    }
-  };
-
-export const validatePassword =
-  (password: string | null): AppThunk =>
-  async dispatch => {
-    if (password) {
-      var reg =
-        /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
-      if (!reg.test(password.trim())) {
-        dispatch(setPasswordWarning('סיסמה אינה חזקה מספיק'));
-        return false;
-      } else {
-        dispatch(setPasswordWarning(null));
-        return true;
-      }
-    } else {
-      dispatch(setPasswordWarning('יש להזין סיסמה'));
-      return false;
-    }
-  };
-
-export const validateName =
-  (name: string | null): AppThunk =>
-  async dispatch => {
-    if (name) {
-      if (name.length === 0) {
-        dispatch(setNameWarning('יש להזין שם או כינוי'));
-        return false;
-      } else if (name.length < 2) {
-        dispatch(setNameWarning('כינוי קצר מדי'));
-        return false;
-      } else {
-        dispatch(setNameWarning(null));
-        return true;
-      }
-    } else {
-      dispatch(setNameWarning('יש להזין שם או כינוי'));
-      return false;
     }
   };
 
@@ -212,12 +163,12 @@ export const signInToFirebase = async (email: string, password: string) => {
 };
 
 // TODO: why AppThunk fucks this up ???
-export const signOutFromFirebase = (): AppThunk => async dispatch => {
+export const signOutFromFirebase = (): AppThunk => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
     await auth.signOut();
     dispatch(resetAuthState());
-    resetTo('Login');
+    resetTo("Login");
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }

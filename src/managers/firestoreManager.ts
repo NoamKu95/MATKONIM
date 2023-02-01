@@ -4,7 +4,7 @@ import storage from "@react-native-firebase/storage";
 import i18n from "../translations/i18n";
 
 // Redux:
-import { AppThunk, useAppDispatch, useAppSelector } from "../store/store";
+import store, { AppThunk } from "../store/store";
 import {
   setImageTransferred,
   setIsUploadingImage,
@@ -65,29 +65,36 @@ export const readFileFromCollection = async (
 // MARK: Recipes Functions:
 export const fetchRecipesOfUser = async (
   collectionPath: string
-): Promise<Recipe[]> => {
+): Promise<Recipe[] | undefined> => {
   try {
-    const ref = firestore().collection(collectionPath);
     let items: Recipe[] = [];
-    await ref.onSnapshot((querySnapshot) => {
-      querySnapshot.docs.map(async (doc) => {
-        let r: Recipe = {
-          id: doc.id,
-          name: doc.data().name,
-          image: "",
-          duration: doc.data().duration,
-          serving: doc.data().serving,
-          category: doc.data().category,
-          ingredients: doc.data().ingredients,
-          preparationSteps: doc.data().preparationSteps,
-        };
-        let url = await downloadImageFromStorage(doc.data().image);
-        r.image = url;
-        items.push(r);
-      });
-      return items;
-    });
+    const ref = firestore().collection<Recipe>(collectionPath);
+    const documents = (await ref.get()).docs;
+    await Promise.all(
+      documents.map(async (doc) => {
+        let data = doc.data();
+        try {
+          let r: Recipe = {
+            id: doc.id,
+            name: data.name,
+            image: "",
+            duration: data.duration,
+            serving: data.serving,
+            category: data.category,
+            ingredients: data.ingredients,
+            preparationSteps: data.preparationSteps,
+          };
+          let url = await downloadImageFromStorage(data.image);
+          r.image = url;
+          items.push(r);
+        } catch (err) {
+          console.log(err); // TODO: Error Handling
+        }
+      })
+    );
+    return items;
   } catch (error) {
+    // firebaseErrorHandler(error)
     console.log(error); // TODO: Error Handling
     return [];
   }

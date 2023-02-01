@@ -1,18 +1,21 @@
 // Outer imports:
-import React from 'react';
+import React from "react";
 import {
-  TouchableOpacity,
-  Text,
   StyleSheet,
   View,
   GestureResponderEvent,
   Pressable,
-} from 'react-native';
-import {colors} from '../constants/colors';
-import BoldText from './text/BoldText';
-import RegularText from './text/RegularText';
+} from "react-native";
+import i18n from "../translations/i18n";
 
 // Inner imports:
+import { colors } from "../constants/colors";
+import { paddings } from "../constants/paddings";
+import { HE } from "../models/translations";
+
+// Components:
+import BoldText from "./text/BoldText";
+import RegularText from "./text/RegularText";
 
 interface Props {
   mainText: string;
@@ -21,7 +24,7 @@ interface Props {
 }
 
 const Callout = (props: Props) => {
-  const {mainText, buttonText, onPress} = props;
+  const { mainText, buttonText, onPress } = props;
 
   return (
     <View style={styles.mainContainer}>
@@ -30,7 +33,7 @@ const Callout = (props: Props) => {
           children={mainText}
           size={14}
           color={colors.darkLime}
-          textAlign="left"
+          textAlign={i18n.locale === HE ? "right" : "left"}
           lineHeight={24}
         />
 
@@ -39,7 +42,7 @@ const Callout = (props: Props) => {
             children={buttonText}
             size={16}
             color={colors.gray}
-            textAlign="left"
+            textAlign={i18n.locale === HE ? "right" : "left"}
             lineHeight={18}
           />
         </Pressable>
@@ -54,17 +57,17 @@ const styles = StyleSheet.create({
   mainContainer: {
     borderRadius: 12,
     backgroundColor: colors.lightGreen,
-    paddingHorizontal: 24,
-    paddingVertical: 4,
+    paddingHorizontal: paddings._24px,
+    paddingVertical: paddings._4px,
   },
   textContainer: {
     flex: 1,
-    paddingVertical: 16,
+    paddingVertical: paddings._16px,
   },
   text: {
     color: colors.gray,
   },
   buttonContainer: {
-    paddingTop: 12,
+    paddingTop: paddings._12px,
   },
 });

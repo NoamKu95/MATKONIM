@@ -1,20 +1,22 @@
 // Outer imports:
-import React from 'react';
+import React from "react";
 import {
   View,
   StyleSheet,
   Image,
   GestureResponderEvent,
   Pressable,
-} from 'react-native';
+} from "react-native";
+import i18n from "../../../translations/i18n";
 
 // Inner imports:
-import {colors} from '../../../constants/colors';
-import {icons} from '../../../constants/icons';
-import {images} from '../../../constants/images';
+import { colors } from "../../../constants/colors";
+import { icons } from "../../../constants/icons";
+import { images } from "../../../constants/images";
+import { HE } from "../../../models/translations";
 
 // Types:
-import {Recipe} from '../../../models/recipe';
+import { Recipe } from "../../../models/recipe";
 
 interface Props {
   recipe: Recipe | null;
@@ -23,11 +25,13 @@ interface Props {
 
 const HEADER_HEIGHT = 250;
 
-const RecipeMainImage = ({recipe, onBackPress}: Props) => {
+const RecipeMainImage = ({ recipe, onBackPress }: Props) => {
   return (
     <View>
       <Image
-        source={images.loginBackground} // TODO: fix image
+        source={{
+          uri: recipe?.image,
+        }}
         resizeMode="cover"
         style={styles.recipeHeaderImage}
       />
@@ -44,17 +48,18 @@ export default RecipeMainImage;
 const styles = StyleSheet.create({
   recipeHeaderImage: {
     height: HEADER_HEIGHT,
-    width: '100%',
+    width: "100%",
   },
   backBtn: {
-    position: 'absolute',
-    top: '5%',
-    right: '5%',
-    alignItems: 'center',
-    justifyContent: 'center',
-
     height: 35,
     width: 35,
+
+    position: "absolute",
+    top: "5%",
+    // right: i18n.locale === HE ? "5%" : "0%",
+    left: i18n.locale === HE ? "5%" : undefined,
+    alignItems: "center",
+    justifyContent: "center",
 
     borderWidth: 1,
     borderColor: colors.lightGray,
@@ -65,5 +70,6 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     tintColor: colors.lightGray,
+    transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
   },
 });

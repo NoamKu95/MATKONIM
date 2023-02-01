@@ -2,17 +2,15 @@
 import React from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   GestureResponderEvent,
   Pressable,
 } from "react-native";
-import { colors } from "../../constants/colors";
-import { images } from "../../constants/images";
-import { paddings } from "../../constants/paddings";
 
 // Inner imports:
+import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 
 // Types:
 import { Recipe } from "../../models/recipe";

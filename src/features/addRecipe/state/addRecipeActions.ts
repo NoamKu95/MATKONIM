@@ -2,14 +2,14 @@ import {
   addFileToCollection,
   downloadImageFromStorage,
   uploadImageToStorage,
-} from '../../../managers/firestoreManager';
-import {Ingredient} from '../../../models/ingredient';
-import {Recipe} from '../../../models/recipe';
-import {AddRecipeTextInputTypes, collections} from '../../../models/types';
-import {AppThunk} from '../../../store/store';
-import {validateNumber, validateText} from '../../../utils/validators';
-import {getCurrentUserID} from '../../auth/state/authActions';
-import {launchImageLibrary} from 'react-native-image-picker';
+} from "../../../managers/firestoreManager";
+import { Ingredient } from "../../../models/ingredient";
+import { Recipe } from "../../../models/recipe";
+import { AddRecipeTextInputTypes, collections } from "../../../models/types";
+import { AppThunk } from "../../../store/store";
+import { validateNumber, validateText } from "../../../utils/validators";
+import { getCurrentUserID } from "../../auth/state/authActions";
+import { launchImageLibrary } from "react-native-image-picker";
 import {
   addIngredient,
   addRecipePreparationStep,
@@ -22,11 +22,12 @@ import {
   setRecipeImageUri,
   setRecipeImageWarning,
   setRecipeName,
+  setRecipePreparationStepsWarning,
   setRecipePrepStep,
   setRecipeServings,
-} from './addRecipeSlice';
+} from "./addRecipeSlice";
 
-export const clearForm = (): AppThunk => async dispatch => {
+export const clearForm = (): AppThunk => async (dispatch) => {
   dispatch(resetAddRecipeState());
 };
 
@@ -42,7 +43,7 @@ export const validateInputText =
         if (!reg.test(input.trim())) {
           // TODO: display "text contains illegal characters" alert
         } else {
-          console.log('hi 2');
+          console.log("hi 2");
 
           updateStateValueWithString(input, textInputType);
         }
@@ -69,7 +70,7 @@ export const validateInputNumber =
 // MARK: State Updates
 export const updateStateValueWithString =
   (newText: string, textInputType: string): AppThunk =>
-  async dispatch => {
+  async (dispatch) => {
     switch (textInputType) {
       case AddRecipeTextInputTypes.RECIPE_NAME:
         dispatch(setRecipeName(newText));
@@ -85,6 +86,8 @@ export const updateStateValueWithString =
         break;
       case AddRecipeTextInputTypes.ADD_PREPARATION_STEP:
         dispatch(addRecipePreparationStep(newText));
+        dispatch(setRecipePrepStep(null));
+        dispatch(setRecipePreparationStepsWarning(null));
         break;
       default:
         break;
@@ -93,7 +96,7 @@ export const updateStateValueWithString =
 
 export const updateStateValueWithNumber =
   (newVal: number, textInputType: string): AppThunk =>
-  async dispatch => {
+  async (dispatch) => {
     switch (textInputType) {
       case AddRecipeTextInputTypes.RECIPE_SERVINGS:
         dispatch(setRecipeServings(newVal));
@@ -108,18 +111,18 @@ export const addIngredientToNewRecipe =
   (
     name: string | null,
     amount: number | null,
-    measure: string | null,
+    measure: string | null
   ): AppThunk =>
-  async dispatch => {
+  async (dispatch) => {
     if (
       validateText(name) === null &&
       validateText(measure) === null &&
       validateNumber(amount) === null
     ) {
       let newIngredient: Ingredient = {
-        name: name ?? '',
+        name: name ?? "",
         amount: amount ?? 0,
-        measure: measure ?? '',
+        measure: measure ?? "",
       };
       dispatch(addIngredient(newIngredient));
       dispatch(setIngredientName(null));
@@ -135,11 +138,11 @@ export const saveRecipe = (): AppThunk => async (dispatch, getState) => {
   const stateRecipe = getState().addRecipe;
 
   let recipe: Recipe = {
-    name: stateRecipe.recipeName ?? '',
-    image: '',
-    duration: stateRecipe.recipeDuration ?? '',
+    name: stateRecipe.recipeName ?? "",
+    image: "",
+    duration: stateRecipe.recipeDuration ?? "",
     serving: stateRecipe.recipeServings ?? 0,
-    category: stateRecipe.recipeCategory ?? '',
+    category: stateRecipe.recipeCategory ?? "",
     ingredients: stateRecipe.recipeIngredients,
     preparationSteps: stateRecipe.recipePreparationSteps,
   };
@@ -147,14 +150,14 @@ export const saveRecipe = (): AppThunk => async (dispatch, getState) => {
   dispatch(
     uploadImageToStorage(() => {
       dispatch(addRecipeToUserCollection(recipe));
-    }),
+    })
   );
 };
 
 export const addRecipeToUserCollection =
   (recipe: Recipe): AppThunk =>
   async (dispatch, getState) => {
-    recipe.image = getState().addRecipe.recipeImageURL ?? '';
+    recipe.image = getState().addRecipe.recipeImageURL ?? "";
     try {
       addFileToCollection(
         `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
@@ -163,7 +166,7 @@ export const addRecipeToUserCollection =
           dispatch(resetAddRecipeState());
           dispatch(setIsLoading(false));
           downloadImageFromStorage(recipe.image);
-        },
+        }
       );
     } catch (error) {
       console.log(error); // TODO: Error Handling
@@ -171,15 +174,15 @@ export const addRecipeToUserCollection =
     }
   };
 
-export const openDeviceGallery = (): AppThunk => async dispatch => {
-  launchImageLibrary({mediaType: 'photo'}, response => {
+export const openDeviceGallery = (): AppThunk => async (dispatch) => {
+  launchImageLibrary({ mediaType: "photo" }, (response) => {
     if (response.didCancel) {
-      dispatch(setRecipeImageWarning('חובה לבחור תמונה למתכון'));
+      dispatch(setRecipeImageWarning("חובה לבחור תמונה למתכון"));
     } else if (response.errorMessage !== undefined) {
-      dispatch(setRecipeImageWarning('אופס, משהו השתבש בפתיחת הגלריה'));
-      console.log('picker error: ', response.errorMessage);
+      dispatch(setRecipeImageWarning("אופס, משהו השתבש בפתיחת הגלריה"));
+      console.log("picker error: ", response.errorMessage);
     } else if (response.assets) {
-      const source = response.assets[0].uri ?? '';
+      const source = response.assets[0].uri ?? "";
       dispatch(setRecipeImageUri(source));
       dispatch(setRecipeImageWarning(null));
     }

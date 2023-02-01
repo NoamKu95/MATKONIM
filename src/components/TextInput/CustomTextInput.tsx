@@ -92,7 +92,7 @@ const CustomTextInput = ({
           children={warningText}
           size={warningTextSize}
           color={isShowWarning ? warningTextColor : colors.transparent}
-          textAlign="left"
+          textAlign={i18n.locale === "he" ? "left" : "right"}
           lineHeight={16}
         />
       </View>

@@ -1,12 +1,17 @@
+// Outer imports:
 import React, { useEffect } from "react";
 import { TextInput, StyleSheet, View, Pressable, Image } from "react-native";
-import { updateSearchPhrase } from "../state/searchActions";
-import { useAppDispatch, useAppSelector } from "../../../store/store";
 import i18n from "../../../translations/i18n";
+
+// Inner imports:
 import { icons } from "../../../constants/icons";
 import { colors } from "../../../constants/colors";
+import { paddings } from "../../../constants/paddings";
+import { HE } from "../../../models/translations";
 
-const isHebrew = i18n.locale === "he" || i18n.locale === "he-IL" ? true : false;
+// Redux:
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { updateSearchPhrase } from "../state/searchActions";
 
 interface Props {
   placeHolderText: string;
@@ -37,13 +42,12 @@ const Searchbar = ({ placeHolderText, searchHandler }: Props) => {
     <View style={styles.searchBarContainer}>
       <TextInput
         style={styles.textInput}
-        onChangeText={(newTxt) => changeSearchText(newTxt)}
+        onChangeText={(newTxt) => dispatch(updateSearchPhrase(newTxt))}
         value={searchText}
         placeholder={placeHolderText}
         placeholderTextColor={colors.transparentBlack5}
         maxLength={25}
       />
-
       <Pressable
         onPress={() => searchHandler(searchText ?? "")}
         style={styles.iconWrapper}
@@ -62,25 +66,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 12,
     backgroundColor: colors.lightGray,
-    marginTop: 24,
   },
   textInput: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    paddingHorizontal: paddings._24px,
+    paddingVertical: paddings._8px,
 
-    textAlign: isHebrew ? "right" : "left",
+    textAlign: i18n.locale === HE ? "right" : "left",
     color: colors.black,
     width: "100%",
-  },
-  searchBarImage: {
-    width: 20,
-    height: 20,
-    alignSelf: "center",
   },
   iconWrapper: {
     position: "absolute",
     right: "5%",
-    top: "25%",
+    top: "30%",
   },
   icon: {
     height: 20,

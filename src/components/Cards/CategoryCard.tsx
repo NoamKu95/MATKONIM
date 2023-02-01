@@ -15,6 +15,7 @@ import { colors } from "../../constants/colors";
 import { Category } from "../../models/category";
 import { HE } from "../../models/translations";
 import { useAppSelector } from "../../store/store";
+import i18n from "../../translations/i18n";
 import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
 interface Props {
@@ -41,7 +42,7 @@ const CategoryCard: React.FC<Props> = ({
       >
         <View style={styles.textContainer}>
           <ShrinkingBoldText
-            children={language === HE ? category.name : category.name_english}
+            children={i18n.locale === HE ? category.name : category.englishName}
             color={colors.white}
             size={20}
             textAlign="center"

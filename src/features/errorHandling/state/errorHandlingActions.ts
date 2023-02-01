@@ -1,6 +1,7 @@
 import { batch } from "react-redux";
-import { MyErrorData } from "../../../models/errors";
+import { InputsValidationErrors, MyErrorData } from "../../../models/errors";
 import { AppThunk } from "../../../store/store";
+import i18n from "../../../translations/i18n";
 import { setError, setIsError } from "./errorHandlingSlice";
 
 export const generalErrorHandler =
@@ -12,3 +13,18 @@ export const generalErrorHandler =
     });
   };
 export { setIsError };
+
+export const defineErrorMessage = (error: InputsValidationErrors): string => {
+  switch (error) {
+    case InputsValidationErrors.NULL_VALUE:
+      return i18n.t("errorHandling.validationErrors.mandatoryField");
+    case InputsValidationErrors.SPECIAL_CHARACTERS:
+      return i18n.t("errorHandling.validationErrors.specialCharactersIssue");
+    case InputsValidationErrors.TOO_SHORT:
+      return i18n.t("errorHandling.validationErrors.contentTooShort");
+    case InputsValidationErrors.BELOW_ZERO:
+      return i18n.t("errorHandling.validationErrors.numBelowZero");
+    default:
+      return "";
+  }
+};

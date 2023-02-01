@@ -1,20 +1,28 @@
 // Outer imports:
 import React, { useEffect } from "react";
-import { View, StyleSheet, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import i18n from "../../translations/i18n";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getRecipesForHomepage } from "./state/homeActions";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
+import { setCategoryFilter } from "../search/state/searchSlice";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 import { navigate } from "../../navigation/RootNavigation";
 
 // Types:
 import { Recipe } from "../../models/recipe";
-import { CATEGORIES } from "../../models/category";
+import { CategoryCards } from "../../models/category";
 
 // Components:
 import BoldText from "../../components/text/BoldText";
@@ -22,8 +30,6 @@ import Callout from "../../components/Callout";
 import Searchbar from "../search/components/Searchbar";
 import RecipeCard from "../../components/Cards/RecipeCard";
 import CategoryCard from "../../components/Cards/CategoryCard";
-import { setCategoryFilter } from "../search/state/searchSlice";
-import { paddings } from "../../constants/paddings";
 import { HE } from "../../models/translations";
 
 const Home = () => {
@@ -110,9 +116,9 @@ const Home = () => {
             letterSpacing={1}
           />
         </View>
-        {CATEGORIES.map((row) => {
+        {CategoryCards.map((row) => {
           return (
-            <View style={styles.categoryRowContainer} key={row[0].id}>
+            <View style={styles.categoryRowContainer}>
               {row.map((category) => {
                 return (
                   <CategoryCard
@@ -163,18 +169,30 @@ const styles = StyleSheet.create({
 
   // TITLES
   titleContainer: {
-    paddingHorizontal: paddings._12px,
     paddingVertical: paddings._16px,
+    paddingTop: paddings._24px,
+    paddingHorizontal: paddings._8px,
   },
 
   //CALLOUT
   calloutWrapper: {
     padding: paddings._12px,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+  },
+
+  // RECENTLY ADDED
+  recentlyAddedTitleContainer: {
+    paddingHorizontal: paddings._8px,
+    paddingVertical: paddings._16px,
   },
 
   // CATEGORIES
   categoriesWrapper: {
-    paddingHorizontal: paddings._12px,
+    paddingHorizontal: paddings._8px,
+  },
+  categoriesTitle: {
+    paddingVertical: paddings._16px,
   },
   categoryRowContainer: {
     flexDirection: "row",

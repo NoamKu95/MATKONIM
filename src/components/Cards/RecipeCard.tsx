@@ -2,7 +2,6 @@
 import React from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   GestureResponderEvent,
@@ -11,6 +10,7 @@ import {
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 
 // Types:
 import { Recipe } from "../../models/recipe";
@@ -33,7 +33,12 @@ const RecipeCard: React.FC<Props> = ({
   return (
     <Pressable
       onPress={onPress}
-      style={isLastIndex ? styles.containerLastIndex : styles.container}
+      style={[
+        styles.container,
+        isLastIndex
+          ? { marginLeft: 4, marginRight: 12 }
+          : { marginLeft: 12, marginRight: 4 },
+      ]}
     >
       <Image
         source={{
@@ -62,16 +67,8 @@ const styles = StyleSheet.create({
   container: {
     height: 250,
     width: 250,
-    marginRight: 4,
     borderRadius: 12,
-    marginLeft: 8,
-  },
-  containerLastIndex: {
-    height: 250,
-    width: 250,
-    marginLeft: 4,
-    borderRadius: 12,
-    marginRight: 8,
+    backgroundColor: "lightgreen",
   },
   backgroundImage: {
     width: 250,
@@ -82,8 +79,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     left: 15,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
+    paddingHorizontal: paddings._16px,
+    paddingVertical: paddings._4px,
     backgroundColor: colors.transparentGray,
     borderRadius: 12,
   },

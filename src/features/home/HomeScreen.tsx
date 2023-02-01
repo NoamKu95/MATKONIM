@@ -30,9 +30,11 @@ import Callout from "../../components/Callout";
 import Searchbar from "../search/components/Searchbar";
 import RecipeCard from "../../components/Cards/RecipeCard";
 import CategoryCard from "../../components/Cards/CategoryCard";
+import { HE } from "../../models/translations";
 
 const Home = () => {
   const dispatch = useAppDispatch();
+  const language = useAppSelector((state) => state.auth.language);
   const recipes = useAppSelector((state) => state.home.recipes);
 
   useEffect(() => {
@@ -68,12 +70,12 @@ const Home = () => {
   const renderRecentlyAddedSection = () => {
     return (
       <>
-        <View style={styles.recentlyAddedTitleContainer}>
+        <View style={styles.titleContainer}>
           <BoldText
             children={i18n.t("homepage.recentlyAddedTitle")}
             color={colors.black}
             size={16}
-            textAlign="left"
+            textAlign={language === HE ? "left" : "right"}
             letterSpacing={1}
           />
         </View>
@@ -91,6 +93,7 @@ const Home = () => {
   const renderRecipeCard = (row: { item: Recipe; index: number }) => {
     return (
       <RecipeCard
+        key={row.item.id}
         recipe={row.item}
         isLastIndex={row.index === recipes.length - 1}
         onPress={() => {
@@ -104,12 +107,12 @@ const Home = () => {
   const renderCategoriesSquares = () => {
     return (
       <View style={styles.categoriesWrapper}>
-        <View style={styles.categoriesTitle}>
+        <View style={styles.titleContainer}>
           <BoldText
             children={i18n.t("homepage.categories")}
             color={colors.black}
             size={16}
-            textAlign="left"
+            textAlign={language === HE ? "left" : "right"}
             letterSpacing={1}
           />
         </View>
@@ -119,6 +122,7 @@ const Home = () => {
               {row.map((category) => {
                 return (
                   <CategoryCard
+                    key={category.id}
                     category={category}
                     image={category.image}
                     width={category.isWideImage ? "49%" : "24%"}
@@ -154,18 +158,25 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: colors.white,
     flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: "100%",
+    height: "100%",
   },
 
   // SEARCHBAR
   searchbarContainer: {
+    paddingHorizontal: paddings._12px,
+  },
+
+  // TITLES
+  titleContainer: {
+    paddingVertical: paddings._16px,
     paddingTop: paddings._24px,
     paddingHorizontal: paddings._8px,
   },
 
   //CALLOUT
   calloutWrapper: {
+    padding: paddings._12px,
     paddingVertical: 12,
     paddingHorizontal: 8,
   },

@@ -20,7 +20,23 @@ interface Props {
 
 const Searchbar = ({ placeHolderText, searchHandler }: Props) => {
   const dispatch = useAppDispatch();
+
   const searchText = useAppSelector((state) => state.search.searchPhrase);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchText != null) {
+        searchHandler(searchText);
+      }
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchText]);
+
+  const changeSearchText = (newTxt: string) => {
+    dispatch(updateSearchPhrase(newTxt));
+  };
 
   return (
     <View style={styles.searchBarContainer}>
@@ -46,6 +62,7 @@ export default Searchbar;
 
 const styles = StyleSheet.create({
   searchBarContainer: {
+    flexDirection: "row",
     height: 50,
     borderRadius: 12,
     backgroundColor: colors.lightGray,

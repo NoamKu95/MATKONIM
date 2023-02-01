@@ -1,10 +1,12 @@
 // Outer imports:
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, View, FlatList, ViewToken } from "react-native";
-import { colors } from "../../constants/colors";
-import PreparationStepCard from "../Cards/PreparationStepCard";
 
 // Inner imports:
+import { colors } from "../../constants/colors";
+
+// Components:
+import PreparationStepCard from "../Cards/PreparationStepCard";
 
 interface Props {
   preparationSteps: string[];
@@ -13,20 +15,20 @@ interface Props {
 const PrepStepsCarousel = ({ preparationSteps }: Props) => {
   const [currentStepIndex, setCurrentstepIndex] = useState(0);
 
-  const viewabilityConfig = {
-    waitForInteraction: true,
-    viewAreaCoveragePercentThreshold: 50,
-  };
+  // const viewabilityConfig = {
+  //   waitForInteraction: true,
+  //   viewAreaCoveragePercentThreshold: 50,
+  // };
 
-  const handleViewableItemsChanged = useCallback(
-    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
-      let newVisibleIndex = info.viewableItems[0].index ?? 0;
-      if (currentStepIndex !== newVisibleIndex) {
-        setCurrentstepIndex(newVisibleIndex);
-      }
-    },
-    []
-  );
+  // const handleViewableItemsChanged = useCallback(
+  //   (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
+  //     let newVisibleIndex = info.viewableItems[0].index ?? 0;
+  //     if (currentStepIndex !== newVisibleIndex) {
+  //       setCurrentstepIndex(newVisibleIndex);
+  //     }
+  //   },
+  //   []
+  // );
 
   const renderStepCard = (row: { item: string; index: number }) => {
     return (
@@ -47,8 +49,9 @@ const PrepStepsCarousel = ({ preparationSteps }: Props) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item: string) => `${item}`}
         renderItem={renderStepCard}
-        viewabilityConfig={viewabilityConfig}
-        onViewableItemsChanged={handleViewableItemsChanged}
+        inverted
+        // viewabilityConfig={viewabilityConfig}
+        // onViewableItemsChanged={handleViewableItemsChanged}
       />
     </View>
   );

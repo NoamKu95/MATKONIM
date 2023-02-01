@@ -1,6 +1,6 @@
 // Outer imports:
-import React, { useState } from "react";
-import { StyleSheet, FlatList, Dimensions } from "react-native";
+import React from "react";
+import { StyleSheet, FlatList } from "react-native";
 
 // Inner imports:
 import { INGREDIENT_CARD_WIDTH, SCREEN_WIDTH } from "../../constants/sizes";

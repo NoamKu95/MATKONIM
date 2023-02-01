@@ -30,11 +30,7 @@ const IngredientCard: React.FC<Props> = ({
     <View
       style={[
         styles.container,
-        // eslint-disable-next-line react-native/no-inline-styles
-        {
-          marginRight: !isLastIndex ? 10 : 20,
-          marginLeft: !isLastIndex ? 20 : 10,
-        },
+        isLastIndex ? styles.containerForLastIndex : {},
       ]}
     >
       <View style={styles.quantityContainer}>
@@ -78,6 +74,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.lightGray,
 
+    marginRight: 10,
+    marginLeft: 20,
+
     shadowColor: colors.lightGray2,
     shadowOffset: {
       width: 0,
@@ -88,6 +87,11 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 2,
   },
+  containerForLastIndex: {
+    marginRight: 20,
+    marginLeft: 10,
+  },
+
   measurementContainer: {
     position: "absolute",
     top: 8,

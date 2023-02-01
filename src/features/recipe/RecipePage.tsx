@@ -1,24 +1,27 @@
 // Outer imports:
-import React from 'react';
-import {View, StyleSheet, ScrollView, Dimensions} from 'react-native';
-import i18n from '../../translations/i18n';
+import React from "react";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import i18n from "../../translations/i18n";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import {pop} from '../../navigation/RootNavigation';
-import {useAppSelector} from '../../store/store';
+import { colors } from "../../constants/colors";
+import { pop } from "../../navigation/RootNavigation";
+
+// Redux:
+import { useAppSelector } from "../../store/store";
 
 // Components:
-import BoldText from '../../components/text/BoldText';
-import RecipeSummary from './components/RecipeSummary';
-import RecipeMainImage from './components/RecipeMainImage';
-import IngredientsCarousel from '../../components/Carousels/IngredientsCarousel';
-import PrepStepsCarousel from '../../components/Carousels/PrepStepsCarousel';
+import BoldText from "../../components/text/BoldText";
+import RecipeSummary from "./components/RecipeSummary";
+import RecipeMainImage from "./components/RecipeMainImage";
+import IngredientsCarousel from "../../components/Carousels/IngredientsCarousel";
+import PrepStepsCarousel from "../../components/Carousels/PrepStepsCarousel";
+import { paddings } from "../../constants/paddings";
 
 const RecipePage = () => {
-  const selectedRecipe = useAppSelector(state => state.recipe.selectedRecipe);
+  const selectedRecipe = useAppSelector((state) => state.recipe.selectedRecipe);
 
-  const renderRecipePageHeader = () => {
+  const renderHeader = () => {
     return (
       <>
         <RecipeMainImage
@@ -27,11 +30,10 @@ const RecipePage = () => {
             pop();
           }}
         />
-
         <RecipeSummary
-          name={selectedRecipe?.name ?? ''}
+          name={selectedRecipe?.name ?? ""}
           serving={selectedRecipe?.serving ?? 1}
-          duration={selectedRecipe?.duration ?? ''}
+          duration={selectedRecipe?.duration ?? ""}
         />
       </>
     );
@@ -42,7 +44,7 @@ const RecipePage = () => {
       <>
         <View style={styles.ingredientsHeaderContainer}>
           <BoldText
-            children={i18n.t('recipe.ingredients')}
+            children={i18n.t("recipe.ingredients")}
             color={colors.black}
             size={20}
             textAlign="left"
@@ -59,7 +61,7 @@ const RecipePage = () => {
       <>
         <View style={styles.ingredientsHeaderContainer}>
           <BoldText
-            children={i18n.t('recipe.preparationSteps')}
+            children={i18n.t("recipe.preparationSteps")}
             color={colors.black}
             size={20}
             textAlign="left"
@@ -76,7 +78,7 @@ const RecipePage = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {renderRecipePageHeader()}
+        {renderHeader()}
         {renderIngredientsCarousel()}
         {renderPreparationStepsCarousel()}
       </ScrollView>
@@ -88,15 +90,12 @@ export default RecipePage;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    backgroundColor: colors.white,
   },
   ingredientsHeaderContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 30,
-    paddingTop: 24,
-    paddingBottom: 12,
+    paddingHorizontal: paddings._16px,
+    paddingTop: paddings._24px,
+    paddingBottom: paddings._12px,
   },
 });

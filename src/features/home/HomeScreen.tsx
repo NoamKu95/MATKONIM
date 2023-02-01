@@ -19,7 +19,6 @@ import { setCategoryFilter } from "../search/state/searchSlice";
 import { colors } from "../../constants/colors";
 import { paddings } from "../../constants/paddings";
 import { navigate } from "../../navigation/RootNavigation";
-import { HE } from "../../models/translations";
 
 // Types:
 import { Recipe } from "../../models/recipe";

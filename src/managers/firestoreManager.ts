@@ -1,25 +1,27 @@
-import {Platform} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import i18n from '../translations/i18n';
+import { Platform } from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
+import i18n from "../translations/i18n";
 
 // Redux:
-import {AppThunk} from '../store/store';
+import store, { AppThunk } from "../store/store";
 import {
   setImageTransferred,
   setIsUploadingImage,
   setLoadingText,
   setRecipeImageURL,
-} from '../features/addRecipe/state/addRecipeSlice';
+} from "../features/addRecipe/state/addRecipeSlice";
 
 // Types:
-import {Recipe} from '../models/recipe';
+import { Recipe } from "../models/recipe";
+import { useDispatch } from "react-redux";
+import { addRecipe } from "../features/home/state/homeSlice";
 
 // MARK: Generic Functions
 export const addFileToCollection = (
   collection: string,
   file: any,
-  completionHandler: Function,
+  completionHandler: Function
 ) => {
   try {
     firestore()
@@ -37,7 +39,7 @@ export const updateFile = (
   collection: string,
   doc: string,
   field: any,
-  completionHandler: Function,
+  completionHandler: Function
 ) => {
   firestore()
     .collection(collection)
@@ -50,7 +52,7 @@ export const updateFile = (
 
 export const readFileFromCollection = async (
   collection: string,
-  docID: string,
+  docID: string
 ) => {
   try {
     const docRef = await firestore().collection(collection).doc(docID).get();
@@ -62,31 +64,37 @@ export const readFileFromCollection = async (
 
 // MARK: Recipes Functions:
 export const fetchRecipesOfUser = async (
-  collectionPath: string,
-): Promise<Recipe[]> => {
+  collectionPath: string
+): Promise<Recipe[] | undefined> => {
   try {
     let items: Recipe[] = [];
-
-    const ref = firestore().collection(collectionPath);
-    await ref.onSnapshot(querySnapshot => {
-      querySnapshot.forEach(async doc => {
-        let r: Recipe = {
-          id: doc.id,
-          name: doc.data().name,
-          image: '',
-          duration: doc.data().duration,
-          serving: doc.data().serving,
-          category: doc.data().category,
-          ingredients: doc.data().ingredients,
-          preparationSteps: doc.data().preparationSteps,
-        };
-        let url = await downloadImageFromStorage(doc.data().image);
-        r.image = url;
-        items.push(r); // gives me the error
-      });
-    });
+    const ref = firestore().collection<Recipe>(collectionPath);
+    const documents = (await ref.get()).docs;
+    await Promise.all(
+      documents.map(async (doc) => {
+        let data = doc.data();
+        try {
+          let r: Recipe = {
+            id: doc.id,
+            name: data.name,
+            image: "",
+            duration: data.duration,
+            serving: data.serving,
+            category: data.category,
+            ingredients: data.ingredients,
+            preparationSteps: data.preparationSteps,
+          };
+          let url = await downloadImageFromStorage(data.image);
+          r.image = url;
+          items.push(r);
+        } catch (err) {
+          console.log(err); // TODO: Error Handling
+        }
+      })
+    );
     return items;
   } catch (error) {
+    // firebaseErrorHandler(error)
     console.log(error); // TODO: Error Handling
     return [];
   }
@@ -97,22 +105,22 @@ export const uploadImageToStorage =
   async (dispatch, getState) => {
     const uri: string | null = getState().addRecipe.recipeImageUri;
     if (uri) {
-      const filename = uri.substring(uri.lastIndexOf('/') + 1);
+      const filename = uri.substring(uri.lastIndexOf("/") + 1);
       const uploadUri =
-        Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+        Platform.OS === "ios" ? uri.replace("file://", "") : uri;
 
       dispatch(setIsUploadingImage(true));
       dispatch(setImageTransferred(0));
 
       const task = storage().ref(filename).putFile(uploadUri);
-      task.on('state_changed', snapshot => {
+      task.on("state_changed", (snapshot) => {
         dispatch(
           setLoadingText(
-            i18n.t('addRecipe.imageUploadingText') +
+            i18n.t("addRecipe.imageUploadingText") +
               Math.round(snapshot.bytesTransferred / snapshot.totalBytes) *
                 100 +
-              '%',
-          ),
+              "%"
+          )
           // setImageTransferred(
           //   Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000,
           // ),
@@ -122,7 +130,7 @@ export const uploadImageToStorage =
       try {
         let taskResult = await task;
         dispatch(setRecipeImageURL(taskResult.metadata.fullPath));
-        dispatch(setLoadingText(i18n.t('addRecipe.loaderText')));
+        dispatch(setLoadingText(i18n.t("addRecipe.loaderText")));
         completionHandler();
       } catch (e) {
         console.error(e); // TODO: Error Handling
@@ -133,7 +141,7 @@ export const uploadImageToStorage =
   };
 
 export const downloadImageFromStorage = async (
-  imageUrl: string,
+  imageUrl: string
 ): Promise<string> => {
   const url = await storage().ref(imageUrl).getDownloadURL();
   return url;
@@ -142,23 +150,23 @@ export const downloadImageFromStorage = async (
 export const queryFirestore = async (
   collectionPath: string,
   searchText: string | null,
-  category: string | null,
+  category: string | null
 ): Promise<Recipe[]> => {
   const routeRef = firestore().collection(collectionPath);
   const nameFilter = searchText
-    ? routeRef.where('name', '==', searchText)
+    ? routeRef.where("name", "==", searchText)
     : routeRef;
   const categoryFilter = category
-    ? nameFilter.where('category', '==', category)
+    ? nameFilter.where("category", "==", category)
     : nameFilter;
 
   let filteredRecipes: Recipe[] = [];
-  categoryFilter.get().then(snapshot => {
-    snapshot.docs.forEach(async doc => {
+  categoryFilter.get().then((snapshot) => {
+    snapshot.docs.forEach(async (doc) => {
       let r: Recipe = {
         id: doc.id,
         name: doc.data().name,
-        image: '',
+        image: "",
         duration: doc.data().duration,
         serving: doc.data().serving,
         category: doc.data().category,

@@ -14,6 +14,7 @@ import { colors } from "../../constants/colors";
 // Types:
 import { Category } from "../../models/category";
 import { HE } from "../../models/translations";
+import { useAppSelector } from "../../store/store";
 import i18n from "../../translations/i18n";
 import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
@@ -30,6 +31,7 @@ const CategoryCard: React.FC<Props> = ({
   width,
   onPress,
 }: Props) => {
+  const language = useAppSelector((state) => state.auth.language);
   return (
     <Pressable onPress={onPress} style={[styles.container, { width }]}>
       <ImageBackground

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { StyleSheet, FlatList, Dimensions } from "react-native";
 
 // Inner imports:
-import { colors } from "../../constants/colors";
+import { INGREDIENT_CARD_WIDTH, SCREEN_WIDTH } from "../../constants/sizes";
 
 // Types:
 import { Ingredient } from "../../models/ingredient";
@@ -33,7 +33,7 @@ const IngredientsCarousel = ({ ingredients }: Props) => {
       keyExtractor={(item: Ingredient) => `${item.name}`}
       renderItem={renderIngredientCard}
       inverted
-      scrollEnabled={ingredients.length * 150 > Dimensions.get("screen").width}
+      scrollEnabled={ingredients.length * INGREDIENT_CARD_WIDTH > SCREEN_WIDTH}
     />
   );
 };

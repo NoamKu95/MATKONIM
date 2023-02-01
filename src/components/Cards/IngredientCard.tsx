@@ -12,6 +12,10 @@ import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
 // Types:
 import { Ingredient } from "../../models/ingredient";
+import {
+  INGREDIENT_CARD_HEIGHT,
+  INGREDIENT_CARD_WIDTH,
+} from "../../constants/sizes";
 
 interface Props {
   ingredient: Ingredient;
@@ -69,8 +73,8 @@ export default IngredientCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: 130,
-    width: 150,
+    height: INGREDIENT_CARD_HEIGHT,
+    width: INGREDIENT_CARD_WIDTH,
     borderRadius: 16,
     backgroundColor: colors.lightGray,
 

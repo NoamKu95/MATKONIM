@@ -1,16 +1,15 @@
 // Outer imports:
 import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import { colors } from "../../constants/colors";
+import { View, StyleSheet } from "react-native";
 
 // Inner imports:
-
-// Types:
-import BoldText from "../text/BoldText";
-import RegularText from "../text/RegularText";
-import ShrinkingRegularText from "../text/ShrinkingRegularText";
+import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
+import { STEP_CARD_HEIGHT, STEP_CARD_WIDTH } from "../../constants/sizes";
 
 // Components:
+import BoldText from "../text/BoldText";
+import ShrinkingRegularText from "../text/ShrinkingRegularText";
 
 interface Props {
   stepNumber: number;
@@ -28,25 +27,21 @@ const PreparationStepCard: React.FC<Props> = ({
   return (
     <View
       style={[
-        styles.container,
-        // eslint-disable-next-line react-native/no-inline-styles
-        {
-          marginRight: isLastIndex ? 20 : 10,
-          marginLeft: isLastIndex ? 10 : 20,
-          backgroundColor: isCardFocused ? colors.lightLime : colors.lightGray,
-        },
+        styles().container,
+        isLastIndex ? styles().containerForLastIndex : {},
+        isCardFocused ? styles().containerForFocused : {},
       ]}
     >
-      <View style={styles.stepNumberContainer}>
+      <View style={styles().stepNumberContainer}>
         <BoldText
           children={`${stepNumber}`}
-          color={colors.lightLime}
+          color={isCardFocused ? colors.white : colors.lightLime}
           size={100}
           textAlign="left"
           lineHeight={100}
         />
       </View>
-      <View style={styles.stepTextContainer}>
+      <View style={styles(stepText.length).stepTextContainer}>
         <ShrinkingRegularText
           children={`${stepText}`}
           color={colors.transparentBlack7}
@@ -62,29 +57,43 @@ const PreparationStepCard: React.FC<Props> = ({
 
 export default PreparationStepCard;
 
-const styles = StyleSheet.create({
-  container: {
-    height: 150,
-    width: 250,
-    borderRadius: 16,
-    marginBottom: 2,
-    shadowColor: colors.lightGray2,
-    shadowOffset: {
-      width: 0,
-      height: 1,
+const styles = (textLength?: number) =>
+  StyleSheet.create({
+    container: {
+      height: STEP_CARD_HEIGHT,
+      width: STEP_CARD_WIDTH,
+      backgroundColor: colors.lightGray,
+      borderRadius: 16,
+
+      marginRight: 10,
+      marginLeft: 20,
+
+      shadowColor: colors.lightGray2,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 2,
+      marginBottom: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 2,
-  },
-  stepNumberContainer: {
-    position: "absolute",
-    top: 15,
-    left: 15,
-  },
-  stepTextContainer: {
-    paddingHorizontal: 12,
-    paddingTop: "15%",
-    paddingBottom: 12,
-  },
-});
+    containerForLastIndex: {
+      marginRight: 20,
+      marginLeft: 10,
+    },
+    containerForFocused: {
+      backgroundColor: colors.lightLime,
+    },
+
+    stepNumberContainer: {
+      position: "absolute",
+      paddingTop: paddings._24px,
+      paddingHorizontal: paddings._8px,
+    },
+    // @ts-ignore
+    stepTextContainer: {
+      paddingHorizontal: textLength ?? 0 > 50 ? paddings._8px : paddings._12px,
+      paddingVertical: textLength ?? 0 > 50 ? paddings._24px : paddings._32px,
+    },
+  });

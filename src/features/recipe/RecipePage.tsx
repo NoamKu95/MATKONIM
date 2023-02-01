@@ -21,6 +21,18 @@ import { paddings } from "../../constants/paddings";
 const RecipePage = () => {
   const selectedRecipe = useAppSelector((state) => state.recipe.selectedRecipe);
 
+  const renderRecipeSectionTitle = (text: string) => {
+    return (
+      <BoldText
+        children={text}
+        color={colors.black}
+        size={20}
+        textAlign="left"
+        lineHeight={20}
+      />
+    );
+  };
+
   const renderHeader = () => {
     return (
       <>
@@ -43,13 +55,7 @@ const RecipePage = () => {
     return (
       <>
         <View style={styles.ingredientsHeaderContainer}>
-          <BoldText
-            children={i18n.t("recipe.ingredients")}
-            color={colors.black}
-            size={20}
-            textAlign="left"
-            lineHeight={20}
-          />
+          {renderRecipeSectionTitle(i18n.t("recipe.ingredients"))}
         </View>
         <IngredientsCarousel ingredients={selectedRecipe?.ingredients ?? []} />
       </>
@@ -60,13 +66,7 @@ const RecipePage = () => {
     return (
       <>
         <View style={styles.ingredientsHeaderContainer}>
-          <BoldText
-            children={i18n.t("recipe.preparationSteps")}
-            color={colors.black}
-            size={20}
-            textAlign="left"
-            lineHeight={20}
-          />
+          {renderRecipeSectionTitle(i18n.t("recipe.preparationSteps"))}
         </View>
         <PrepStepsCarousel
           preparationSteps={selectedRecipe?.preparationSteps ?? []}

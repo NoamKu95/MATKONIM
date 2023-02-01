@@ -1,5 +1,5 @@
 // Outer imports:
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,18 +7,17 @@ import {
   StyleSheet,
   GestureResponderEvent,
   Pressable,
-} from 'react-native';
-import {colors} from '../../constants/colors';
-import {images} from '../../constants/images';
+} from "react-native";
 
 // Inner imports:
+import { colors } from "../../constants/colors";
 
 // Types:
-import {Recipe} from '../../models/recipe';
+import { Recipe } from "../../models/recipe";
 
 // Components:
-import CardInfo from '../InfoSquares/CardInfo';
-import RegularText from '../text/RegularText';
+import CardInfo from "../InfoSquares/CardInfo";
+import RegularText from "../text/RegularText";
 
 interface Props {
   recipe: Recipe;
@@ -34,7 +33,8 @@ const RecipeCard: React.FC<Props> = ({
   return (
     <Pressable
       onPress={onPress}
-      style={isLastIndex ? styles.containerLastIndex : styles.container}>
+      style={isLastIndex ? styles.containerLastIndex : styles.container}
+    >
       <Image
         source={{
           uri: recipe.image,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   categoryContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     left: 15,
     paddingHorizontal: 16,

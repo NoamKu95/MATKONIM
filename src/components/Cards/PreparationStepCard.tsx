@@ -1,14 +1,14 @@
 // Outer imports:
-import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
-import {colors} from '../../constants/colors';
+import React from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../constants/colors";
 
 // Inner imports:
 
 // Types:
-import BoldText from '../text/BoldText';
-import RegularText from '../text/RegularText';
-import ShrinkingRegularText from '../text/ShrinkingRegularText';
+import BoldText from "../text/BoldText";
+import RegularText from "../text/RegularText";
+import ShrinkingRegularText from "../text/ShrinkingRegularText";
 
 // Components:
 
@@ -16,14 +16,14 @@ interface Props {
   stepNumber: number;
   stepText: string;
   isLastIndex: boolean;
-  isOnlyCard: boolean;
+  isCardFocused: boolean;
 }
 
 const PreparationStepCard: React.FC<Props> = ({
   stepNumber,
   stepText,
   isLastIndex = false,
-  isOnlyCard = false,
+  isCardFocused = false,
 }: Props) => {
   return (
     <View
@@ -31,11 +31,12 @@ const PreparationStepCard: React.FC<Props> = ({
         styles.container,
         // eslint-disable-next-line react-native/no-inline-styles
         {
-          marginRight: !isLastIndex ? 10 : isOnlyCard ? 0 : 20,
+          marginRight: isLastIndex ? 20 : 10,
           marginLeft: isLastIndex ? 10 : 20,
-          width: isOnlyCard ? Dimensions.get('window').width - 18 : 250,
+          backgroundColor: isCardFocused ? colors.lightLime : colors.lightGray,
         },
-      ]}>
+      ]}
+    >
       <View style={styles.stepNumberContainer}>
         <BoldText
           children={`${stepNumber}`}
@@ -64,7 +65,7 @@ export default PreparationStepCard;
 const styles = StyleSheet.create({
   container: {
     height: 150,
-    backgroundColor: colors.lightGray,
+    width: 250,
     borderRadius: 16,
     marginBottom: 2,
     shadowColor: colors.lightGray2,
@@ -77,13 +78,13 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   stepNumberContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 15,
     left: 15,
   },
   stepTextContainer: {
     paddingHorizontal: 12,
-    paddingTop: '15%',
+    paddingTop: "15%",
     paddingBottom: 12,
   },
 });

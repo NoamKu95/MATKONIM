@@ -1,8 +1,8 @@
 // Outer imports:
-import React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
-import {colors} from '../../constants/colors';
-import PreparationStepCard from '../Cards/PreparationStepCard';
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet, View, FlatList, ViewToken } from "react-native";
+import { colors } from "../../constants/colors";
+import PreparationStepCard from "../Cards/PreparationStepCard";
 
 // Inner imports:
 
@@ -10,14 +10,31 @@ interface Props {
   preparationSteps: string[];
 }
 
-const PrepStepsCarousel = ({preparationSteps}: Props) => {
-  const renderStepCard = (row: {item: string; index: number}) => {
+const PrepStepsCarousel = ({ preparationSteps }: Props) => {
+  const [currentStepIndex, setCurrentstepIndex] = useState(0);
+
+  const viewabilityConfig = {
+    waitForInteraction: true,
+    viewAreaCoveragePercentThreshold: 50,
+  };
+
+  const handleViewableItemsChanged = useCallback(
+    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
+      let newVisibleIndex = info.viewableItems[0].index ?? 0;
+      if (currentStepIndex !== newVisibleIndex) {
+        setCurrentstepIndex(newVisibleIndex);
+      }
+    },
+    []
+  );
+
+  const renderStepCard = (row: { item: string; index: number }) => {
     return (
       <PreparationStepCard
         stepNumber={row.index + 1}
         stepText={row.item}
         isLastIndex={row.index === preparationSteps.length - 1}
-        isOnlyCard={preparationSteps.length === 1}
+        isCardFocused={currentStepIndex === row.index}
       />
     );
   };
@@ -30,6 +47,8 @@ const PrepStepsCarousel = ({preparationSteps}: Props) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item: string) => `${item}`}
         renderItem={renderStepCard}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={handleViewableItemsChanged}
       />
     </View>
   );

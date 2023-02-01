@@ -1,25 +1,26 @@
 // Outer imports:
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import React from "react";
+import { View, StyleSheet } from "react-native";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import BoldText from '../text/BoldText';
+import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
+
+// Components:
+import BoldText from "../text/BoldText";
+import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
 // Types:
-import {Ingredient} from '../../models/ingredient';
-import ShrinkingBoldText from '../text/ShrinkingBoldText';
+import { Ingredient } from "../../models/ingredient";
 
 interface Props {
   ingredient: Ingredient;
   isLastIndex: boolean;
-  isOnlyCard: boolean;
 }
 
 const IngredientCard: React.FC<Props> = ({
   ingredient,
   isLastIndex = false,
-  isOnlyCard = false,
 }: Props) => {
   return (
     <View
@@ -27,11 +28,11 @@ const IngredientCard: React.FC<Props> = ({
         styles.container,
         // eslint-disable-next-line react-native/no-inline-styles
         {
-          marginRight: !isLastIndex ? 10 : isOnlyCard ? 0 : 20,
-          marginLeft: isLastIndex ? 10 : 20,
-          width: isOnlyCard ? Dimensions.get('window').width - 18 : 150,
+          marginRight: !isLastIndex ? 10 : 20,
+          marginLeft: !isLastIndex ? 20 : 10,
         },
-      ]}>
+      ]}
+    >
       <View style={styles.quantityContainer}>
         <ShrinkingBoldText
           children={`${ingredient.amount}`}
@@ -50,7 +51,7 @@ const IngredientCard: React.FC<Props> = ({
           lineHeight={18}
         />
       </View>
-      <View style={styles.textContainer}>
+      <View style={styles.ingNameContainer}>
         <ShrinkingBoldText
           children={ingredient.name}
           color={colors.darkGreen}
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     width: 150,
     borderRadius: 16,
     backgroundColor: colors.lightGray,
-    marginBottom: 2,
+
     shadowColor: colors.lightGray2,
     shadowOffset: {
       width: 0,
@@ -81,19 +82,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 2,
+    marginBottom: 2,
   },
   measurementContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     right: 8,
   },
   quantityContainer: {
-    paddingTop: 24,
-    paddingHorizontal: 8,
+    paddingTop: paddings._24px,
+    paddingHorizontal: paddings._8px,
   },
-  textContainer: {
-    position: 'absolute',
-    top: '65%',
-    paddingHorizontal: 8,
+  ingNameContainer: {
+    position: "absolute",
+    bottom: "5%",
+    paddingHorizontal: paddings._8px,
   },
 });

@@ -1,37 +1,32 @@
 // Outer imports:
-import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import React from "react";
+import { View, StyleSheet } from "react-native";
 
 // Inner imports:
-import {colors} from '../../constants/colors';
-import {icons} from '../../constants/icons';
+import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 
-// Types:
-import {Recipe} from '../../models/recipe';
-import i18n from '../../translations/i18n';
-import RegularText from '../text/RegularText';
-import ShrinkingBoldText from '../text/ShrinkingBoldText';
+// Components:
+import RegularText from "../text/RegularText";
+import ShrinkingBoldText from "../text/ShrinkingBoldText";
 
 interface Props {
-  recipe: Recipe;
+  titleText: string;
+  subtitleText: string;
 }
 
-const CardInfo: React.FC<Props> = (props: Props) => {
-  const {recipe} = props;
-
+const CardInfo: React.FC<Props> = ({ titleText, subtitleText }: Props) => {
   return (
     <View style={styles.container}>
       <ShrinkingBoldText
-        children={recipe.name}
+        children={titleText}
         color={colors.white}
         size={18}
         textAlign="left"
         lineHeight={18}
       />
       <RegularText
-        children={`${recipe.duration}   ||   ${recipe.serving} ${i18n.t(
-          'recipeCard.servings',
-        )}`}
+        children={subtitleText}
         color={colors.white}
         size={12}
         textAlign="left"
@@ -45,31 +40,10 @@ export default CardInfo;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.transparentDarkGray,
-    justifyContent: 'space-between',
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    right: 10,
-    height: '25%',
-    paddingVertical: '5%',
-    paddingHorizontal: '5%',
+    justifyContent: "space-between",
+    padding: paddings._12px,
     borderRadius: 12,
-  },
-  infoText: {
-    color: colors.white,
-  },
-  recipeName: {
-    width: '70%',
-    color: colors.white,
-    fontSize: 18,
-  },
-  cookingDetailsText: {
-    color: colors.lightGray,
-  },
-  bookmarkIcon: {
-    width: 20,
-    height: 20,
-    marginLeft: 8,
-    tintColor: colors.darkGreen,
+    borderWidth: 1,
+    borderColor: colors.lightGray,
   },
 });

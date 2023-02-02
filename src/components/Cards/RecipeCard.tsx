@@ -14,6 +14,8 @@ import { paddings } from "../../constants/paddings";
 
 // Types:
 import { Recipe } from "../../models/recipe";
+import { HE } from "../../models/translations";
+import i18n from "../../translations/i18n";
 
 // Components:
 import CardInfo from "../InfoSquares/CardInfo";
@@ -35,9 +37,7 @@ const RecipeCard: React.FC<Props> = ({
       onPress={onPress}
       style={[
         styles.container,
-        isLastIndex
-          ? { marginLeft: 4, marginRight: 12 }
-          : { marginLeft: 12, marginRight: 4 },
+        isLastIndex ? styles.containerForLastIndex : null,
       ]}
     >
       <Image
@@ -56,7 +56,14 @@ const RecipeCard: React.FC<Props> = ({
         />
       </View>
 
-      <CardInfo recipe={recipe} />
+      <View style={styles.cardInfoContainer}>
+        <CardInfo
+          titleText={recipe.name}
+          subtitleText={`${recipe.duration}   ||   ${recipe.serving} ${i18n.t(
+            "recipeCard.servings"
+          )}`}
+        />
+      </View>
     </Pressable>
   );
 };
@@ -68,7 +75,12 @@ const styles = StyleSheet.create({
     height: 250,
     width: 250,
     borderRadius: 12,
-    backgroundColor: "lightgreen",
+    marginLeft: i18n.locale === HE ? 12 : 12,
+    marginRight: paddings._8px,
+  },
+  containerForLastIndex: {
+    marginLeft: i18n.locale === HE ? paddings._8px : 4,
+    // marginRight: paddings._32px,
   },
   backgroundImage: {
     width: 250,
@@ -81,10 +93,16 @@ const styles = StyleSheet.create({
     left: 15,
     paddingHorizontal: paddings._16px,
     paddingVertical: paddings._4px,
-    backgroundColor: colors.transparentGray,
-    borderRadius: 12,
+
+    borderWidth: 1,
+    borderColor: colors.lightGray,
+    borderRadius: 50,
+    backgroundColor: colors.transparentBlack5,
   },
-  categoryText: {
-    color: colors.white,
+  cardInfoContainer: {
+    position: "absolute",
+    bottom: 10,
+    width: "100%",
+    paddingHorizontal: paddings._12px,
   },
 });

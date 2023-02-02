@@ -18,6 +18,7 @@ import { setCategoryFilter } from "../search/state/searchSlice";
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { paddings } from "../../constants/paddings";
+import { HE } from "../../models/translations";
 import { navigate } from "../../navigation/RootNavigation";
 
 // Types:
@@ -30,7 +31,6 @@ import Callout from "../../components/Callout";
 import Searchbar from "../search/components/Searchbar";
 import RecipeCard from "../../components/Cards/RecipeCard";
 import CategoryCard from "../../components/Cards/CategoryCard";
-import { HE } from "../../models/translations";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -80,11 +80,13 @@ const Home = () => {
           />
         </View>
         <FlatList
+          keyExtractor={(item: Recipe) => `${item.id}`}
           data={recipes}
           horizontal
+          inverted={i18n.locale === HE}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item: Recipe) => `${item.name}`}
           renderItem={renderRecipeCard}
+          scrollEnabled={recipes.length * 150 > Dimensions.get("screen").width}
         />
       </>
     );
@@ -164,7 +166,8 @@ const styles = StyleSheet.create({
 
   // SEARCHBAR
   searchbarContainer: {
-    paddingHorizontal: paddings._12px,
+    paddingHorizontal: paddings._8px,
+    paddingTop: paddings._12px,
   },
 
   // TITLES
@@ -176,23 +179,13 @@ const styles = StyleSheet.create({
 
   //CALLOUT
   calloutWrapper: {
-    padding: paddings._12px,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-  },
-
-  // RECENTLY ADDED
-  recentlyAddedTitleContainer: {
+    paddingVertical: paddings._12px,
     paddingHorizontal: paddings._8px,
-    paddingVertical: paddings._16px,
   },
 
   // CATEGORIES
   categoriesWrapper: {
     paddingHorizontal: paddings._8px,
-  },
-  categoriesTitle: {
-    paddingVertical: paddings._16px,
   },
   categoryRowContainer: {
     flexDirection: "row",

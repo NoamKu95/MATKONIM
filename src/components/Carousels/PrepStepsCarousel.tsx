@@ -1,9 +1,10 @@
 // Outer imports:
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View, FlatList, ViewToken } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { SCREEN_WIDTH, STEP_CARD_WIDTH } from "../../constants/sizes";
 
 // Components:
 import PreparationStepCard from "../Cards/PreparationStepCard";
@@ -13,22 +14,15 @@ interface Props {
 }
 
 const PrepStepsCarousel = ({ preparationSteps }: Props) => {
-  const [currentStepIndex, setCurrentstepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-  // const viewabilityConfig = {
-  //   waitForInteraction: true,
-  //   viewAreaCoveragePercentThreshold: 50,
-  // };
+  const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
+    setCurrentStepIndex(viewableItems[0].index);
+  }, []);
 
-  // const handleViewableItemsChanged = useCallback(
-  //   (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
-  //     let newVisibleIndex = info.viewableItems[0].index ?? 0;
-  //     if (currentStepIndex !== newVisibleIndex) {
-  //       setCurrentstepIndex(newVisibleIndex);
-  //     }
-  //   },
-  //   []
-  // );
+  const _viewabilityConfig = {
+    itemVisiblePercentThreshold: 60,
+  };
 
   const renderStepCard = (row: { item: string; index: number }) => {
     return (
@@ -44,14 +38,18 @@ const PrepStepsCarousel = ({ preparationSteps }: Props) => {
   return (
     <View style={styles.mainContainer}>
       <FlatList
+        keyExtractor={(item: string) => `${item}`}
         data={preparationSteps}
+        extraData={currentStepIndex}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item: string) => `${item}`}
         renderItem={renderStepCard}
-        inverted
-        // viewabilityConfig={viewabilityConfig}
-        // onViewableItemsChanged={handleViewableItemsChanged}
+        scrollEnabled={preparationSteps.length * STEP_CARD_WIDTH > SCREEN_WIDTH}
+        onViewableItemsChanged={_onViewableItemsChanged}
+        viewabilityConfig={_viewabilityConfig}
+        pagingEnabled={true}
+        decelerationRate={"fast"}
+        snapToAlignment={"start"}
       />
     </View>
   );

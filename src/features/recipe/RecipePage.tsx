@@ -1,10 +1,11 @@
 // Outer imports:
 import React from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import i18n from "../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { paddings } from "../../constants/paddings";
 import { pop } from "../../navigation/RootNavigation";
 
 // Redux:
@@ -16,7 +17,6 @@ import RecipeSummary from "./components/RecipeSummary";
 import RecipeMainImage from "./components/RecipeMainImage";
 import IngredientsCarousel from "../../components/Carousels/IngredientsCarousel";
 import PrepStepsCarousel from "../../components/Carousels/PrepStepsCarousel";
-import { paddings } from "../../constants/paddings";
 
 const RecipePage = () => {
   const selectedRecipe = useAppSelector((state) => state.recipe.selectedRecipe);

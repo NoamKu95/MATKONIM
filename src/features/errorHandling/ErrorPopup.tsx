@@ -1,5 +1,5 @@
 // Outer imports:
-import React, { useEffect } from "react";
+import React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Modal from "react-native-modal";
 
@@ -10,11 +10,18 @@ import { resetTo } from "../../navigation/RootNavigation";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { setIsError } from "./state/errorHandlingActions";
+import {
+  defineFirebaseErrorMessage,
+  defineGeneralErrorMessage,
+  setIsError,
+} from "./state/errorHandlingActions";
 
 // Components:
-import RegularText from "../../components/text/RegularText";
-import { MyErrorTypes } from "../../models/errors";
+import {
+  AppErrorsUnion,
+  FirebaseErrors,
+  GeneralErrorTypes,
+} from "../../models/errors";
 import { icons } from "../../constants/icons";
 import i18n from "../../translations/i18n";
 import BoldText from "../../components/text/BoldText";
@@ -29,28 +36,61 @@ const ErrorPopUp = () => {
   );
   const errorIcon = useAppSelector((state) => state.errorHandling.errorIcon);
 
-  const modalContentByErrorType: { [key in MyErrorTypes]: JSX.Element } = {
-    [MyErrorTypes.NO_INTERNET]: (
-      <View style={styles.modalContent}>
-        <Image
-          source={errorIcon ? errorIcon : icons.sad_face}
-          resizeMethod="resize"
-          style={{ height: 70, width: 70 }}
-        />
-        <BoldText size={15} color={colors.black} textAlign="center">
-          {errorMessage
-            ? errorMessage
-            : i18n.t("errorHandling.somethingWentWrong")}
-        </BoldText>
-        {/* <BigButton
-          buttonLabel={i18n.t("errorHandling.toCustomerService")}
-          onPress={() => {
-            dispatch(setIsError(false));
-            resetTo("Login");
-          }}
-        /> */}
-      </View>
-    ),
+  const modalContentByErrorType = (error: AppErrorsUnion | null) => {
+    switch (error) {
+      case GeneralErrorTypes.NO_INTERNET:
+        return (
+          <View style={styles.modalContent}>
+            <Image
+              source={errorIcon ? errorIcon : icons.no_internet}
+              resizeMethod="resize"
+              style={{ height: 70, width: 70 }}
+            />
+            <BoldText size={15} color={colors.black} textAlign="center">
+              {errorMessage
+                ? errorMessage
+                : defineGeneralErrorMessage(GeneralErrorTypes.NO_INTERNET)}
+            </BoldText>
+            {/* <BigButton
+            buttonLabel={i18n.t("errorHandling.toCustomerService")}
+            onPress={() => {
+              dispatch(setIsError(false));
+              resetTo("Login");
+            }}
+          /> */}
+          </View>
+        );
+      case FirebaseErrors.INVALID_IMAGE_URL:
+        return (
+          <View style={styles.modalContent}>
+            <Image
+              source={errorIcon ? errorIcon : icons.broken_image}
+              resizeMethod="resize"
+              style={{ height: 70, width: 70 }}
+            />
+            <BoldText size={15} color={colors.black} textAlign="center">
+              {errorMessage
+                ? errorMessage
+                : defineFirebaseErrorMessage(FirebaseErrors.INVALID_IMAGE_URL)}
+            </BoldText>
+          </View>
+        );
+      default:
+        return (
+          <View style={styles.modalContent}>
+            <Image
+              source={errorIcon ? errorIcon : icons.sad_face}
+              resizeMethod="resize"
+              style={{ height: 70, width: 70 }}
+            />
+            <BoldText size={15} color={colors.black} textAlign="center">
+              {errorMessage
+                ? errorMessage
+                : i18n.t("errorHandling.somethingWentWrong")}
+            </BoldText>
+          </View>
+        );
+    }
   };
 
   return (
@@ -69,7 +109,7 @@ const ErrorPopUp = () => {
         >
           <CloseIcon />
         </Pressable>
-        {modalContentByErrorType[errorType]}
+        {modalContentByErrorType(errorType)}
       </View>
     </Modal>
   );

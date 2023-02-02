@@ -13,7 +13,7 @@ import BoldText from "../../components/text/BoldText";
 import RegularText from "../../components/text/RegularText";
 import ActionButton from "../../components/Buttons/ActionButton";
 import { pop } from "../../navigation/RootNavigation";
-import { MyErrorData, MyErrorTypes } from "../../models/errors";
+import { MyErrorData, GeneralErrorTypes } from "../../models/errors";
 
 // Redux:
 import { useAppDispatch } from "../../store/store";
@@ -28,7 +28,7 @@ const NoInternetScreen = () => {
       pop();
     } else {
       const error: MyErrorData = {
-        type: MyErrorTypes.NO_INTERNET,
+        type: GeneralErrorTypes.NO_INTERNET,
         message: i18n.t("errorHandling.noInternetTitle"),
         icon: icons.no_internet,
       };

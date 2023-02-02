@@ -17,6 +17,9 @@ export const icons = {
   close_circle: require("../assets/icons/close-circle.png"),
   no_results: require("../assets/icons/no_results.png"),
   abstract_shape1: require("../assets/icons/abstract-shape.png"),
+
+  // Error icons
   no_internet: require("../assets/icons/no-signal.png"),
   sad_face: require("../assets/icons/sad-face.png"),
+  broken_image: require("../assets/icons/broken-image.png"),
 };

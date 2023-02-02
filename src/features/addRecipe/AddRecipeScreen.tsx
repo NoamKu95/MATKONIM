@@ -24,7 +24,7 @@ import {
   setRecipeIngredientsWarning,
   setRecipePreparationStepsWarning,
 } from "./state/addRecipeSlice";
-import { defineErrorMessage } from "../errorHandling/state/errorHandlingActions";
+import { defineValidationErrorMessage } from "../errorHandling/state/errorHandlingActions";
 
 // Components:
 import RegularText from "../../components/text/RegularText";
@@ -245,7 +245,6 @@ const AddRecipe = () => {
         <IngredientsFormPart
           renderTitlesOfSection={renderTitlesOfSection}
           onChangeText={onChangeText}
-          defineErrorMessage={defineErrorMessage}
           renderWarningTextPlaceholder={renderWarningTextPlaceholder}
         />
         <PrepStepsFormPart

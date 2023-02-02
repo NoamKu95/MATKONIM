@@ -10,6 +10,7 @@ import {
 
 // Inner imports:
 import { colors } from "../../constants/colors";
+import { images } from "../../constants/images";
 import { paddings } from "../../constants/paddings";
 
 // Types:
@@ -41,9 +42,13 @@ const RecipeCard: React.FC<Props> = ({
       ]}
     >
       <Image
-        source={{
-          uri: recipe.image,
-        }}
+        source={
+          recipe.image
+            ? {
+                uri: recipe.image,
+              }
+            : images.loginBackground
+        }
         style={styles.backgroundImage}
       />
 

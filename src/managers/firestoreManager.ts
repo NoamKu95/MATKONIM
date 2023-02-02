@@ -1,7 +1,11 @@
+// Outer imports:
 import { Platform } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 import i18n from "../translations/i18n";
+
+// Inner imports:
+import { icons } from "../constants/icons";
 
 // Redux:
 import store, { AppThunk } from "../store/store";
@@ -11,11 +15,11 @@ import {
   setLoadingText,
   setRecipeImageURL,
 } from "../features/addRecipe/state/addRecipeSlice";
+import { generalErrorHandler } from "../features/errorHandling/state/errorHandlingActions";
 
 // Types:
 import { Recipe } from "../models/recipe";
-import { useDispatch } from "react-redux";
-import { addRecipe } from "../features/home/state/homeSlice";
+import { FirebaseErrors } from "../models/errors";
 
 // MARK: Generic Functions
 export const addFileToCollection = (
@@ -77,24 +81,25 @@ export const fetchRecipesOfUser = async (
           let r: Recipe = {
             id: doc.id,
             name: data.name,
-            image: "",
+            image: data.image,
             duration: data.duration,
             serving: data.serving,
             category: data.category,
             ingredients: data.ingredients,
             preparationSteps: data.preparationSteps,
           };
-          let url = await downloadImageFromStorage(data.image);
-          r.image = url;
+          let url = await downloadImageFromStorage(data.image ?? "");
+          r.image = url ?? null;
           items.push(r);
         } catch (err) {
+          console.log("log error x");
           console.log(err); // TODO: Error Handling
         }
       })
     );
     return items;
   } catch (error) {
-    // firebaseErrorHandler(error)
+    console.log("log error y");
     console.log(error); // TODO: Error Handling
     return [];
   }
@@ -142,9 +147,20 @@ export const uploadImageToStorage =
 
 export const downloadImageFromStorage = async (
   imageUrl: string
-): Promise<string> => {
-  const url = await storage().ref(imageUrl).getDownloadURL();
-  return url;
+): Promise<string | undefined> => {
+  try {
+    const url = await storage().ref(imageUrl).getDownloadURL();
+    return url;
+  } catch (error) {
+    store.dispatch(
+      generalErrorHandler({
+        type: FirebaseErrors.INVALID_IMAGE_URL,
+        message: i18n.t("errorHandling.FirebaseErrors.invalidImageUrl"),
+        icon: icons.broken_image,
+      })
+    );
+    console.log(error);
+  }
 };
 
 export const queryFirestore = async (

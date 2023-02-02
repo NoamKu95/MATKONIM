@@ -115,6 +115,9 @@ export interface Translation {
       ImageSelectionSectionError: string;
       formIncomplete: string;
     };
+    FirebaseErrors: {
+      invalidImageUrl: string;
+    };
   };
 }
 

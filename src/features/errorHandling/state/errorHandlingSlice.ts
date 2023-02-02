@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MyErrorData, MyErrorTypes } from "../../../models/errors";
+import { MyErrorData, AppErrorsUnion } from "../../../models/errors";
 
 export interface ErrorHandlingState {
   isError: boolean;
-  errorType: MyErrorTypes;
+  errorType: AppErrorsUnion | null;
   errorMessage: string;
   errorIcon: any;
 }
 
 const initialState: ErrorHandlingState = {
   isError: false,
-  errorType: MyErrorTypes.NO_INTERNET,
+  errorType: null,
   errorMessage: "",
   errorIcon: "",
 };

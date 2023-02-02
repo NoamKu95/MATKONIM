@@ -9,7 +9,7 @@ import { AddRecipeTextInputTypes } from "../../../models/types";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import i18n from "../../../translations/i18n";
 import { validateNumber, validateText } from "../../../utils/validators";
-import { defineErrorMessage } from "../../errorHandling/state/errorHandlingActions";
+import { defineValidationErrorMessage } from "../../errorHandling/state/errorHandlingActions";
 import {
   setRecipeDurationWarning,
   setRecipeNameWarning,
@@ -57,7 +57,7 @@ const BasicInfoFormPart = ({
       if (recipeName != null) {
         let error = validateText(recipeName);
         if (error) {
-          let errorMsg = defineErrorMessage(error);
+          let errorMsg = defineValidationErrorMessage(error);
           dispatch(setRecipeNameWarning(errorMsg));
         } else {
           dispatch(setRecipeNameWarning(null));
@@ -74,7 +74,7 @@ const BasicInfoFormPart = ({
       if (recipeDuration != null) {
         let error = validateText(recipeName);
         if (error) {
-          let errorMsg = defineErrorMessage(error);
+          let errorMsg = defineValidationErrorMessage(error);
           dispatch(setRecipeDurationWarning(errorMsg));
         } else {
           dispatch(setRecipeDurationWarning(null));
@@ -91,7 +91,7 @@ const BasicInfoFormPart = ({
       if (recipeServings != null) {
         let error = validateNumber(recipeServings);
         if (error) {
-          let errorMsg = defineErrorMessage(error);
+          let errorMsg = defineValidationErrorMessage(error);
           dispatch(setRecipeServingsWarning(errorMsg));
         } else {
           dispatch(setRecipeServingsWarning(null));

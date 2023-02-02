@@ -121,6 +121,10 @@ export const translations: TranslationsUnion = {
         ImageSelectionSectionError: "חובה להוסיף תמונה למתכון",
         formIncomplete: "אופס, נראה שיש צורך לתקן משהו בטופס",
       },
+      FirebaseErrors: {
+        invalidImageUrl:
+          "אופס, נראה שיש בעיה עם ההורדה של אחת או יותר מהתמונות ולכן ייתכן שיופיעו תמונות חסרות",
+      },
     },
   },
   en: {
@@ -237,6 +241,10 @@ export const translations: TranslationsUnion = {
         CategorySectionError: "Choosing a category is mandatory",
         ImageSelectionSectionError: "Uploading an image is mandatory",
         formIncomplete: "Oops, looks like something in the form needs fixing",
+      },
+      FirebaseErrors: {
+        invalidImageUrl:
+          "Seems like there's an issue with one or more of the recipes' images, therefore one or more images may appear missing!",
       },
     },
   },

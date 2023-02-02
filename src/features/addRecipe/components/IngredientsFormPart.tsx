@@ -25,7 +25,7 @@ import {
 import { addIngredientToNewRecipe } from "../state/addRecipeActions";
 import { validateNumber, validateText } from "../../../utils/validators";
 import { InputsValidationErrors } from "../../../models/errors";
-import { defineErrorMessage } from "../../errorHandling/state/errorHandlingActions";
+import { defineValidationErrorMessage } from "../../errorHandling/state/errorHandlingActions";
 import { HE } from "../../../models/translations";
 
 interface BasicInfoProps {
@@ -75,7 +75,7 @@ const IngredientsFormPart = ({
       if (ingredientName != null) {
         let error = validateText(ingredientName);
         if (error) {
-          let errorMsg = defineErrorMessage(error);
+          let errorMsg = defineValidationErrorMessage(error);
           dispatch(setIngredientNameWarning(errorMsg));
         } else {
           dispatch(setIngredientNameWarning(null));
@@ -92,7 +92,7 @@ const IngredientsFormPart = ({
       if (ingredientAmount != null) {
         let error = validateNumber(ingredientAmount);
         if (error) {
-          let errorMsg = defineErrorMessage(error);
+          let errorMsg = defineValidationErrorMessage(error);
           dispatch(setIngredientAmountWarning(errorMsg));
         } else {
           dispatch(setIngredientAmountWarning(null));

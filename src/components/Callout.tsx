@@ -33,7 +33,7 @@ const Callout = (props: Props) => {
           children={mainText}
           size={14}
           color={colors.darkLime}
-          textAlign={i18n.locale === HE ? "right" : "left"}
+          textAlign={"left"}
           lineHeight={24}
         />
 
@@ -42,7 +42,7 @@ const Callout = (props: Props) => {
             children={buttonText}
             size={16}
             color={colors.gray}
-            textAlign={i18n.locale === HE ? "right" : "left"}
+            textAlign={"left"}
             lineHeight={18}
           />
         </Pressable>

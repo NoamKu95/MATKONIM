@@ -37,6 +37,8 @@ export interface Translation {
     };
     search: string;
     recentlyAddedTitle: string;
+    noAddedRecipes: string;
+    addRecipeText: string;
     categories: string;
   };
   search: {

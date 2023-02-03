@@ -4,8 +4,9 @@ import {
   View,
   StyleSheet,
   FlatList,
-  Dimensions,
   ScrollView,
+  Image,
+  Pressable,
 } from "react-native";
 import i18n from "../../translations/i18n";
 
@@ -31,11 +32,20 @@ import Callout from "../../components/Callout";
 import Searchbar from "../search/components/Searchbar";
 import RecipeCard from "../../components/Cards/RecipeCard";
 import CategoryCard from "../../components/Cards/CategoryCard";
+import {
+  RECIPE_CARD_HEIGHT,
+  RECIPE_CARD_WIDTH,
+  SCREEN_WIDTH,
+} from "../../constants/sizes";
+import Loader from "../../components/Loader";
+import RegularText from "../../components/text/RegularText";
+import { icons } from "../../constants/icons";
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const language = useAppSelector((state) => state.auth.language);
   const recipes = useAppSelector((state) => state.home.recipes);
+  const isLoading = useAppSelector((state) => state.home.isFetching);
 
   useEffect(() => {
     dispatch(getRecipesForHomepage());
@@ -67,28 +77,78 @@ const Home = () => {
     );
   };
 
+  const renderSectionTitle = (text: string) => {
+    return (
+      <View style={styles.titleContainer}>
+        <BoldText
+          children={text}
+          color={colors.black}
+          size={16}
+          textAlign={"left"}
+          letterSpacing={1}
+        />
+      </View>
+    );
+  };
+
   const renderRecentlyAddedSection = () => {
     return (
       <>
-        <View style={styles.titleContainer}>
-          <BoldText
-            children={i18n.t("homepage.recentlyAddedTitle")}
-            color={colors.black}
-            size={16}
-            textAlign={language === HE ? "left" : "right"}
-            letterSpacing={1}
-          />
-        </View>
-        <FlatList
-          keyExtractor={(item: Recipe) => `${item.id}`}
-          data={recipes}
-          horizontal
-          inverted={i18n.locale === HE}
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderRecipeCard}
-          scrollEnabled={recipes.length * 150 > Dimensions.get("screen").width}
-        />
+        {renderSectionTitle(i18n.t("homepage.recentlyAddedTitle"))}
+        {isLoading ? (
+          <View style={styles.loaderWrapper}>
+            <Loader />
+          </View>
+        ) : recipes.length !== 0 ? (
+          renderNoAddedRecipes()
+        ) : (
+          renderAddedRecipesList()
+        )}
       </>
+    );
+  };
+
+  const renderNoAddedRecipes = () => {
+    return (
+      <View style={{ paddingTop: 24, paddingHorizontal: paddings._24px }}>
+        <RegularText
+          children={i18n.t("homepage.noAddedRecipes")}
+          color={colors.black}
+          size={16}
+          lineHeight={24}
+        />
+        <Pressable onPress={() => {}} style={styles.addRecipeWrapper}>
+          <View style={styles.addRecipeTextContainer}>
+            <BoldText
+              children={i18n.t("homepage.addRecipeText")}
+              color={colors.darkLime}
+              size={16}
+              lineHeight={16}
+            />
+          </View>
+          <Image
+            source={icons.plus}
+            style={{ width: 10, height: 10, tintColor: colors.darkLime }}
+          />
+        </Pressable>
+      </View>
+    );
+  };
+
+  const renderAddedRecipesList = () => {
+    return (
+      <FlatList
+        keyExtractor={(item: Recipe) => `${item.id}`}
+        data={recipes}
+        horizontal
+        snapToInterval={RECIPE_CARD_WIDTH}
+        snapToAlignment={i18n.locale === HE ? "start" : "end"}
+        decelerationRate="fast"
+        // inverted={i18n.locale === HE}
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderRecipeCard}
+        scrollEnabled={recipes.length * RECIPE_CARD_WIDTH > SCREEN_WIDTH}
+      />
     );
   };
 
@@ -108,37 +168,31 @@ const Home = () => {
 
   const renderCategoriesSquares = () => {
     return (
-      <View style={styles.categoriesWrapper}>
-        <View style={styles.titleContainer}>
-          <BoldText
-            children={i18n.t("homepage.categories")}
-            color={colors.black}
-            size={16}
-            textAlign={language === HE ? "left" : "right"}
-            letterSpacing={1}
-          />
+      <>
+        {renderSectionTitle(i18n.t("homepage.categories"))}
+        <View style={styles.categoriesWrapper}>
+          {CategoryCards.map((row, index) => {
+            return (
+              <View style={styles.categoryRowContainer} key={index}>
+                {row.map((category) => {
+                  return (
+                    <CategoryCard
+                      key={category.id}
+                      category={category}
+                      image={category.image}
+                      width={category.isWideImage ? "49%" : "24%"}
+                      onPress={() => {
+                        dispatch(setCategoryFilter(category.name));
+                        navigate("Search");
+                      }}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })}
         </View>
-        {CategoryCards.map((row) => {
-          return (
-            <View style={styles.categoryRowContainer}>
-              {row.map((category) => {
-                return (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    image={category.image}
-                    width={category.isWideImage ? "49%" : "24%"}
-                    onPress={() => {
-                      dispatch(setCategoryFilter(category.name));
-                      navigate("Search");
-                    }}
-                  />
-                );
-              })}
-            </View>
-          );
-        })}
-      </View>
+      </>
     );
   };
 
@@ -147,7 +201,7 @@ const Home = () => {
       <ScrollView nestedScrollEnabled={true}>
         {renderSearchBar()}
         {renderCallout()}
-        {recipes.length > 0 && renderRecentlyAddedSection()}
+        {renderRecentlyAddedSection()}
         {renderCategoriesSquares()}
       </ScrollView>
     </View>
@@ -180,6 +234,22 @@ const styles = StyleSheet.create({
   //CALLOUT
   calloutWrapper: {
     paddingVertical: paddings._12px,
+    paddingHorizontal: paddings._8px,
+  },
+
+  // RECENTLY ADDED
+  loaderWrapper: {
+    paddingTop: RECIPE_CARD_HEIGHT / 2.5,
+  },
+
+  // ADD RECIPE
+  addRecipeWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: paddings._12px,
+  },
+  addRecipeTextContainer: {
     paddingHorizontal: paddings._8px,
   },
 

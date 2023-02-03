@@ -5,7 +5,6 @@ export type RootStackParamList = {
   Tabs: undefined;
   Search: undefined;
   Recipe: undefined;
-  GeneralSettings: undefined;
   NoInternet: undefined;
 };
 
@@ -16,7 +15,6 @@ export const Screens: {
   TABS: keyof RootStackParamList;
   SEARCH: keyof RootStackParamList;
   RECIPE: keyof RootStackParamList;
-  GENERAL_SETTINGS: keyof RootStackParamList;
   NO_INTERNET: keyof RootStackParamList;
 } = {
   SPLASH: "Splash",
@@ -25,7 +23,6 @@ export const Screens: {
   TABS: "Tabs",
   SEARCH: "Search",
   RECIPE: "Recipe",
-  GENERAL_SETTINGS: "GeneralSettings",
   NO_INTERNET: "NoInternet",
 };
 

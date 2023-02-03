@@ -1,8 +1,12 @@
-import { StyleSheet, Text, I18nManager, TextStyle } from "react-native";
+// Outer imports:
 import React from "react";
+import { StyleSheet, Text, TextStyle } from "react-native";
+import i18n from "../../translations/i18n";
+
+// Inner imports:
 import { Fonts } from "../../constants/fonts";
 import { colors } from "../../constants/colors";
-import i18n from "../../translations/i18n";
+import { HE } from "../../models/translations";
 
 interface MediumTextProps {
   color?: string;
@@ -21,9 +25,9 @@ const MediumText = ({
   lineHeight = 16,
   letterSpacing = 0,
 }: MediumTextProps) => {
-  const isHebrew = i18n.locale == "he" || i18n.locale == "he-IL" ? true : false;
+  const isHebrew = i18n.locale == HE;
   const dynamicStyleObject: TextStyle = {
-    color: color ? color : colors.WHITE,
+    color: color ? color : colors.white,
     fontSize: size,
     lineHeight: lineHeight,
     textAlign: textAlign,

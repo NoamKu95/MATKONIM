@@ -12,6 +12,7 @@ import {
 import { colors } from "../../constants/colors";
 import { images } from "../../constants/images";
 import { paddings } from "../../constants/paddings";
+import { RECIPE_CARD_HEIGHT, RECIPE_CARD_WIDTH } from "../../constants/sizes";
 
 // Types:
 import { Recipe } from "../../models/recipe";
@@ -77,19 +78,19 @@ export default RecipeCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: 250,
-    width: 250,
+    height: RECIPE_CARD_HEIGHT,
+    width: RECIPE_CARD_WIDTH,
     borderRadius: 12,
-    marginLeft: i18n.locale === HE ? 12 : 12,
+    marginLeft: i18n.locale === HE ? paddings._8px : 0,
     marginRight: paddings._8px,
   },
   containerForLastIndex: {
-    marginLeft: i18n.locale === HE ? paddings._8px : 4,
-    // marginRight: paddings._32px,
+    marginLeft: i18n.locale === HE ? paddings._8px : 0,
+    // marginRight: i18n.locale === HE ? paddings._8px : 0,
   },
   backgroundImage: {
-    width: 250,
-    height: 250,
+    height: RECIPE_CARD_HEIGHT,
+    width: RECIPE_CARD_WIDTH,
     borderRadius: 12,
   },
   categoryContainer: {

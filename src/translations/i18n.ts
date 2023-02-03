@@ -39,6 +39,8 @@ export const translations: TranslationsUnion = {
       },
       search: "מה אנחנו מבשלים היום?",
       recentlyAddedTitle: "נוספו לאחרונה",
+      noAddedRecipes: "עדיין לא הוספת מתכונים..\nלמה לא להתחיל כבר עכשיו?",
+      addRecipeText: "להוספת המתכון הראשון שלך",
       categories: "קטגוריות",
     },
     search: {
@@ -162,6 +164,9 @@ export const translations: TranslationsUnion = {
       },
       search: "What are we cooking today?",
       recentlyAddedTitle: "Added recently",
+      noAddedRecipes:
+        "You haven't added any recipes yet..\nwhy not start right now?",
+      addRecipeText: "Add your first recipe",
       categories: "Categories",
     },
     search: {

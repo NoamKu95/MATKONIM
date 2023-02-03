@@ -81,12 +81,12 @@ const styles = StyleSheet.create({
     height: RECIPE_CARD_HEIGHT,
     width: RECIPE_CARD_WIDTH,
     borderRadius: 12,
-    marginLeft: i18n.locale === HE ? 12 : 12,
+    marginLeft: i18n.locale === HE ? paddings._8px : 0,
     marginRight: paddings._8px,
   },
   containerForLastIndex: {
-    marginLeft: i18n.locale === HE ? paddings._8px : 4,
-    // marginRight: paddings._32px,
+    marginLeft: i18n.locale === HE ? paddings._8px : 0,
+    // marginRight: i18n.locale === HE ? paddings._8px : 0,
   },
   backgroundImage: {
     height: RECIPE_CARD_HEIGHT,

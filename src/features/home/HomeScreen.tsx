@@ -6,7 +6,7 @@ import {
   FlatList,
   ScrollView,
   Image,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
 import i18n from "../../translations/i18n";
 
@@ -19,6 +19,7 @@ import { setCategoryFilter } from "../search/state/searchSlice";
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { paddings } from "../../constants/paddings";
+import { icons } from "../../constants/icons";
 import { HE } from "../../models/translations";
 import { navigate } from "../../navigation/RootNavigation";
 
@@ -39,11 +40,9 @@ import {
 } from "../../constants/sizes";
 import Loader from "../../components/Loader";
 import RegularText from "../../components/text/RegularText";
-import { icons } from "../../constants/icons";
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const language = useAppSelector((state) => state.auth.language);
   const recipes = useAppSelector((state) => state.home.recipes);
   const isLoading = useAppSelector((state) => state.home.isFetching);
 
@@ -70,7 +69,7 @@ const Home = () => {
           mainText={i18n.t("homepage.callout.mainText")}
           buttonText={i18n.t("homepage.callout.pressableText")}
           onPress={() => {
-            navigate("Search");
+            navigate("Search"); // TODO: Search shouldn't appear in RootStackParamList
           }}
         />
       </View>
@@ -99,7 +98,7 @@ const Home = () => {
           <View style={styles.loaderWrapper}>
             <Loader />
           </View>
-        ) : recipes.length !== 0 ? (
+        ) : recipes.length === 0 ? (
           renderNoAddedRecipes()
         ) : (
           renderAddedRecipesList()
@@ -110,14 +109,19 @@ const Home = () => {
 
   const renderNoAddedRecipes = () => {
     return (
-      <View style={{ paddingTop: 24, paddingHorizontal: paddings._24px }}>
+      <View style={styles.addRecipeMainContainer}>
         <RegularText
           children={i18n.t("homepage.noAddedRecipes")}
           color={colors.black}
           size={16}
           lineHeight={24}
         />
-        <Pressable onPress={() => {}} style={styles.addRecipeWrapper}>
+        <TouchableOpacity
+          onPress={() => {
+            // TODO: make it navigate to add recipe page
+          }}
+          style={styles.addRecipeWrapper}
+        >
           <View style={styles.addRecipeTextContainer}>
             <BoldText
               children={i18n.t("homepage.addRecipeText")}
@@ -126,11 +130,8 @@ const Home = () => {
               lineHeight={16}
             />
           </View>
-          <Image
-            source={icons.plus}
-            style={{ width: 10, height: 10, tintColor: colors.darkLime }}
-          />
-        </Pressable>
+          <Image source={icons.plus} style={styles.icon} />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -243,6 +244,10 @@ const styles = StyleSheet.create({
   },
 
   // ADD RECIPE
+  addRecipeMainContainer: {
+    padding: paddings._24px,
+    paddingBottom: paddings._4px,
+  },
   addRecipeWrapper: {
     flexDirection: "row",
     justifyContent: "center",
@@ -251,6 +256,11 @@ const styles = StyleSheet.create({
   },
   addRecipeTextContainer: {
     paddingHorizontal: paddings._8px,
+  },
+  icon: {
+    width: 10,
+    height: 10,
+    tintColor: colors.darkLime,
   },
 
   // CATEGORIES

@@ -17,30 +17,38 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import { HE } from "../../models/translations";
+import { SCREEN_HEIGHT } from "../../constants/sizes";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
   const userSurname = useAppSelector((state) => state.auth.userName);
+  const recipes = useAppSelector((state) => state.home.recipes);
 
-  const renderHeyUser = () => {
+  const renderHeader = () => {
     return (
       <>
-        <View style={styles.textsContainer}>
-          <View style={styles.heyUser}>
+        <View style={styles.userDetailsMainContainer}>
+          <View style={styles.userDetailsTextsContainer}>
             <BoldText
-              children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
-              size={24}
-              color={colors.darkLime}
+              children={userSurname ?? "נעם קורצר"}
+              size={32}
+              color={colors.white}
               textAlign="left"
               lineHeight={32}
             />
+            <View style={styles.recipesNumberWrapper}>
+              <RegularText
+                children={`No. of recipes: ${recipes.length}`}
+                size={16}
+                color={colors.white}
+                textAlign="left"
+              />
+            </View>
           </View>
-          <RegularText
-            children={i18n.t("profile.personalText")}
-            size={16}
-            color={colors.gray}
-            textAlign="left"
-            lineHeight={32}
+          <Image
+            source={icons.abstract_shape1}
+            resizeMethod={"resize"}
+            style={styles.userIcon}
           />
         </View>
       </>
@@ -56,65 +64,64 @@ const ProfileScreen = () => {
     );
   };
 
-  const renderLogout = () => {
+  const renderHeyUser = () => {
     return (
-      <View style={styles.logoutContainer}>
-        <Pressable
-          style={styles.logoutContainer}
-          onPress={() => {
-            dispatch(signOutFromFirebase);
-          }}
-        >
-          <View style={styles.iconWrapper}>
-            <LogoutIcon />
+      <>
+        <View style={styles.textsContainer}>
+          <View style={styles.heyUser}>
+            <BoldText
+              children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
+              size={21}
+              color={colors.darkLime}
+              textAlign="left"
+              lineHeight={24}
+            />
           </View>
-          <BoldText
-            children={i18n.t("profile.logout")}
-            size={14}
-            color={colors.lime}
+          <RegularText
+            children={i18n.t("profile.personalText")}
+            size={16}
+            color={colors.gray}
             textAlign="left"
+            lineHeight={32}
           />
-        </Pressable>
-      </View>
+        </View>
+      </>
     );
   };
 
-  const renderHeader = () => {
+  const renderLogout = () => {
     return (
-      <>
-        <View style={styles.userDetailsContainer}>
-          <Image
-            source={icons.abstract_shape1}
-            resizeMethod={"resize"}
-            style={styles.userIcon}
+      <Pressable
+        style={styles.logoutContainer}
+        onPress={() => {
+          dispatch(signOutFromFirebase);
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={icons.user_logout} style={styles.logoutIcon} />
+          <BoldText
+            children={i18n.t("profile.logout")}
+            size={14}
+            color={colors.darkLime}
+            textAlign="left"
           />
-          <View style={{ flexDirection: "column" }}>
-            <View style={styles.userNameText}>
-              <BoldText
-                children="Noam Kurtzer"
-                size={32}
-                color={colors.white}
-                textAlign="right"
-                lineHeight={32}
-              />
-            </View>
-            <View style={styles.recipesNumberWrapper}>
-              <RegularText
-                children="No. of recipes: 24"
-                size={16}
-                color={colors.white}
-                textAlign="left"
-              />
-            </View>
-          </View>
         </View>
-      </>
+      </Pressable>
+    );
+  };
+
+  const renderRecipesChart = () => {
+    return (
+      <View>
+        <View></View>
+      </View>
     );
   };
 
   return (
     <View style={styles.mainContainer}>
       {renderHeader()}
+      {renderRecipesChart()}
       {renderWhiteSheet()}
     </View>
   );
@@ -127,59 +134,68 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.lime,
   },
+
+  // USER DETAILS
+  userDetailsMainContainer: {
+    paddingTop: paddings._42px,
+    paddingHorizontal: paddings._21px,
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  userIcon: {
+    width: 80,
+    height: 80,
+    borderWidth: 2,
+    borderRadius: 50,
+    borderColor: colors.transparentBlack3,
+    backgroundColor: colors.lightGray,
+    tintColor: colors.darkLime,
+  },
+  userDetailsTextsContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-around",
+  },
+  recipesNumberWrapper: {
+    borderWidth: 1.5,
+    borderRadius: 30,
+    borderColor: colors.white,
+    paddingVertical: paddings._8px,
+    paddingHorizontal: paddings._16px,
+  },
+
+  // SHEET
   sheetContainer: {
-    marginTop: "20%",
-    height: Dimensions.get("window").height,
+    marginTop: "15%",
+    height: SCREEN_HEIGHT,
     backgroundColor: colors.white,
     borderTopRightRadius: 35,
     borderTopLeftRadius: 35,
     paddingHorizontal: paddings._16px,
     paddingVertical: paddings._32px,
   },
-
   heyUser: {
     paddingBottom: paddings._8px,
   },
-
-  // USER DETAILS
-  userDetailsContainer: {
-    paddingTop: paddings._32px,
-    paddingHorizontal: paddings._24px,
-    justifyContent: "space-around",
-    flexDirection: "row",
-  },
-  userIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.transparentBlack9,
-    backgroundColor: colors.blue,
-  },
-  userNameText: {
-    paddingBottom: paddings._8px,
-  },
-  recipesNumberWrapper: {
-    alignSelf: "center",
-    alignContent: "center",
-    borderWidth: 1.5,
-    borderColor: colors.white,
-    padding: paddings._8px,
-  },
-
   textsContainer: {
     paddingVertical: paddings._12px,
   },
 
   // LOGOUT
   logoutContainer: {
-    paddingVertical: paddings._8px,
     flexDirection: "row",
     alignItems: "center",
+    borderTopWidth: 0.8,
+    borderStyle: "dashed",
+    borderTopColor: colors.transparentBlack7,
+    paddingVertical: paddings._16px,
   },
-  iconWrapper: {
-    paddingRight: i18n.locale === HE ? paddings._8px : 0,
-    paddingLeft: i18n.locale === HE ? 0 : paddings._8px,
-    transform: i18n.locale === HE ? [{ scaleX: 1 }] : [{ scaleX: -1 }],
+  logoutIcon: {
+    height: 25,
+    width: 25,
+    tintColor: colors.darkLime,
+    marginRight: i18n.locale === HE ? paddings._4px : 0,
+    marginLeft: i18n.locale === HE ? 0 : paddings._4px,
+    transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
   },
 });

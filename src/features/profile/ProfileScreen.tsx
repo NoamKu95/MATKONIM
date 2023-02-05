@@ -10,6 +10,7 @@ import { colors } from "../../constants/colors";
 import { icons } from "../../constants/icons";
 import { animations } from "../../constants/animations";
 import { paddings } from "../../constants/paddings";
+import { Directions } from "../../constants/directions";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -19,12 +20,11 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import { HE } from "../../models/translations";
-import { SCREEN_WIDTH } from "../../constants/sizes";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
 import {
   CATEGORIES_ENGLISH_NAMES,
   CATEGORIES_HEBREW_NAMES,
 } from "../../models/category";
-import { Directions } from "../../constants/directions";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
@@ -137,15 +137,14 @@ const ProfileScreen = () => {
 
   const renderRecipesChart = () => {
     return (
-      <>
+      <View style={styles().chartMainContainer}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           onScroll={({ nativeEvent }) => {
             if (reachedEndOfScrollView(nativeEvent)) {
               setLottieArrowDirection(Directions.LEFT);
-            }
-            if (reachedStartScrollView(nativeEvent)) {
+            } else if (reachedStartOfScrollView(nativeEvent)) {
               setLottieArrowDirection(Directions.RIGHT);
             }
           }}
@@ -187,7 +186,7 @@ const ProfileScreen = () => {
             style={styles(lottieArrowDirection).arrowAnimation}
           />
         </View>
-      </>
+      </View>
     );
   };
 
@@ -199,7 +198,7 @@ const ProfileScreen = () => {
     return layoutMeasurement.width + contentOffset.x >= contentSize.width;
   };
 
-  const reachedStartScrollView = ({ contentOffset }) => {
+  const reachedStartOfScrollView = ({ contentOffset }) => {
     return contentOffset.x === 0;
   };
 
@@ -252,6 +251,7 @@ const styles = (lottieArrowDirection?: string) =>
     // SHEET
     sheetContainer: {
       marginTop: "15%",
+      height: SCREEN_HEIGHT / 1.5,
       backgroundColor: colors.white,
       borderTopRightRadius: 35,
       borderTopLeftRadius: 35,
@@ -259,13 +259,19 @@ const styles = (lottieArrowDirection?: string) =>
     },
 
     // SHEET TEXTS
+    textsContainer: {
+      paddingHorizontal: paddings._16px,
+      paddingTop: paddings._12px,
+    },
     heyUser: {
       paddingHorizontal: paddings._16px,
       paddingBottom: paddings._8px,
     },
-    textsContainer: {
-      paddingHorizontal: paddings._16px,
-      paddingVertical: paddings._12px,
+
+    // CHART
+    chartMainContainer: {
+      height: 225,
+      paddingBottom: paddings._16px,
     },
 
     // ARROW ANIMATION
@@ -282,8 +288,6 @@ const styles = (lottieArrowDirection?: string) =>
     arrowAnimationWrapper: {
       alignSelf:
         lottieArrowDirection === Directions.LEFT ? "flex-end" : "flex-start",
-      paddingTop: paddings._8px,
-      paddingBottom: paddings._16px,
       paddingHorizontal: paddings._16px,
     },
 
@@ -294,7 +298,7 @@ const styles = (lottieArrowDirection?: string) =>
       borderTopWidth: 0.8,
       borderStyle: "dashed",
       borderTopColor: colors.transparentBlack7,
-      paddingVertical: paddings._16px,
+      padding: paddings._16px,
     },
     logoutIcon: {
       height: 25,

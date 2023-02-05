@@ -1,13 +1,13 @@
 // Outer imports:
-import React from "react";
-import { View, StyleSheet, Pressable, Dimensions, Image } from "react-native";
+import React, { useEffect } from "react";
+import { View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
 import i18n from "../../translations/i18n";
+import { BarChart } from "react-native-chart-kit";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { icons } from "../../constants/icons";
 import { paddings } from "../../constants/paddings";
-import LogoutIcon from "../../assets/icons/svg/LogoutIcon";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -17,12 +17,30 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import { HE } from "../../models/translations";
-import { SCREEN_HEIGHT } from "../../constants/sizes";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
+import {
+  CATEGORIES_ENGLISH_NAMES,
+  CATEGORIES_HEBREW_NAMES,
+} from "../../models/category";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
   const userSurname = useAppSelector((state) => state.auth.userName);
   const recipes = useAppSelector((state) => state.home.recipes);
+  let chartData: {
+    labels: string[];
+    datasets: {
+      data: number[];
+    }[];
+  } = {
+    labels:
+      i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES,
+    datasets: [
+      {
+        data: [0, 5, 0, 2, 0, 3, 3, 0, 0], // TODO: data should be stored in a slice
+      },
+    ],
+  };
 
   const renderHeader = () => {
     return (
@@ -59,6 +77,7 @@ const ProfileScreen = () => {
     return (
       <View style={styles.sheetContainer}>
         {renderHeyUser()}
+        {renderRecipesChart()}
         {renderLogout()}
       </View>
     );
@@ -112,16 +131,41 @@ const ProfileScreen = () => {
 
   const renderRecipesChart = () => {
     return (
-      <View>
-        <View></View>
-      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <BarChart
+          data={chartData}
+          width={SCREEN_WIDTH * 1.5}
+          height={180}
+          yAxisSuffix=""
+          yAxisLabel=""
+          withHorizontalLabels={false}
+          verticalLabelRotation={0}
+          withInnerLines={false}
+          showValuesOnTopOfBars
+          chartConfig={{
+            backgroundColor: colors.white,
+            backgroundGradientFrom: colors.white,
+            backgroundGradientTo: colors.white,
+            color: () => `rgba(26, 136, 113, 1)`,
+            labelColor: () => `rgba(26, 136, 113, 1)`,
+            barPercentage: 1,
+            decimalPlaces: 0,
+            propsForLabels: {
+              fontSize: "9",
+            },
+          }}
+          style={{
+            paddingRight: 0,
+            paddingBottom: paddings._16px,
+          }}
+        />
+      </ScrollView>
     );
   };
 
   return (
     <View style={styles.mainContainer}>
       {renderHeader()}
-      {renderRecipesChart()}
       {renderWhiteSheet()}
     </View>
   );
@@ -167,7 +211,6 @@ const styles = StyleSheet.create({
   // SHEET
   sheetContainer: {
     marginTop: "15%",
-    height: SCREEN_HEIGHT,
     backgroundColor: colors.white,
     borderTopRightRadius: 35,
     borderTopLeftRadius: 35,

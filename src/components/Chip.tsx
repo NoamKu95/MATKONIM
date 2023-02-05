@@ -1,8 +1,12 @@
 // Outer imports:
-import React from 'react';
-import {StyleSheet, GestureResponderEvent, Pressable} from 'react-native';
-import {colors} from '../constants/colors';
-import RegularText from './text/RegularText';
+import React from "react";
+import { StyleSheet, GestureResponderEvent, Pressable } from "react-native";
+
+// Inner imports:
+import { colors } from "../constants/colors";
+
+// Components:
+import RegularText from "./text/RegularText";
 
 // Inner imports:
 
@@ -29,9 +33,10 @@ const Chip = ({
     <Pressable
       style={[
         styles.mainContainer,
-        {backgroundColor: isSelected ? selectedBgColor : bgColor},
+        { backgroundColor: isSelected ? selectedBgColor : bgColor },
       ]}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <RegularText
         children={text}
         size={textSize}
@@ -50,7 +55,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     maxWidth: 100,
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 4,
     marginTop: 12,
     marginBottom: 4,

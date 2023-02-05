@@ -1,4 +1,4 @@
-export const icons = {
+export const icons: iconsInterface = {
   bookmark: require("../assets/icons/bookmark.png"),
   bookmarkFilled: require("../assets/icons/bookmark-filled.png"),
   home: require("../assets/icons/home.png"),
@@ -17,9 +17,35 @@ export const icons = {
   close_circle: require("../assets/icons/close-circle.png"),
   no_results: require("../assets/icons/no_results.png"),
   abstract_shape1: require("../assets/icons/abstract-shape.png"),
+  user_logout: require("../assets/icons/user-logout.png"),
 
   // Error icons
   no_internet: require("../assets/icons/no-signal.png"),
   sad_face: require("../assets/icons/sad-face.png"),
   broken_image: require("../assets/icons/broken-image.png"),
 };
+
+interface iconsInterface {
+  bookmark: NodeRequire;
+  bookmarkFilled: NodeRequire;
+  home: NodeRequire;
+  search: NodeRequire;
+  settings: NodeRequire;
+  back: NodeRequire;
+  rightArrow: NodeRequire;
+  plus: NodeRequire;
+  threeDots: NodeRequire;
+  openEye: NodeRequire;
+  gallery: NodeRequire;
+  checkmarkGreen: NodeRequire;
+  reset: NodeRequire;
+  trash: NodeRequire;
+  close: NodeRequire;
+  close_circle: NodeRequire;
+  no_results: NodeRequire;
+  abstract_shape1: NodeRequire;
+  user_logout: NodeRequire;
+  no_internet: NodeRequire;
+  sad_face: NodeRequire;
+  broken_image: NodeRequire;
+}

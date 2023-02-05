@@ -8,6 +8,28 @@ export interface Category {
   image: any;
 }
 
+export const CATEGORIES_HEBREW_NAMES: string[] = [
+  "ראשונות",
+  "מרקים",
+  "סלטים",
+  "עופות",
+  "בשרים",
+  "דגים",
+  "פסטה",
+  "קינוחים",
+  "קוקטיילים",
+];
+export const CATEGORIES_ENGLISH_NAMES: string[] = [
+  "Starters",
+  "Soup",
+  "Salads",
+  "Chicken",
+  "Meat",
+  "Fish",
+  "Pasta",
+  "Desserts",
+  "Cocktails",
+];
 export const CATEGORIES: Category[] = [
   {
     id: 1,

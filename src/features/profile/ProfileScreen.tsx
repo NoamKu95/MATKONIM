@@ -1,13 +1,16 @@
 // Outer imports:
-import React from "react";
-import { View, StyleSheet, Pressable, Dimensions, Image } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
+import { BarChart } from "react-native-chart-kit";
+import LottieView from "lottie-react-native";
 import i18n from "../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { icons } from "../../constants/icons";
+import { animations } from "../../constants/animations";
 import { paddings } from "../../constants/paddings";
-import LogoutIcon from "../../assets/icons/svg/LogoutIcon";
+import { Directions } from "../../constants/directions";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -17,22 +20,86 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import { HE } from "../../models/translations";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
+import {
+  CATEGORIES_ENGLISH_NAMES,
+  CATEGORIES_HEBREW_NAMES,
+} from "../../models/category";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
   const userSurname = useAppSelector((state) => state.auth.userName);
+  const recipes = useAppSelector((state) => state.home.recipes);
+  let chartData: {
+    labels: string[];
+    datasets: {
+      data: number[];
+    }[];
+  } = {
+    labels:
+      i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES,
+    datasets: [
+      {
+        data: [0, 5, 0, 2, 0, 3, 3, 0, 0], // TODO: data should be stored in a slice
+      },
+    ],
+  };
+  const [lottieArrowDirection, setLottieArrowDirection] = useState(
+    Directions.RIGHT
+  );
+
+  const renderHeader = () => {
+    return (
+      <>
+        <View style={styles().userDetailsMainContainer}>
+          <View style={styles().userDetailsTextsContainer}>
+            <BoldText
+              children={userSurname ?? "נעם קורצר"}
+              size={32}
+              color={colors.white}
+              textAlign="left"
+              lineHeight={32}
+            />
+            <View style={styles().recipesNumberWrapper}>
+              <RegularText
+                children={`No. of recipes: ${recipes.length}`}
+                size={16}
+                color={colors.white}
+                textAlign="left"
+              />
+            </View>
+          </View>
+          <Image
+            source={icons.abstract_shape1}
+            resizeMethod={"resize"}
+            style={styles().userIcon}
+          />
+        </View>
+      </>
+    );
+  };
+
+  const renderWhiteSheet = () => {
+    return (
+      <View style={styles().sheetContainer}>
+        {renderHeyUser()}
+        {renderRecipesChart()}
+        {renderLogout()}
+      </View>
+    );
+  };
 
   const renderHeyUser = () => {
     return (
       <>
-        <View style={styles.textsContainer}>
-          <View style={styles.heyUser}>
+        <View style={styles().textsContainer}>
+          <View style={styles().heyUser}>
             <BoldText
               children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
-              size={24}
+              size={21}
               color={colors.darkLime}
               textAlign="left"
-              lineHeight={32}
+              lineHeight={24}
             />
           </View>
           <RegularText
@@ -47,73 +114,96 @@ const ProfileScreen = () => {
     );
   };
 
-  const renderWhiteSheet = () => {
-    return (
-      <View style={styles.sheetContainer}>
-        {renderHeyUser()}
-        {renderLogout()}
-      </View>
-    );
-  };
-
   const renderLogout = () => {
     return (
-      <View style={styles.logoutContainer}>
-        <Pressable
-          style={styles.logoutContainer}
-          onPress={() => {
-            dispatch(signOutFromFirebase);
-          }}
-        >
-          <View style={styles.iconWrapper}>
-            <LogoutIcon />
-          </View>
+      <Pressable
+        style={styles().logoutContainer}
+        onPress={() => {
+          dispatch(signOutFromFirebase);
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={icons.user_logout} style={styles().logoutIcon} />
           <BoldText
             children={i18n.t("profile.logout")}
             size={14}
-            color={colors.lime}
+            color={colors.darkLime}
             textAlign="left"
           />
-        </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderRecipesChart = () => {
+    return (
+      <View style={styles().chartMainContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            if (reachedEndOfScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.LEFT);
+            } else if (reachedStartOfScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.RIGHT);
+            }
+          }}
+          scrollEventThrottle={0}
+        >
+          <BarChart
+            data={chartData}
+            width={SCREEN_WIDTH * 1.5}
+            height={180}
+            yAxisSuffix=""
+            yAxisLabel=""
+            withHorizontalLabels={false}
+            verticalLabelRotation={0}
+            withInnerLines={false}
+            showValuesOnTopOfBars
+            chartConfig={{
+              backgroundColor: colors.white,
+              backgroundGradientFrom: colors.white,
+              backgroundGradientTo: colors.white,
+              color: () => `rgba(26, 136, 113, 1)`,
+              labelColor: () => `rgba(26, 136, 113, 1)`,
+              barPercentage: 1,
+              decimalPlaces: 0,
+              propsForLabels: {
+                fontSize: "9",
+              },
+            }}
+            style={{
+              paddingRight: 0,
+            }}
+          />
+        </ScrollView>
+        <View style={styles(lottieArrowDirection).arrowAnimationWrapper}>
+          <LottieView
+            autoPlay={true}
+            loop
+            speed={1.5}
+            source={animations.scroll_indicator}
+            style={styles(lottieArrowDirection).arrowAnimation}
+          />
+        </View>
       </View>
     );
   };
 
-  const renderHeader = () => {
-    return (
-      <>
-        <View style={styles.userDetailsContainer}>
-          <Image
-            source={icons.abstract_shape1}
-            resizeMethod={"resize"}
-            style={styles.userIcon}
-          />
-          <View style={{ flexDirection: "column" }}>
-            <View style={styles.userNameText}>
-              <BoldText
-                children="Noam Kurtzer"
-                size={32}
-                color={colors.white}
-                textAlign="right"
-                lineHeight={32}
-              />
-            </View>
-            <View style={styles.recipesNumberWrapper}>
-              <RegularText
-                children="No. of recipes: 24"
-                size={16}
-                color={colors.white}
-                textAlign="left"
-              />
-            </View>
-          </View>
-        </View>
-      </>
-    );
+  const reachedEndOfScrollView = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    return layoutMeasurement.width + contentOffset.x >= contentSize.width;
+  };
+
+  const reachedStartOfScrollView = ({ contentOffset }) => {
+    return contentOffset.x === 0;
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles().mainContainer}>
       {renderHeader()}
       {renderWhiteSheet()}
     </View>
@@ -122,64 +212,100 @@ const ProfileScreen = () => {
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: colors.lime,
-  },
-  sheetContainer: {
-    marginTop: "20%",
-    height: Dimensions.get("window").height,
-    backgroundColor: colors.white,
-    borderTopRightRadius: 35,
-    borderTopLeftRadius: 35,
-    paddingHorizontal: paddings._16px,
-    paddingVertical: paddings._32px,
-  },
+const styles = (lottieArrowDirection?: string) =>
+  StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      backgroundColor: colors.lime,
+    },
 
-  heyUser: {
-    paddingBottom: paddings._8px,
-  },
+    // USER DETAILS
+    userDetailsMainContainer: {
+      paddingTop: paddings._42px,
+      paddingHorizontal: paddings._21px,
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+    userIcon: {
+      width: 80,
+      height: 80,
+      borderWidth: 2,
+      borderRadius: 50,
+      borderColor: colors.transparentBlack3,
+      backgroundColor: colors.lightGray,
+      tintColor: colors.darkLime,
+    },
+    userDetailsTextsContainer: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "space-around",
+    },
+    recipesNumberWrapper: {
+      borderWidth: 1.5,
+      borderRadius: 30,
+      borderColor: colors.white,
+      paddingVertical: paddings._8px,
+      paddingHorizontal: paddings._16px,
+    },
 
-  // USER DETAILS
-  userDetailsContainer: {
-    paddingTop: paddings._32px,
-    paddingHorizontal: paddings._24px,
-    justifyContent: "space-around",
-    flexDirection: "row",
-  },
-  userIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.transparentBlack9,
-    backgroundColor: colors.blue,
-  },
-  userNameText: {
-    paddingBottom: paddings._8px,
-  },
-  recipesNumberWrapper: {
-    alignSelf: "center",
-    alignContent: "center",
-    borderWidth: 1.5,
-    borderColor: colors.white,
-    padding: paddings._8px,
-  },
+    // SHEET
+    sheetContainer: {
+      marginTop: "15%",
+      height: SCREEN_HEIGHT / 1.5,
+      backgroundColor: colors.white,
+      borderTopRightRadius: 35,
+      borderTopLeftRadius: 35,
+      paddingVertical: paddings._32px,
+    },
 
-  textsContainer: {
-    paddingVertical: paddings._12px,
-  },
+    // SHEET TEXTS
+    textsContainer: {
+      paddingHorizontal: paddings._16px,
+      paddingTop: paddings._12px,
+    },
+    heyUser: {
+      paddingHorizontal: paddings._16px,
+      paddingBottom: paddings._8px,
+    },
 
-  // LOGOUT
-  logoutContainer: {
-    paddingVertical: paddings._8px,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  iconWrapper: {
-    paddingRight: i18n.locale === HE ? paddings._8px : 0,
-    paddingLeft: i18n.locale === HE ? 0 : paddings._8px,
-    transform: i18n.locale === HE ? [{ scaleX: 1 }] : [{ scaleX: -1 }],
-  },
-});
+    // CHART
+    chartMainContainer: {
+      height: 225,
+      paddingBottom: paddings._16px,
+    },
+
+    // ARROW ANIMATION
+    arrowAnimation: {
+      width: 15,
+      height: 15,
+      transform: [
+        lottieArrowDirection === Directions.LEFT
+          ? { rotate: "45deg" }
+          : { rotate: "-45deg" },
+      ],
+      opacity: 0.5,
+    },
+    arrowAnimationWrapper: {
+      alignSelf:
+        lottieArrowDirection === Directions.LEFT ? "flex-end" : "flex-start",
+      paddingHorizontal: paddings._16px,
+    },
+
+    // LOGOUT
+    logoutContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderTopWidth: 0.8,
+      borderStyle: "dashed",
+      borderTopColor: colors.transparentBlack7,
+      padding: paddings._16px,
+    },
+    logoutIcon: {
+      height: 25,
+      width: 25,
+      tintColor: colors.darkLime,
+      marginRight: i18n.locale === HE ? paddings._4px : 0,
+      marginLeft: i18n.locale === HE ? 0 : paddings._4px,
+      transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
+    },
+  });

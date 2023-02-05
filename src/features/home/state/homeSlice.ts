@@ -4,12 +4,16 @@ import { Recipe } from "../../../models/recipe";
 export interface HomeState {
   recipes: Recipe[];
   filteredRecipes: Recipe[];
+  categorizedRecipes: {
+    [key: string]: Recipe[];
+  };
   isFetching: boolean;
 }
 
 const initialState: HomeState = {
   recipes: [],
   filteredRecipes: [],
+  categorizedRecipes: {},
   isFetching: false,
 };
 
@@ -20,6 +24,14 @@ export const HomeSlice = createSlice({
     setRecipes: (state, action: PayloadAction<Recipe[]>) => {
       state.recipes = action.payload;
       state.filteredRecipes = action.payload;
+    },
+    setCategorizedRecipes: (
+      state,
+      action: PayloadAction<{
+        [key: string]: Recipe[];
+      }>
+    ) => {
+      state.categorizedRecipes = action.payload;
     },
     setFilteredRecipes: (state, action: PayloadAction<Recipe[]>) => {
       state.filteredRecipes = action.payload;
@@ -35,7 +47,12 @@ export const HomeSlice = createSlice({
   },
 });
 
-export const { setRecipes, addRecipe, setIsFetching, setFilteredRecipes } =
-  HomeSlice.actions;
+export const {
+  setRecipes,
+  addRecipe,
+  setCategorizedRecipes,
+  setIsFetching,
+  setFilteredRecipes,
+} = HomeSlice.actions;
 
 export default HomeSlice.reducer;

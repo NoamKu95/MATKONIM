@@ -11,6 +11,7 @@ import { icons } from "../../constants/icons";
 import { animations } from "../../constants/animations";
 import { paddings } from "../../constants/paddings";
 import { Directions } from "../../constants/directions";
+import { countItemsUnderEachKey, countKeys } from "../../utils/counters";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -28,22 +29,14 @@ import {
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
+
   const userSurname = useAppSelector((state) => state.auth.userName);
-  const recipes = useAppSelector((state) => state.home.recipes);
-  let chartData: {
-    labels: string[];
-    datasets: {
-      data: number[];
-    }[];
-  } = {
-    labels:
-      i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES,
-    datasets: [
-      {
-        data: [0, 5, 0, 2, 0, 3, 3, 0, 0], // TODO: data should be stored in a slice
-      },
-    ],
-  };
+
+  const xAxisLabels =
+    i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES;
+  const groupedRecipes = useAppSelector(
+    (state) => state.home.categorizedRecipes
+  );
   const [lottieArrowDirection, setLottieArrowDirection] = useState(
     Directions.RIGHT
   );
@@ -62,7 +55,7 @@ const ProfileScreen = () => {
             />
             <View style={styles().recipesNumberWrapper}>
               <RegularText
-                children={`No. of recipes: ${recipes.length}`}
+                children={`No. of recipes: ${countKeys(groupedRecipes)}`}
                 size={16}
                 color={colors.white}
                 textAlign="left"
@@ -151,7 +144,17 @@ const ProfileScreen = () => {
           scrollEventThrottle={0}
         >
           <BarChart
-            data={chartData}
+            data={{
+              labels: xAxisLabels,
+              datasets: [
+                {
+                  data: countItemsUnderEachKey(
+                    groupedRecipes,
+                    CATEGORIES_HEBREW_NAMES
+                  ),
+                },
+              ],
+            }}
             width={SCREEN_WIDTH * 1.5}
             height={180}
             yAxisSuffix=""

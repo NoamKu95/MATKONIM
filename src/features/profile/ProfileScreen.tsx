@@ -1,12 +1,14 @@
 // Outer imports:
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
-import i18n from "../../translations/i18n";
 import { BarChart } from "react-native-chart-kit";
+import LottieView from "lottie-react-native";
+import i18n from "../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { icons } from "../../constants/icons";
+import { animations } from "../../constants/animations";
 import { paddings } from "../../constants/paddings";
 
 // Redux:
@@ -17,11 +19,12 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import { HE } from "../../models/translations";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
+import { SCREEN_WIDTH } from "../../constants/sizes";
 import {
   CATEGORIES_ENGLISH_NAMES,
   CATEGORIES_HEBREW_NAMES,
 } from "../../models/category";
+import { Directions } from "../../constants/directions";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
@@ -41,12 +44,15 @@ const ProfileScreen = () => {
       },
     ],
   };
+  const [lottieArrowDirection, setLottieArrowDirection] = useState(
+    Directions.RIGHT
+  );
 
   const renderHeader = () => {
     return (
       <>
-        <View style={styles.userDetailsMainContainer}>
-          <View style={styles.userDetailsTextsContainer}>
+        <View style={styles().userDetailsMainContainer}>
+          <View style={styles().userDetailsTextsContainer}>
             <BoldText
               children={userSurname ?? "נעם קורצר"}
               size={32}
@@ -54,7 +60,7 @@ const ProfileScreen = () => {
               textAlign="left"
               lineHeight={32}
             />
-            <View style={styles.recipesNumberWrapper}>
+            <View style={styles().recipesNumberWrapper}>
               <RegularText
                 children={`No. of recipes: ${recipes.length}`}
                 size={16}
@@ -66,7 +72,7 @@ const ProfileScreen = () => {
           <Image
             source={icons.abstract_shape1}
             resizeMethod={"resize"}
-            style={styles.userIcon}
+            style={styles().userIcon}
           />
         </View>
       </>
@@ -75,7 +81,7 @@ const ProfileScreen = () => {
 
   const renderWhiteSheet = () => {
     return (
-      <View style={styles.sheetContainer}>
+      <View style={styles().sheetContainer}>
         {renderHeyUser()}
         {renderRecipesChart()}
         {renderLogout()}
@@ -86,8 +92,8 @@ const ProfileScreen = () => {
   const renderHeyUser = () => {
     return (
       <>
-        <View style={styles.textsContainer}>
-          <View style={styles.heyUser}>
+        <View style={styles().textsContainer}>
+          <View style={styles().heyUser}>
             <BoldText
               children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
               size={21}
@@ -111,13 +117,13 @@ const ProfileScreen = () => {
   const renderLogout = () => {
     return (
       <Pressable
-        style={styles.logoutContainer}
+        style={styles().logoutContainer}
         onPress={() => {
           dispatch(signOutFromFirebase);
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={icons.user_logout} style={styles.logoutIcon} />
+          <Image source={icons.user_logout} style={styles().logoutIcon} />
           <BoldText
             children={i18n.t("profile.logout")}
             size={14}
@@ -131,40 +137,74 @@ const ProfileScreen = () => {
 
   const renderRecipesChart = () => {
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <BarChart
-          data={chartData}
-          width={SCREEN_WIDTH * 1.5}
-          height={180}
-          yAxisSuffix=""
-          yAxisLabel=""
-          withHorizontalLabels={false}
-          verticalLabelRotation={0}
-          withInnerLines={false}
-          showValuesOnTopOfBars
-          chartConfig={{
-            backgroundColor: colors.white,
-            backgroundGradientFrom: colors.white,
-            backgroundGradientTo: colors.white,
-            color: () => `rgba(26, 136, 113, 1)`,
-            labelColor: () => `rgba(26, 136, 113, 1)`,
-            barPercentage: 1,
-            decimalPlaces: 0,
-            propsForLabels: {
-              fontSize: "9",
-            },
+      <>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            if (reachedEndOfScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.LEFT);
+            }
+            if (reachedStartScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.RIGHT);
+            }
           }}
-          style={{
-            paddingRight: 0,
-            paddingBottom: paddings._16px,
-          }}
-        />
-      </ScrollView>
+          scrollEventThrottle={0}
+        >
+          <BarChart
+            data={chartData}
+            width={SCREEN_WIDTH * 1.5}
+            height={180}
+            yAxisSuffix=""
+            yAxisLabel=""
+            withHorizontalLabels={false}
+            verticalLabelRotation={0}
+            withInnerLines={false}
+            showValuesOnTopOfBars
+            chartConfig={{
+              backgroundColor: colors.white,
+              backgroundGradientFrom: colors.white,
+              backgroundGradientTo: colors.white,
+              color: () => `rgba(26, 136, 113, 1)`,
+              labelColor: () => `rgba(26, 136, 113, 1)`,
+              barPercentage: 1,
+              decimalPlaces: 0,
+              propsForLabels: {
+                fontSize: "9",
+              },
+            }}
+            style={{
+              paddingRight: 0,
+            }}
+          />
+        </ScrollView>
+        <View style={styles(lottieArrowDirection).arrowAnimationWrapper}>
+          <LottieView
+            autoPlay={true}
+            loop
+            speed={1.5}
+            source={animations.scroll_indicator}
+            style={styles(lottieArrowDirection).arrowAnimation}
+          />
+        </View>
+      </>
     );
   };
 
+  const reachedEndOfScrollView = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    return layoutMeasurement.width + contentOffset.x >= contentSize.width;
+  };
+
+  const reachedStartScrollView = ({ contentOffset }) => {
+    return contentOffset.x === 0;
+  };
+
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles().mainContainer}>
       {renderHeader()}
       {renderWhiteSheet()}
     </View>
@@ -173,72 +213,95 @@ const ProfileScreen = () => {
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: colors.lime,
-  },
+const styles = (lottieArrowDirection?: string) =>
+  StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      backgroundColor: colors.lime,
+    },
 
-  // USER DETAILS
-  userDetailsMainContainer: {
-    paddingTop: paddings._42px,
-    paddingHorizontal: paddings._21px,
-    justifyContent: "space-between",
-    flexDirection: "row",
-  },
-  userIcon: {
-    width: 80,
-    height: 80,
-    borderWidth: 2,
-    borderRadius: 50,
-    borderColor: colors.transparentBlack3,
-    backgroundColor: colors.lightGray,
-    tintColor: colors.darkLime,
-  },
-  userDetailsTextsContainer: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-around",
-  },
-  recipesNumberWrapper: {
-    borderWidth: 1.5,
-    borderRadius: 30,
-    borderColor: colors.white,
-    paddingVertical: paddings._8px,
-    paddingHorizontal: paddings._16px,
-  },
+    // USER DETAILS
+    userDetailsMainContainer: {
+      paddingTop: paddings._42px,
+      paddingHorizontal: paddings._21px,
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+    userIcon: {
+      width: 80,
+      height: 80,
+      borderWidth: 2,
+      borderRadius: 50,
+      borderColor: colors.transparentBlack3,
+      backgroundColor: colors.lightGray,
+      tintColor: colors.darkLime,
+    },
+    userDetailsTextsContainer: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "space-around",
+    },
+    recipesNumberWrapper: {
+      borderWidth: 1.5,
+      borderRadius: 30,
+      borderColor: colors.white,
+      paddingVertical: paddings._8px,
+      paddingHorizontal: paddings._16px,
+    },
 
-  // SHEET
-  sheetContainer: {
-    marginTop: "15%",
-    backgroundColor: colors.white,
-    borderTopRightRadius: 35,
-    borderTopLeftRadius: 35,
-    paddingHorizontal: paddings._16px,
-    paddingVertical: paddings._32px,
-  },
-  heyUser: {
-    paddingBottom: paddings._8px,
-  },
-  textsContainer: {
-    paddingVertical: paddings._12px,
-  },
+    // SHEET
+    sheetContainer: {
+      marginTop: "15%",
+      backgroundColor: colors.white,
+      borderTopRightRadius: 35,
+      borderTopLeftRadius: 35,
+      paddingVertical: paddings._32px,
+    },
 
-  // LOGOUT
-  logoutContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderTopWidth: 0.8,
-    borderStyle: "dashed",
-    borderTopColor: colors.transparentBlack7,
-    paddingVertical: paddings._16px,
-  },
-  logoutIcon: {
-    height: 25,
-    width: 25,
-    tintColor: colors.darkLime,
-    marginRight: i18n.locale === HE ? paddings._4px : 0,
-    marginLeft: i18n.locale === HE ? 0 : paddings._4px,
-    transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
-  },
-});
+    // SHEET TEXTS
+    heyUser: {
+      paddingHorizontal: paddings._16px,
+      paddingBottom: paddings._8px,
+    },
+    textsContainer: {
+      paddingHorizontal: paddings._16px,
+      paddingVertical: paddings._12px,
+    },
+
+    // ARROW ANIMATION
+    arrowAnimation: {
+      width: 15,
+      height: 15,
+      transform: [
+        lottieArrowDirection === Directions.LEFT
+          ? { rotate: "45deg" }
+          : { rotate: "-45deg" },
+      ],
+      opacity: 0.5,
+    },
+    arrowAnimationWrapper: {
+      alignSelf:
+        lottieArrowDirection === Directions.LEFT ? "flex-end" : "flex-start",
+      paddingTop: paddings._8px,
+      paddingBottom: paddings._16px,
+      paddingHorizontal: paddings._16px,
+    },
+
+    // LOGOUT
+    logoutContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderTopWidth: 0.8,
+      borderStyle: "dashed",
+      borderTopColor: colors.transparentBlack7,
+      paddingVertical: paddings._16px,
+    },
+    logoutIcon: {
+      height: 25,
+      width: 25,
+      tintColor: colors.darkLime,
+      marginRight: i18n.locale === HE ? paddings._4px : 0,
+      marginLeft: i18n.locale === HE ? 0 : paddings._4px,
+      transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
+    },
+  });

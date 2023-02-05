@@ -10,7 +10,14 @@ import { colors } from "../../constants/colors";
 import { icons } from "../../constants/icons";
 import { animations } from "../../constants/animations";
 import { paddings } from "../../constants/paddings";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
 import { Directions } from "../../constants/directions";
+import { countItemsUnderEachKey, countKeys } from "../../utils/counters";
+import { HE } from "../../models/translations";
+import {
+  CATEGORIES_ENGLISH_NAMES,
+  CATEGORIES_HEBREW_NAMES,
+} from "../../models/category";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -19,31 +26,16 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 // Components:
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
-import { HE } from "../../models/translations";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/sizes";
-import {
-  CATEGORIES_ENGLISH_NAMES,
-  CATEGORIES_HEBREW_NAMES,
-} from "../../models/category";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
+
   const userSurname = useAppSelector((state) => state.auth.userName);
-  const recipes = useAppSelector((state) => state.home.recipes);
-  let chartData: {
-    labels: string[];
-    datasets: {
-      data: number[];
-    }[];
-  } = {
-    labels:
-      i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES,
-    datasets: [
-      {
-        data: [0, 5, 0, 2, 0, 3, 3, 0, 0], // TODO: data should be stored in a slice
-      },
-    ],
-  };
+  const xAxisCategoriesLabels =
+    i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES;
+  const groupedRecipes = useAppSelector(
+    (state) => state.home.categorizedRecipes
+  );
   const [lottieArrowDirection, setLottieArrowDirection] = useState(
     Directions.RIGHT
   );
@@ -62,7 +54,9 @@ const ProfileScreen = () => {
             />
             <View style={styles().recipesNumberWrapper}>
               <RegularText
-                children={`No. of recipes: ${recipes.length}`}
+                children={
+                  i18n.t("profile.numberOfRecipes") + countKeys(groupedRecipes)
+                }
                 size={16}
                 color={colors.white}
                 textAlign="left"
@@ -83,7 +77,7 @@ const ProfileScreen = () => {
     return (
       <View style={styles().sheetContainer}>
         {renderHeyUser()}
-        {renderRecipesChart()}
+        {renderRecipesChartArea()}
         {renderLogout()}
       </View>
     );
@@ -114,6 +108,89 @@ const ProfileScreen = () => {
     );
   };
 
+  const renderRecipesChartArea = () => {
+    return (
+      <View style={styles().chartMainContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            if (reachedEndOfScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.LEFT);
+            } else if (reachedStartOfScrollView(nativeEvent)) {
+              setLottieArrowDirection(Directions.RIGHT);
+            }
+          }}
+          scrollEventThrottle={0}
+        >
+          {renderBarChart()}
+        </ScrollView>
+        <View style={styles(lottieArrowDirection).arrowAnimationWrapper}>
+          <LottieView
+            autoPlay={true}
+            loop
+            speed={1.5}
+            source={animations.scroll_indicator}
+            style={styles(lottieArrowDirection).arrowAnimation}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const renderBarChart = () => {
+    return (
+      <BarChart
+        data={{
+          labels: xAxisCategoriesLabels,
+          datasets: [
+            {
+              data: countItemsUnderEachKey(
+                groupedRecipes,
+                xAxisCategoriesLabels
+              ),
+            },
+          ],
+        }}
+        width={SCREEN_WIDTH * 1.5}
+        height={180}
+        yAxisSuffix=""
+        yAxisLabel=""
+        withHorizontalLabels={false}
+        verticalLabelRotation={0}
+        withInnerLines={false}
+        showValuesOnTopOfBars
+        chartConfig={{
+          backgroundColor: colors.white,
+          backgroundGradientFrom: colors.white,
+          backgroundGradientTo: colors.white,
+          color: () => `rgba(26, 136, 113, 1)`,
+          labelColor: () => `rgba(26, 136, 113, 1)`,
+          barPercentage: 1,
+          decimalPlaces: 0,
+          propsForLabels: {
+            fontSize: "11",
+          },
+        }}
+        style={{
+          paddingRight: 0,
+        }}
+      />
+    );
+  };
+
+  const reachedEndOfScrollView = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    return layoutMeasurement.width + contentOffset.x >= contentSize.width;
+  };
+
+  const reachedStartOfScrollView = ({ contentOffset }) => {
+    return contentOffset.x === 0;
+  };
+
   const renderLogout = () => {
     return (
       <Pressable
@@ -133,73 +210,6 @@ const ProfileScreen = () => {
         </View>
       </Pressable>
     );
-  };
-
-  const renderRecipesChart = () => {
-    return (
-      <View style={styles().chartMainContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          onScroll={({ nativeEvent }) => {
-            if (reachedEndOfScrollView(nativeEvent)) {
-              setLottieArrowDirection(Directions.LEFT);
-            } else if (reachedStartOfScrollView(nativeEvent)) {
-              setLottieArrowDirection(Directions.RIGHT);
-            }
-          }}
-          scrollEventThrottle={0}
-        >
-          <BarChart
-            data={chartData}
-            width={SCREEN_WIDTH * 1.5}
-            height={180}
-            yAxisSuffix=""
-            yAxisLabel=""
-            withHorizontalLabels={false}
-            verticalLabelRotation={0}
-            withInnerLines={false}
-            showValuesOnTopOfBars
-            chartConfig={{
-              backgroundColor: colors.white,
-              backgroundGradientFrom: colors.white,
-              backgroundGradientTo: colors.white,
-              color: () => `rgba(26, 136, 113, 1)`,
-              labelColor: () => `rgba(26, 136, 113, 1)`,
-              barPercentage: 1,
-              decimalPlaces: 0,
-              propsForLabels: {
-                fontSize: "9",
-              },
-            }}
-            style={{
-              paddingRight: 0,
-            }}
-          />
-        </ScrollView>
-        <View style={styles(lottieArrowDirection).arrowAnimationWrapper}>
-          <LottieView
-            autoPlay={true}
-            loop
-            speed={1.5}
-            source={animations.scroll_indicator}
-            style={styles(lottieArrowDirection).arrowAnimation}
-          />
-        </View>
-      </View>
-    );
-  };
-
-  const reachedEndOfScrollView = ({
-    layoutMeasurement,
-    contentOffset,
-    contentSize,
-  }) => {
-    return layoutMeasurement.width + contentOffset.x >= contentSize.width;
-  };
-
-  const reachedStartOfScrollView = ({ contentOffset }) => {
-    return contentOffset.x === 0;
   };
 
   return (
@@ -242,7 +252,7 @@ const styles = (lottieArrowDirection?: string) =>
     },
     recipesNumberWrapper: {
       borderWidth: 1.5,
-      borderRadius: 30,
+      borderRadius: 12,
       borderColor: colors.white,
       paddingVertical: paddings._8px,
       paddingHorizontal: paddings._16px,

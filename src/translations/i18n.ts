@@ -62,6 +62,7 @@ export const translations: TranslationsUnion = {
       heyUser: "היי, ",
       personalText:
         "איזה כיף שבחרת להשתמש באפליקציית מתכונים! אם נהנית זה הזמן לזרוק מילה טובה לחברים :)",
+      numberOfRecipes: "כמות מתכונים: ",
     },
     addRecipe: {
       mainTitle: "הוספת מתכון חדש",
@@ -188,6 +189,7 @@ export const translations: TranslationsUnion = {
       heyUser: "Hey, ",
       personalText:
         "Happy to see your are using the MATKONIM app :) If you enjoy the app, please recommend to your friends",
+      numberOfRecipes: "No. of recipes: ",
     },
     addRecipe: {
       mainTitle: "Add new recipe",

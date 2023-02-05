@@ -59,6 +59,7 @@ export interface Translation {
     logout: string;
     heyUser: string;
     personalText: string;
+    numberOfRecipes: string;
   };
   addRecipe: {
     mainTitle: string;

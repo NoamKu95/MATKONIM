@@ -46,7 +46,9 @@ const RecipesSearch = () => {
   const filteredRecipes = useAppSelector(
     (state) => state.search.filteredRecipes
   );
-  const searchCategory = useAppSelector((state) => state.search.searchCategory);
+  const searchCategories = useAppSelector(
+    (state) => state.search.searchCategories
+  );
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -127,7 +129,7 @@ const RecipesSearch = () => {
               onPress={() => {
                 updateCategoryChip(category.name);
               }}
-              isSelected={category.name === searchCategory}
+              isSelected={searchCategories.includes(category.name)}
               bgColor={colors.lightGreen}
               selectedBgColor={colors.darkLime}
             />
@@ -139,10 +141,14 @@ const RecipesSearch = () => {
 
   // (4)
   const updateCategoryChip = (chipName: string) => {
-    if (chipName === searchCategory) {
-      dispatch(setCategoryFilter(null));
+    if (searchCategories.includes(chipName)) {
+      dispatch(
+        setCategoryFilter(
+          searchCategories.filter((category) => category != chipName)
+        )
+      );
     } else {
-      dispatch(setCategoryFilter(chipName));
+      dispatch(setCategoryFilter([...searchCategories, chipName]));
     }
     filterRecipesBasedOnSearch();
   };

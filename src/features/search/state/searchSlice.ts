@@ -1,22 +1,22 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Recipe} from '../../../models/recipe';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Recipe } from "../../../models/recipe";
 
 export interface SearchState {
   isFetching: boolean;
   searchPhrase: string | null;
-  searchCategory: string | null;
+  searchCategories: string[];
   filteredRecipes: Recipe[];
 }
 
 const initialState: SearchState = {
   isFetching: false,
   searchPhrase: null,
-  searchCategory: null,
+  searchCategories: [],
   filteredRecipes: [],
 };
 
 export const SearchSlice = createSlice({
-  name: 'SearchSlice',
+  name: "SearchSlice",
   initialState,
   reducers: {
     setIsFetching: (state, action: PayloadAction<boolean>) => {
@@ -25,8 +25,8 @@ export const SearchSlice = createSlice({
     setSearchPhrase: (state, action: PayloadAction<string>) => {
       state.searchPhrase = action.payload;
     },
-    setCategoryFilter: (state, action: PayloadAction<string | null>) => {
-      state.searchCategory = action.payload;
+    setCategoryFilter: (state, action: PayloadAction<string[]>) => {
+      state.searchCategories = action.payload;
     },
     setFilteredRecipes: (state, action: PayloadAction<Recipe[]>) => {
       state.filteredRecipes = action.payload;

@@ -8,7 +8,7 @@ import { Recipe } from "../../../models/recipe";
 import { collections } from "../../../models/types";
 
 // Redux:
-import { AppThunk } from "../../../store/store";
+import store, { AppThunk } from "../../../store/store";
 import { getCurrentUserID } from "../../auth/state/authActions";
 import {
   setFilteredRecipes,
@@ -47,35 +47,54 @@ export const updateSearchPhrase =
 export const updateSearchResults =
   (): AppThunk => async (dispatch, getState) => {
     const searchText: string | null = getState().search.searchPhrase;
-    const categoryFilter: string | null = getState().search.searchCategory;
+    const categoriesFilter: string[] = getState().search.searchCategories;
+    const recipes = getState().home.recipes;
+
+    const isSearchTextEmpty = searchText === null || searchText === "";
+    const isCategoriesEmpty = categoriesFilter.length === 0;
 
     // No filters
-    if ((searchText === null || searchText === "") && categoryFilter === null) {
+    if (isSearchTextEmpty && isCategoriesEmpty) {
       dispatch(setFilteredRecipes(getState().home.recipes));
     }
-    // Only chip filter
-    else if (
-      (searchText === null || searchText === "") &&
-      categoryFilter !== null
-    ) {
+
+    // Only chips filter
+    else if (isSearchTextEmpty && !isCategoriesEmpty) {
+      dispatch(setFilteredRecipes(getRecipesPoolBasedOnChosenCategories()));
+    }
+
+    // Only text filter
+    else if (!isSearchTextEmpty && isCategoriesEmpty) {
       dispatch(
-        setFilteredRecipes(
-          getState().home.categorizedRecipes[categoryFilter] ?? []
-        )
+        setFilteredRecipes(filterRecipesFromArrByText(recipes, searchText))
       );
     }
-    // 2 filters
-    else {
-      console.log("got 2 filters: " + searchText + " and " + categoryFilter);
 
-      const userCollectionPath = `${collections.USERS}/${getCurrentUserID()}/${
-        collections.RECIPES
-      }`;
-      let recipes = await queryFirestore(
-        userCollectionPath,
-        searchText,
-        categoryFilter
+    // 2 filters
+    else if (!isSearchTextEmpty && !isCategoriesEmpty) {
+      const recipesPoolByCategory = getRecipesPoolBasedOnChosenCategories();
+      const filteredRecipes = filterRecipesFromArrByText(
+        recipesPoolByCategory,
+        searchText
       );
-      dispatch(setFilteredRecipes(recipes));
+      dispatch(setFilteredRecipes(filteredRecipes));
     }
   };
+
+const getRecipesPoolBasedOnChosenCategories = (): Recipe[] => {
+  const categoriesFilter: string[] = store.getState().search.searchCategories;
+  let newFilteredArr: Recipe[] = [];
+  categoriesFilter.forEach((category) => {
+    newFilteredArr = newFilteredArr.concat(
+      store.getState().home.categorizedRecipes[category] ?? []
+    );
+  });
+  return newFilteredArr;
+};
+
+const filterRecipesFromArrByText = (
+  recipesArr: Recipe[],
+  text: string
+): Recipe[] => {
+  return recipesArr.filter((recipe) => recipe.name.includes(text));
+};

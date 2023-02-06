@@ -45,7 +45,7 @@ export interface Translation {
     mainTitle: string;
     secondaryTitle: string;
     searchPlaceholder: string;
-    leadingText: string;
+    loadingText: string;
     noResults: string;
   };
   recipeCard: {

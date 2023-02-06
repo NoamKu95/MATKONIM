@@ -47,7 +47,7 @@ export const translations: TranslationsUnion = {
       mainTitle: "חפש במתכונים שלך",
       secondaryTitle: "לגלות מחדש את המנות הטעימות שלך",
       searchPlaceholder: "מה אנחנו מבשלים היום?",
-      leadingText: "מביאים את המתכונים עבורך",
+      loadingText: "מביאים את המתכונים עבורך",
       noResults: `לא מצאנו תוצאות מתאימות\nכדאי לנסות חיפוש אחר`,
     },
     recipeCard: {
@@ -174,7 +174,7 @@ export const translations: TranslationsUnion = {
       mainTitle: "Browse your recipes",
       secondaryTitle: "Re-discover your delicious dishes",
       searchPlaceholder: "What are we cooking today?",
-      leadingText: "Fetching recipes for you",
+      loadingText: "Fetching recipes for you",
       noResults: `We couldn't find any matching results\nYou should try a different search`,
     },
     recipeCard: {

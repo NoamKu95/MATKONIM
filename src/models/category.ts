@@ -9,15 +9,15 @@ export interface Category {
 }
 
 export const CATEGORIES_HEBREW_NAMES: string[] = [
-  "ראשונות",
-  "מרקים",
-  "סלטים",
-  "עופות",
-  "בשרים",
-  "דגים",
-  "פסטה",
-  "קינוחים",
   "קוקטיילים",
+  "קינוחים",
+  "פסטה",
+  "דגים",
+  "בשרים",
+  "עופות",
+  "סלטים",
+  "מרקים",
+  "ראשונות",
 ];
 export const CATEGORIES_ENGLISH_NAMES: string[] = [
   "Starters",

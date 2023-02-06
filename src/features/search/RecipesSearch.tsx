@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     paddingHorizontal: paddings._8px,
     paddingVertical: paddings._8px,
-    backgroundColor: "orange",
   },
 
   // LOADER

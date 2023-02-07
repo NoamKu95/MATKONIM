@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export const icons: iconsInterface = {
   bookmark: require("../assets/icons/bookmark.png"),
   bookmarkFilled: require("../assets/icons/bookmark-filled.png"),
@@ -26,26 +28,26 @@ export const icons: iconsInterface = {
 };
 
 interface iconsInterface {
-  bookmark: NodeRequire;
-  bookmarkFilled: NodeRequire;
-  home: NodeRequire;
-  search: NodeRequire;
-  settings: NodeRequire;
-  back: NodeRequire;
-  rightArrow: NodeRequire;
-  plus: NodeRequire;
-  threeDots: NodeRequire;
-  openEye: NodeRequire;
-  gallery: NodeRequire;
-  checkmarkGreen: NodeRequire;
-  reset: NodeRequire;
-  trash: NodeRequire;
-  close: NodeRequire;
-  close_circle: NodeRequire;
-  no_results: NodeRequire;
-  abstract_shape1: NodeRequire;
-  user_logout: NodeRequire;
-  no_internet: NodeRequire;
-  sad_face: NodeRequire;
-  broken_image: NodeRequire;
+  bookmark: ImageSourcePropType;
+  bookmarkFilled: ImageSourcePropType;
+  home: ImageSourcePropType;
+  search: ImageSourcePropType;
+  settings: ImageSourcePropType;
+  back: ImageSourcePropType;
+  rightArrow: ImageSourcePropType;
+  plus: ImageSourcePropType;
+  threeDots: ImageSourcePropType;
+  openEye: ImageSourcePropType;
+  gallery: ImageSourcePropType;
+  checkmarkGreen: ImageSourcePropType;
+  reset: ImageSourcePropType;
+  trash: ImageSourcePropType;
+  close: ImageSourcePropType;
+  close_circle: ImageSourcePropType;
+  no_results: ImageSourcePropType;
+  abstract_shape1: ImageSourcePropType;
+  user_logout: ImageSourcePropType;
+  no_internet: ImageSourcePropType;
+  sad_face: ImageSourcePropType;
+  broken_image: ImageSourcePropType;
 }

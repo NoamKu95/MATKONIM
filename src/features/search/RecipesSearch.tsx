@@ -15,6 +15,7 @@ import i18n from "../../translations/i18n";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   getRecipesFromServer,
+  updateSearchPhrase,
   updateSearchResults,
 } from "./state/searchActions";
 import { setCategoryFilter } from "./state/searchSlice";
@@ -51,11 +52,6 @@ const RecipesSearch = () => {
   );
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  useEffect(() => {
-    filterRecipesBasedOnSearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Keyboard listener
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -77,9 +73,15 @@ const RecipesSearch = () => {
     };
   }, []);
 
+  // (1)
+  useEffect(() => {
+    filterRecipesBasedOnSearchFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Fires on :
-  // (1) Page load  //  (2) One sec after user stops typing  //  (3) On search icon press  //  (4) On chip press
-  const filterRecipesBasedOnSearch = () => {
+  // (1) Page load  //  (2) One sec after user stops typing  //  (3) On chip press
+  const filterRecipesBasedOnSearchFilters = () => {
     dispatch(updateSearchResults());
   };
 
@@ -111,7 +113,10 @@ const RecipesSearch = () => {
       <View style={styles.searchbarContainer}>
         <Searchbar
           placeHolderText={i18n.t("search.searchPlaceholder")}
-          searchHandler={filterRecipesBasedOnSearch}
+          searchHandler={(newText) => {
+            dispatch(updateSearchPhrase(newText));
+            filterRecipesBasedOnSearchFilters();
+          }}
         />
       </View>
     );
@@ -139,7 +144,7 @@ const RecipesSearch = () => {
     );
   };
 
-  // (4)
+  // (3)
   const updateCategoryChip = (chipName: string) => {
     if (searchCategories.includes(chipName)) {
       dispatch(
@@ -150,7 +155,7 @@ const RecipesSearch = () => {
     } else {
       dispatch(setCategoryFilter([...searchCategories, chipName]));
     }
-    filterRecipesBasedOnSearch();
+    filterRecipesBasedOnSearchFilters();
   };
 
   const renderSearchResultsList = () => {

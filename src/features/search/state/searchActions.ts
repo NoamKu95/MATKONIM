@@ -1,25 +1,26 @@
-// import myRecipes from '../../../constants/myRecipes';
 import {
   fetchRecipesOfUser,
   queryFirestore,
-} from '../../../managers/firestoreManager';
-import {Recipe} from '../../../models/recipe';
-import {collections} from '../../../models/types';
-import {AppThunk} from '../../../store/store';
-import {getCurrentUserID} from '../../auth/state/authActions';
+} from "../../../managers/firestoreManager";
+
+// Types:
+import { Recipe } from "../../../models/recipe";
+import { collections } from "../../../models/types";
+
+// Redux:
+import store, { AppThunk } from "../../../store/store";
+import { getCurrentUserID } from "../../auth/state/authActions";
 import {
   setFilteredRecipes,
   setIsFetching,
   setSearchPhrase,
-} from './searchSlice';
+} from "./searchSlice";
 
 export const getRecipesFromServer =
   (): AppThunk => async (dispatch, getState) => {
     try {
       dispatch(setIsFetching(true));
 
-      // send GET request to server
-      //   const partners = await returnPartnersRepo(userId); // TODO: get recipes from firebase
       const myData: Recipe[] = []; //myRecipes.trendingRecipes;
 
       // TODO: check if there is a filter to apply
@@ -46,19 +47,54 @@ export const updateSearchPhrase =
 export const updateSearchResults =
   (): AppThunk => async (dispatch, getState) => {
     const searchText: string | null = getState().search.searchPhrase;
-    const categoryFilter: string | null = getState().search.searchCategory;
-    const userCollectionPath = `${collections.USERS}/${getCurrentUserID()}/${
-      collections.RECIPES
-    }`;
+    const categoriesFilter: string[] = getState().search.searchCategories;
+    const recipes = getState().home.recipes;
 
-    if ((searchText === null || searchText === '') && categoryFilter === null) {
-      fetchRecipesOfUser(userCollectionPath);
-    } else {
-      let recipes = await queryFirestore(
-        userCollectionPath,
-        searchText,
-        categoryFilter,
+    const isSearchTextEmpty = searchText === null || searchText === "";
+    const isCategoriesEmpty = categoriesFilter.length === 0;
+
+    // No filters
+    if (isSearchTextEmpty && isCategoriesEmpty) {
+      dispatch(setFilteredRecipes(getState().home.recipes));
+    }
+
+    // Only chips filter
+    else if (isSearchTextEmpty && !isCategoriesEmpty) {
+      dispatch(setFilteredRecipes(getRecipesPoolBasedOnChosenCategories()));
+    }
+
+    // Only text filter
+    else if (!isSearchTextEmpty && isCategoriesEmpty) {
+      dispatch(
+        setFilteredRecipes(filterRecipesFromArrByText(recipes, searchText))
       );
-      dispatch(setFilteredRecipes(recipes));
+    }
+
+    // 2 filters
+    else if (!isSearchTextEmpty && !isCategoriesEmpty) {
+      const recipesPoolByCategory = getRecipesPoolBasedOnChosenCategories();
+      const filteredRecipes = filterRecipesFromArrByText(
+        recipesPoolByCategory,
+        searchText
+      );
+      dispatch(setFilteredRecipes(filteredRecipes));
     }
   };
+
+const getRecipesPoolBasedOnChosenCategories = (): Recipe[] => {
+  const categoriesFilter: string[] = store.getState().search.searchCategories;
+  let newFilteredArr: Recipe[] = [];
+  categoriesFilter.forEach((category) => {
+    newFilteredArr = newFilteredArr.concat(
+      store.getState().home.categorizedRecipes[category] ?? []
+    );
+  });
+  return newFilteredArr;
+};
+
+const filterRecipesFromArrByText = (
+  recipesArr: Recipe[],
+  text: string
+): Recipe[] => {
+  return recipesArr.filter((recipe) => recipe.name.includes(text));
+};

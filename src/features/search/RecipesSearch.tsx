@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   Keyboard,
+  SafeAreaView,
 } from "react-native";
 import i18n from "../../translations/i18n";
 
@@ -14,6 +15,7 @@ import i18n from "../../translations/i18n";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   getRecipesFromServer,
+  updateSearchPhrase,
   updateSearchResults,
 } from "./state/searchActions";
 import { setCategoryFilter } from "./state/searchSlice";
@@ -37,20 +39,18 @@ import Chip from "../../components/Chip";
 import Searchbar from "./components/Searchbar";
 import SearchCard from "../../components/Cards/SearchCard";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
+import { SCREEN_HEIGHT } from "../../constants/sizes";
 
 const RecipesSearch = () => {
   const dispatch = useAppDispatch();
   const isFetching = useAppSelector((state) => state.home.isFetching);
-  const searchCategory = useAppSelector((state) => state.search.searchCategory);
   const filteredRecipes = useAppSelector(
     (state) => state.search.filteredRecipes
   );
+  const searchCategories = useAppSelector(
+    (state) => state.search.searchCategories
+  );
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    filterRecipesBasedOnSearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Keyboard listener
   useEffect(() => {
@@ -73,21 +73,16 @@ const RecipesSearch = () => {
     };
   }, []);
 
-  // MARK: Helper Functions
+  // (1)
+  useEffect(() => {
+    filterRecipesBasedOnSearchFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fires on :
-  // (1) Page load  //  (2) One sec after user stops typing  //  (3) On search icon press  //  (4) On chip press
-  const filterRecipesBasedOnSearch = () => {
+  // (1) Page load  //  (2) One sec after user stops typing  //  (3) On chip press
+  const filterRecipesBasedOnSearchFilters = () => {
     dispatch(updateSearchResults());
-  };
-
-  const updateCategoryChip = (chipName: string) => {
-    if (chipName === searchCategory) {
-      dispatch(setCategoryFilter(null));
-    } else {
-      dispatch(setCategoryFilter(chipName));
-    }
-    filterRecipesBasedOnSearch();
   };
 
   const renderHeader = () => {
@@ -112,12 +107,16 @@ const RecipesSearch = () => {
     );
   };
 
+  // (2)
   const renderSearchbar = () => {
     return (
       <View style={styles.searchbarContainer}>
         <Searchbar
           placeHolderText={i18n.t("search.searchPlaceholder")}
-          searchHandler={filterRecipesBasedOnSearch}
+          searchHandler={(newText) => {
+            dispatch(updateSearchPhrase(newText));
+            filterRecipesBasedOnSearchFilters();
+          }}
         />
       </View>
     );
@@ -135,7 +134,7 @@ const RecipesSearch = () => {
               onPress={() => {
                 updateCategoryChip(category.name);
               }}
-              isSelected={category.name === searchCategory}
+              isSelected={searchCategories.includes(category.name)}
               bgColor={colors.lightGreen}
               selectedBgColor={colors.darkLime}
             />
@@ -145,11 +144,25 @@ const RecipesSearch = () => {
     );
   };
 
+  // (3)
+  const updateCategoryChip = (chipName: string) => {
+    if (searchCategories.includes(chipName)) {
+      dispatch(
+        setCategoryFilter(
+          searchCategories.filter((category) => category != chipName)
+        )
+      );
+    } else {
+      dispatch(setCategoryFilter([...searchCategories, chipName]));
+    }
+    filterRecipesBasedOnSearchFilters();
+  };
+
   const renderSearchResultsList = () => {
     return (
       <View style={styles.listWrapper}>
         <FlatList
-          data={[]}
+          data={filteredRecipes}
           keyExtractor={(item: Recipe) => `${item.id}`}
           renderItem={renderRecipeCard}
           showsHorizontalScrollIndicator={false}
@@ -162,13 +175,15 @@ const RecipesSearch = () => {
 
   const renderRecipeCard = ({ item }: { item: Recipe }) => {
     return (
-      <SearchCard
-        recipe={item}
-        onPress={() => {
-          dispatch(setSelectedRecipe(item));
-          navigate("Recipe");
-        }}
-      />
+      <View style={styles.searchCardContainer}>
+        <SearchCard
+          recipe={item}
+          onPress={() => {
+            dispatch(setSelectedRecipe(item));
+            navigate("Recipe");
+          }}
+        />
+      </View>
     );
   };
 
@@ -182,30 +197,34 @@ const RecipesSearch = () => {
           resizeMethod={"resize"}
           style={styles.icon}
         />
-        <BoldText
-          children={i18n.t("search.noResults")}
-          size={20}
-          color={colors.darkLime}
-          textAlign="center"
-          lineHeight={32}
-        />
+        <View style={styles.noResultsTextContainer}>
+          <BoldText
+            children={i18n.t("search.noResults")}
+            size={20}
+            color={colors.darkLime}
+            textAlign="center"
+            lineHeight={32}
+          />
+        </View>
       </View>
     );
   };
 
   return (
-    <View style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea}>
       {renderHeader()}
       {renderSearchbar()}
       {renderCategories()}
       {isFetching ? (
-        <Loader text={i18n.t("search.loadingText")} />
-      ) : filteredRecipes.length !== 0 ? (
-        renderSearchResultsList()
-      ) : (
+        <View style={styles.loaderContainer}>
+          <Loader text={i18n.t("search.loadingText")} />
+        </View>
+      ) : filteredRecipes.length === 0 ? (
         renderNoResults()
+      ) : (
+        renderSearchResultsList()
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -213,8 +232,9 @@ export default RecipesSearch;
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
     backgroundColor: colors.white,
+    height: SCREEN_HEIGHT,
+    flex: 1,
   },
 
   // HEADER
@@ -241,26 +261,31 @@ const styles = StyleSheet.create({
     paddingVertical: paddings._8px,
   },
 
+  // LOADER
+  loaderContainer: {
+    position: "absolute",
+    top: SCREEN_HEIGHT / 2,
+    alignSelf: "center",
+    alignItems: "center",
+  },
+
   // RECIPES LIST
   listWrapper: {
-    paddingVertical: paddings._24px,
-    paddingBottom:
-      i18n.locale === HE
-        ? Dimensions.get("window").height * 0.32
-        : Dimensions.get("window").height * 0.35,
+    paddingTop: paddings._24px,
+    height: SCREEN_HEIGHT * 0.6 - 70,
   },
   list: {
-    height: "81.5%",
+    // paddingBottom: 70,
   },
+
+  searchCardContainer: { paddingHorizontal: paddings._8px },
 
   // NO RESULTS
   noResultsContainer: {
     position: "absolute",
-    top: "55%",
+    top: SCREEN_HEIGHT / 2.5,
     alignSelf: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: 150,
   },
   icon: {
     width: 70,
@@ -268,4 +293,5 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     transform: i18n.locale === HE ? [{ scaleX: -1 }] : [{ scaleX: 1 }],
   },
+  noResultsTextContainer: { paddingVertical: paddings._12px },
 });

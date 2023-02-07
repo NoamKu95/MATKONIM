@@ -162,38 +162,3 @@ export const downloadImageFromStorage = async (
     console.log(error);
   }
 };
-
-export const queryFirestore = async (
-  collectionPath: string,
-  searchText: string | null,
-  category: string | null
-): Promise<Recipe[]> => {
-  const routeRef = firestore().collection(collectionPath);
-  const nameFilter = searchText
-    ? routeRef.where("name", "==", searchText)
-    : routeRef;
-  const categoryFilter = category
-    ? nameFilter.where("category", "==", category)
-    : nameFilter;
-
-  let filteredRecipes: Recipe[] = [];
-  categoryFilter.get().then((snapshot) => {
-    snapshot.docs.forEach(async (doc) => {
-      let r: Recipe = {
-        id: doc.id,
-        name: doc.data().name,
-        image: "",
-        duration: doc.data().duration,
-        serving: doc.data().serving,
-        category: doc.data().category,
-        ingredients: doc.data().ingredients,
-        preparationSteps: doc.data().preparationSteps,
-      };
-      let url = await downloadImageFromStorage(doc.data().image);
-      r.image = url;
-      console.log(r);
-      // filteredRecipes.push(r);
-    });
-  });
-  return filteredRecipes;
-};

@@ -3,7 +3,6 @@ export type RootStackParamList = {
   Login: undefined;
   Onboarding: undefined;
   Tabs: undefined;
-  Search: undefined;
   Recipe: undefined;
   NoInternet: undefined;
 };
@@ -13,7 +12,6 @@ export const Screens: {
   LOGIN: keyof RootStackParamList;
   ONBOARDING: keyof RootStackParamList;
   TABS: keyof RootStackParamList;
-  SEARCH: keyof RootStackParamList;
   RECIPE: keyof RootStackParamList;
   NO_INTERNET: keyof RootStackParamList;
 } = {
@@ -21,7 +19,6 @@ export const Screens: {
   LOGIN: "Login",
   ONBOARDING: "Onboarding",
   TABS: "Tabs",
-  SEARCH: "Search",
   RECIPE: "Recipe",
   NO_INTERNET: "NoInternet",
 };

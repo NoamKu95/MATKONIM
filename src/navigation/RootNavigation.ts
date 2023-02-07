@@ -2,10 +2,11 @@ import {
   CompositeNavigationProp,
   createNavigationContainerRef,
   StackActions,
-} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList, RootTabsParamList} from '../constants/screens';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList, RootTabsParamList } from "../constants/screens";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import React from "react";
 
 class NavigationReadiness {
   isReady = false;
@@ -22,7 +23,8 @@ class NavigationReadiness {
 }
 
 export const navigationReadiness = new NavigationReadiness();
-export const navigationRef = createNavigationContainerRef<RootStackParamList>();
+export const navigationRef =
+  React.createRef() as unknown as React.RefObject<any>; // createNavigationContainerRef<RootStackParamList>();
 
 export const push = (name: keyof RootStackParamList): void => {
   navigationRef.current?.dispatch(StackActions.push(name));
@@ -30,14 +32,16 @@ export const push = (name: keyof RootStackParamList): void => {
 export const pop = (): void => {
   navigationRef.current?.dispatch(StackActions.pop());
 };
-export const navigate = (name: keyof RootStackParamList): void => {
+export const navigate = (
+  name: keyof RootStackParamList | keyof RootTabsParamList
+): void => {
   navigationRef.current?.navigate(name);
 };
 
 export const resetTo = (screen: keyof RootStackParamList): void => {
   navigationRef.current?.reset({
     index: 0,
-    routes: [{name: screen.toString()}],
+    routes: [{ name: screen.toString() }],
   });
 };
 

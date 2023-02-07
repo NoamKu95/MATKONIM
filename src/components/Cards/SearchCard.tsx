@@ -1,34 +1,43 @@
 // Outer imports:
-import React from 'react';
+import React from "react";
 import {
   View,
   Image,
   StyleSheet,
   GestureResponderEvent,
   Pressable,
-} from 'react-native';
-import {colors} from '../../constants/colors';
-import {images} from '../../constants/images';
+} from "react-native";
+import i18n from "../../translations/i18n";
 
 // Inner imports:
+import { colors } from "../../constants/colors";
+import { images } from "../../constants/images";
 
 // Types:
-import {Recipe} from '../../models/recipe';
-import i18n from '../../translations/i18n';
+import { Recipe } from "../../models/recipe";
 
 // Components:
-import BoldText from '../text/BoldText';
-import RegularText from '../text/RegularText';
+import BoldText from "../text/BoldText";
+import RegularText from "../text/RegularText";
 
 interface Props {
   recipe: Recipe;
   onPress: (event: GestureResponderEvent) => void;
 }
 
-const SearchCard: React.FC<Props> = ({recipe, onPress}: Props) => {
+const SearchCard: React.FC<Props> = ({ recipe, onPress }: Props) => {
   return (
     <Pressable onPress={onPress} style={styles.cardContainer}>
-      <Image source={images.loginBackground} style={styles.backgroundImage} />
+      <Image
+        source={
+          recipe.image
+            ? {
+                uri: recipe.image,
+              }
+            : images.loginBackground
+        }
+        style={styles.backgroundImage}
+      />
       <View style={styles.cardInfoContainer}>
         <View>
           <BoldText
@@ -40,7 +49,7 @@ const SearchCard: React.FC<Props> = ({recipe, onPress}: Props) => {
           />
           <RegularText
             children={`${recipe.duration}   ||   ${recipe.serving} ${i18n.t(
-              'recipeCard.servings',
+              "recipeCard.servings"
             )}`}
             color={colors.black}
             size={12}
@@ -78,24 +87,24 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   backgroundImage: {
-    width: '100%',
+    width: "100%",
     height: 180,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   // INFO TEXTS
   cardInfoContainer: {
     backgroundColor: colors.white,
     height: 70,
-    width: '99%',
-    alignSelf: 'center',
+    width: "99%",
+    alignSelf: "center",
     padding: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 12,
@@ -105,8 +114,8 @@ const styles = StyleSheet.create({
   categoryBadge: {
     backgroundColor: colors.darkLime,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     minWidth: 50,
     maxHeight: 30,
   },

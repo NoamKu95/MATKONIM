@@ -41,7 +41,7 @@ import SearchCard from "../../components/Cards/SearchCard";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
 import { SCREEN_HEIGHT } from "../../constants/sizes";
 
-const RecipesSearch = () => {
+const RecipesSearch = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const isFetching = useAppSelector((state) => state.home.isFetching);
   const filteredRecipes = useAppSelector(
@@ -75,9 +75,12 @@ const RecipesSearch = () => {
 
   // (1)
   useEffect(() => {
-    filterRecipesBasedOnSearchFilters();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      filterRecipesBasedOnSearchFilters();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   // Fires on :
   // (1) Page load  //  (2) One sec after user stops typing  //  (3) On chip press

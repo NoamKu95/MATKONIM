@@ -183,7 +183,7 @@ const Home = () => {
                       image={category.image}
                       width={category.isWideImage ? "49%" : "24%"}
                       onPress={() => {
-                        dispatch(setCategoryFilter(category.name));
+                        dispatch(setCategoryFilter([category.name]));
                         navigate("Search");
                       }}
                     />

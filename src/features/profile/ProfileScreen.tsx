@@ -1,6 +1,13 @@
 // Outer imports:
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import LottieView from "lottie-react-native";
 import i18n from "../../translations/i18n";
@@ -26,11 +33,12 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 // Components:
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
+import AvatarSelectionModal from "./components/AvatarSelectionModal";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
 
-  const userSurname = useAppSelector((state) => state.auth.userName);
+  const userSurname = useAppSelector((state) => state.auth.userEmail);
   const xAxisCategoriesLabels =
     i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES;
   const groupedRecipes = useAppSelector(
@@ -63,11 +71,17 @@ const ProfileScreen = () => {
               />
             </View>
           </View>
-          <Image
-            source={icons.abstract_shape1}
-            resizeMethod={"resize"}
-            style={styles().userIcon}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Lets change image");
+            }}
+          >
+            <Image
+              source={icons.abstract_shape1}
+              resizeMethod={"resize"}
+              style={styles().userIcon}
+            />
+          </TouchableOpacity>
         </View>
       </>
     );
@@ -216,6 +230,7 @@ const ProfileScreen = () => {
     <View style={styles().mainContainer}>
       {renderHeader()}
       {renderWhiteSheet()}
+      <AvatarSelectionModal isVisible={true} />
     </View>
   );
 };

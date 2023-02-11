@@ -55,13 +55,14 @@ export const icons: iconsInterface = {
   // animals
   walrus: require("../assets/icons/avatars/walrus.png"),
   boar: require("../assets/icons/avatars/wild-boar.png"),
-  lion: require("../assets/icons/avatars/wild-boar.png"),
+  lion: require("../assets/icons/avatars/lion.png"),
   snake: require("../assets/icons/avatars/snake.png"),
   hen: require("../assets/icons/avatars/hen.png"),
   bat: require("../assets/icons/avatars/bat.png"),
   cat: require("../assets/icons/avatars/cat.png"),
   sloth: require("../assets/icons/avatars/sloth.png"),
   rabbit: require("../assets/icons/avatars/rabbit.png"),
+  fox: require("../assets/icons/avatars/fox.png"),
 };
 
 interface iconsInterface {
@@ -126,4 +127,5 @@ interface iconsInterface {
   cat: ImageSourcePropType;
   sloth: ImageSourcePropType;
   rabbit: ImageSourcePropType;
+  fox: ImageSourcePropType;
 }

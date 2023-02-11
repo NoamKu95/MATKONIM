@@ -34,6 +34,7 @@ import { signOutFromFirebase } from "../auth/state/authActions";
 import RegularText from "../../components/text/RegularText";
 import BoldText from "../../components/text/BoldText";
 import AvatarSelectionModal from "./components/AvatarSelectionModal";
+import { setModalVisibility } from "./state/profileSlice";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
@@ -73,7 +74,7 @@ const ProfileScreen = () => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              console.log("Lets change image");
+              dispatch(setModalVisibility(true));
             }}
           >
             <Image
@@ -230,7 +231,7 @@ const ProfileScreen = () => {
     <View style={styles().mainContainer}>
       {renderHeader()}
       {renderWhiteSheet()}
-      <AvatarSelectionModal isVisible={true} />
+      <AvatarSelectionModal />
     </View>
   );
 };

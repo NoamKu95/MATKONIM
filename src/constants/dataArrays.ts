@@ -9,14 +9,14 @@ export const AVATAR_TYPES: Avatar[] = [
     icon: icons.femaleSign,
   },
   {
-    id: 2,
-    name: "men",
-    icon: icons.maleSign,
-  },
-  {
     id: 3,
     name: "undefined",
     icon: icons.undefinedSign,
+  },
+  {
+    id: 2,
+    name: "men",
+    icon: icons.maleSign,
   },
 ];
 

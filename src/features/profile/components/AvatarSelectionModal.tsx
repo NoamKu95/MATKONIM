@@ -1,6 +1,12 @@
 // Outer imports:
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  GestureResponderEvent,
+} from "react-native";
 import Modal from "react-native-modal";
 
 // Inner imports:
@@ -22,7 +28,8 @@ import { Avatar } from "../../../models/avatar";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
-import { icons } from "../../../constants/icons";
+import { setModalVisibility, setSelectedAvatar } from "../state/profileSlice";
+import ActionButton from "../../../components/Buttons/ActionButton";
 
 enum AvatarType {
   female = 1,
@@ -30,13 +37,14 @@ enum AvatarType {
   undefined,
 }
 
-interface AvatarModalProps {
-  isVisible: boolean;
-}
-
-const AvatarSelectionModal = ({ isVisible }: AvatarModalProps) => {
+const AvatarSelectionModal = () => {
   const dispatch = useAppDispatch();
-  const [selectedType, setSelectedType] = useState<AvatarType | null>(null);
+  const modalVisibility = useAppSelector(
+    (state) => state.profile.isModalVisible
+  );
+  const [selectedType, setSelectedType] = useState<AvatarType>(
+    AvatarType.undefined
+  );
   const selectedAvatar = useAppSelector(
     (state) => state.profile.selectedAvatar
   );
@@ -61,7 +69,7 @@ const AvatarSelectionModal = ({ isVisible }: AvatarModalProps) => {
                 onPress={() => setSelectedType(avatar.id)}
                 style={[
                   styles.typeIconWrapper,
-                  selectedType === avatar.id ? styles.typeSelected : null,
+                  selectedType === avatar.id ? styles.selectedIcon : null,
                 ]}
                 key={avatar.id}
               >
@@ -108,10 +116,10 @@ const AvatarSelectionModal = ({ isVisible }: AvatarModalProps) => {
         {iconsArr.map((avatar) => {
           return (
             <Pressable
-              onPress={() => setSelectedType(avatar.id)}
+              onPress={() => dispatch(setSelectedAvatar(avatar.icon))}
               style={[
                 styles.avatarIconWrapper,
-                selectedType === avatar.id ? styles.typeSelected : null,
+                selectedAvatar === avatar.icon ? styles.selectedIcon : null,
               ]}
               key={avatar.id}
             >
@@ -125,26 +133,58 @@ const AvatarSelectionModal = ({ isVisible }: AvatarModalProps) => {
 
   const renderAvatarPreview = () => {
     return (
-      <View style={styles.previewImageContainer}>
-        <Image source={icons.boar} style={styles.previewImage} />
-      </View>
+      <>
+        <View style={styles.title}>
+          <BoldText
+            children="Preview:"
+            color={colors.darkGreen}
+            size={24}
+            lineHeight={24}
+            textAlign={"left"}
+          />
+        </View>
+        <View style={styles.previewImageContainer}>
+          <Image source={selectedAvatar} style={styles.previewImage} />
+        </View>
+      </>
+    );
+  };
+
+  const renderSaveButton = () => {
+    return (
+      <>
+        <ActionButton
+          buttonText={"Save Avatar"}
+          buttonTextColor={colors.white}
+          buttonTextSize={16}
+          buttonContainerStyle={styles.saveButtonContainer}
+          buttonColors={[colors.lightGreen1, colors.lightGreen1]}
+          onPress={() => {
+            console.log("save");
+          }}
+        />
+      </>
     );
   };
 
   return (
     <Modal
-      isVisible={isVisible}
+      isVisible={modalVisibility}
       animationIn="slideInUp"
       animationOut="slideOutDown"
       style={styles.modal}
     >
       <View style={styles.mainContainer}>
-        <View style={styles.closeIconContainer}>
+        <Pressable
+          onPress={() => dispatch(setModalVisibility(false))}
+          style={styles.closeIconContainer}
+        >
           <CloseIcon />
-        </View>
+        </Pressable>
         {renderAvatarTypeSelection()}
         {renderAvatarsBySelectedType()}
         {renderAvatarPreview()}
+        {renderSaveButton()}
       </View>
     </Modal>
   );
@@ -189,9 +229,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   typeIconWrapper: {
+    borderWidth: 1.5,
+    borderColor: "transparent",
     padding: paddings._8px,
   },
-  typeSelected: {
+
+  // ICONS
+  selectedIcon: {
     borderRadius: 50,
     borderColor: colors.transparentBlack5,
     borderWidth: 1.5,
@@ -201,17 +245,18 @@ const styles = StyleSheet.create({
   // AVATARS
   avatarsContainer: {
     flexDirection: "row",
-    alignContent: "space-between",
-    alignSelf: "center",
+    justifyContent: "center",
     flexWrap: "wrap",
   },
   avatarIconWrapper: {
     padding: paddings._8px,
-    marginHorizontal: 8,
+    marginHorizontal: 4,
+    borderWidth: 1.5,
+    borderColor: "transparent",
   },
   avatarIcon: {
-    width: 55,
-    height: 55,
+    width: 50,
+    height: 50,
   },
 
   // PREVIEW
@@ -221,5 +266,13 @@ const styles = StyleSheet.create({
   previewImage: {
     width: 150,
     height: 150,
+  },
+
+  // SAVE
+  saveButtonContainer: {
+    height: 45,
+    justifyContent: "center",
+    borderRadius: 12,
+    marginVertical: paddings._16px,
   },
 });

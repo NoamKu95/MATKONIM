@@ -1,6 +1,6 @@
 import { ImageSourcePropType } from "react-native";
 
-export const icons: iconsInterface = {
+export const icons: IconsInterface = {
   bookmark: require("../assets/icons/bookmark.png"),
   bookmarkFilled: require("../assets/icons/bookmark-filled.png"),
   home: require("../assets/icons/home.png"),
@@ -65,7 +65,7 @@ export const icons: iconsInterface = {
   fox: require("../assets/icons/avatars/fox.png"),
 };
 
-interface iconsInterface {
+interface IconsInterface {
   bookmark: ImageSourcePropType;
   bookmarkFilled: ImageSourcePropType;
   home: ImageSourcePropType;

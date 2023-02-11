@@ -11,6 +11,7 @@ export enum InputsValidationErrors {
 
 export enum FirebaseErrors {
   INVALID_IMAGE_URL = "INVALID_IMAGE_URL",
+  FAILED_SAVE_AVATAR = "FAILED_SAVE_AVATAR",
 }
 
 // Errors to raise ErrorPopup about

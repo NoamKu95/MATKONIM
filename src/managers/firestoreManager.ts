@@ -39,19 +39,25 @@ export const addFileToCollection = (
   }
 };
 
-export const updateFile = (
+export const updateUserAvatar = (
   collection: string,
   doc: string,
-  field: any,
-  completionHandler: Function
+  fieldValue: string
 ) => {
-  firestore()
-    .collection(collection)
-    .doc(doc)
-    .update(field)
-    .then(() => {
-      completionHandler();
+  try {
+    firestore().collection(collection).doc(doc).update({
+      avatar: fieldValue,
     });
+  } catch (err) {
+    store.dispatch(
+      generalErrorHandler({
+        type: FirebaseErrors.FAILED_SAVE_AVATAR,
+        message: i18n.t("errorHandling.FirebaseErrors.failedSaveAvatar"),
+        icon: icons.broken_image,
+      })
+    );
+    console.log(err);
+  }
 };
 
 export const readFileFromCollection = async (

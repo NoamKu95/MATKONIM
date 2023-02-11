@@ -5,13 +5,15 @@ import {
   StyleSheet,
   Pressable,
   Image,
-  GestureResponderEvent,
+  ImageSourcePropType,
 } from "react-native";
 import Modal from "react-native-modal";
+import i18n from "../../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../../constants/colors";
 import { paddings } from "../../../constants/paddings";
+import { SCREEN_WIDTH } from "../../../constants/sizes";
 import {
   ANIMAL_AVATARS,
   AVATAR_TYPES,
@@ -22,6 +24,7 @@ import CloseIcon from "../../../assets/icons/svg/closeIcon";
 
 // Components:
 import BoldText from "../../../components/text/BoldText";
+import ActionButton from "../../../components/Buttons/ActionButton";
 
 // Types:
 import { Avatar } from "../../../models/avatar";
@@ -29,7 +32,8 @@ import { Avatar } from "../../../models/avatar";
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { setModalVisibility, setSelectedAvatar } from "../state/profileSlice";
-import ActionButton from "../../../components/Buttons/ActionButton";
+import { updateSavedUserAvatar } from "../state/profileActions";
+import Loader from "../../../components/Loader";
 
 enum AvatarType {
   female = 1,
@@ -37,27 +41,30 @@ enum AvatarType {
   undefined,
 }
 
-const AvatarSelectionModal = () => {
+interface AvatarModalProps {
+  currentAvatar: Avatar;
+}
+
+const AvatarSelectionModal = ({ currentAvatar }: AvatarModalProps) => {
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.profile.isLoading);
   const modalVisibility = useAppSelector(
     (state) => state.profile.isModalVisible
   );
   const [selectedType, setSelectedType] = useState<AvatarType>(
     AvatarType.undefined
   );
-  const selectedAvatar = useAppSelector(
-    (state) => state.profile.selectedAvatar
-  );
+  const [selectedAvatar, setSelectedAvatar] = useState<Avatar>(currentAvatar);
 
   const renderAvatarTypeSelection = () => {
     return (
       <>
         <View style={styles.title}>
           <BoldText
-            children="Choose your avatar type: "
+            children={i18n.t("profile.avatarModal.chooseType")}
             color={colors.darkGreen}
-            size={24}
-            lineHeight={24}
+            size={18}
+            lineHeight={18}
             textAlign={"left"}
           />
         </View>
@@ -78,6 +85,7 @@ const AvatarSelectionModal = () => {
             );
           })}
         </View>
+        {renderDivider()}
       </>
     );
   };
@@ -98,14 +106,15 @@ const AvatarSelectionModal = () => {
       <>
         <View style={styles.title}>
           <BoldText
-            children="Choose your avatar:"
+            children={i18n.t("profile.avatarModal.chooseAvatar")}
             color={colors.darkGreen}
-            size={24}
-            lineHeight={24}
+            size={18}
+            lineHeight={18}
             textAlign={"left"}
           />
         </View>
         {renderAvatars(arr)}
+        {renderDivider()}
       </>
     );
   };
@@ -116,10 +125,12 @@ const AvatarSelectionModal = () => {
         {iconsArr.map((avatar) => {
           return (
             <Pressable
-              onPress={() => dispatch(setSelectedAvatar(avatar.icon))}
+              onPress={() => setSelectedAvatar(avatar)}
               style={[
                 styles.avatarIconWrapper,
-                selectedAvatar === avatar.icon ? styles.selectedIcon : null,
+                selectedAvatar.icon === avatar.icon
+                  ? styles.selectedIcon
+                  : null,
               ]}
               key={avatar.id}
             >
@@ -136,35 +147,43 @@ const AvatarSelectionModal = () => {
       <>
         <View style={styles.title}>
           <BoldText
-            children="Preview:"
+            children={i18n.t("profile.avatarModal.preview")}
             color={colors.darkGreen}
-            size={24}
-            lineHeight={24}
+            size={18}
+            lineHeight={18}
             textAlign={"left"}
           />
         </View>
         <View style={styles.previewImageContainer}>
-          <Image source={selectedAvatar} style={styles.previewImage} />
+          <Image source={selectedAvatar.icon} style={styles.previewImage} />
         </View>
       </>
     );
   };
 
   const renderSaveButton = () => {
-    return (
-      <>
+    return isLoading ? (
+      <View style={styles.loaderContainer}>
+        <Loader />
+      </View>
+    ) : (
+      <View style={styles.saveButtonContainer}>
         <ActionButton
-          buttonText={"Save Avatar"}
+          buttonText={i18n.t("profile.avatarModal.save")}
           buttonTextColor={colors.white}
           buttonTextSize={16}
-          buttonContainerStyle={styles.saveButtonContainer}
-          buttonColors={[colors.lightGreen1, colors.lightGreen1]}
+          buttonContainerStyle={styles.saveButton}
+          buttonColors={[colors.darkGreen, colors.lime]}
           onPress={() => {
-            console.log("save");
+            dispatch(updateSavedUserAvatar(selectedAvatar));
           }}
         />
-      </>
+      </View>
     );
+  };
+
+  const renderDivider = () => {
+    return <View style={styles.divider} />;
   };
 
   return (
@@ -202,12 +221,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute",
     width: "100%",
-    height: "95%",
+    height: "80%",
   },
 
   mainContainer: {
     height: "100%",
-    paddingTop: paddings._42px,
+    paddingTop: paddings._32px,
     paddingHorizontal: paddings._16px,
   },
 
@@ -220,6 +239,7 @@ const styles = StyleSheet.create({
 
   title: {
     paddingTop: paddings._21px,
+    paddingBottom: paddings._16px,
   },
 
   // TYPE
@@ -255,8 +275,8 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   avatarIcon: {
-    width: 50,
-    height: 50,
+    width: SCREEN_WIDTH / 10,
+    height: SCREEN_WIDTH / 10,
   },
 
   // PREVIEW
@@ -264,15 +284,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   previewImage: {
-    width: 150,
-    height: 150,
+    width: SCREEN_WIDTH / 3,
+    height: SCREEN_WIDTH / 3,
   },
 
   // SAVE
   saveButtonContainer: {
-    height: 45,
+    paddingVertical: paddings._24px,
+  },
+  saveButton: {
     justifyContent: "center",
     borderRadius: 12,
-    marginVertical: paddings._16px,
+    paddingVertical: 18,
+  },
+
+  loaderContainer: {
+    position: "absolute",
+    bottom: "3%",
+    left: "50%",
+  },
+
+  // DIVIDER
+  divider: {
+    borderTopWidth: 0.8,
+    borderStyle: "dashed",
+    borderTopColor: colors.transparentBlack7,
+    marginTop: 12,
   },
 });

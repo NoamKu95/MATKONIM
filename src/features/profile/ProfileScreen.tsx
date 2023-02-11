@@ -40,6 +40,9 @@ const ProfileScreen = () => {
   const dispatch = useAppDispatch();
 
   const userSurname = useAppSelector((state) => state.auth.userEmail);
+  const selectedAvatar = useAppSelector(
+    (state) => state.profile.selectedAvatar
+  );
   const xAxisCategoriesLabels =
     i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES;
   const groupedRecipes = useAppSelector(
@@ -78,7 +81,7 @@ const ProfileScreen = () => {
             }}
           >
             <Image
-              source={icons.abstract_shape1}
+              source={selectedAvatar.icon}
               resizeMethod={"resize"}
               style={styles().userIcon}
             />
@@ -231,7 +234,7 @@ const ProfileScreen = () => {
     <View style={styles().mainContainer}>
       {renderHeader()}
       {renderWhiteSheet()}
-      <AvatarSelectionModal />
+      <AvatarSelectionModal currentAvatar={selectedAvatar} />
     </View>
   );
 };
@@ -258,8 +261,6 @@ const styles = (lottieArrowDirection?: string) =>
       borderWidth: 2,
       borderRadius: 50,
       borderColor: colors.transparentBlack3,
-      backgroundColor: colors.lightGray,
-      tintColor: colors.darkLime,
     },
     userDetailsTextsContainer: {
       flexDirection: "column",

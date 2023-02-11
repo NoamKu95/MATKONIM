@@ -1,30 +1,36 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ImageSourcePropType } from "react-native";
 import { icons } from "../../../constants/icons";
+import { Avatar } from "../../../models/avatar";
 
 export interface ProfileState {
-  selectedAvatar: ImageSourcePropType;
+  selectedAvatar: Avatar;
   isModalVisible: boolean;
+  isLoading: boolean;
 }
 
 const initialState: ProfileState = {
-  selectedAvatar: icons.rabbit,
+  selectedAvatar: { id: 4, name: "snake", icon: icons.snake },
   isModalVisible: false,
+  isLoading: false,
 };
 
 export const ProfileSlice = createSlice({
   name: "ProfileSlice",
   initialState,
   reducers: {
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
     setModalVisibility: (state, action: PayloadAction<boolean>) => {
       state.isModalVisible = action.payload;
     },
-    setSelectedAvatar: (state, action: PayloadAction<ImageSourcePropType>) => {
+    setSelectedAvatar: (state, action: PayloadAction<Avatar>) => {
       state.selectedAvatar = action.payload;
     },
   },
 });
 
-export const { setModalVisibility, setSelectedAvatar } = ProfileSlice.actions;
+export const { setIsLoading, setModalVisibility, setSelectedAvatar } =
+  ProfileSlice.actions;
 
 export default ProfileSlice.reducer;

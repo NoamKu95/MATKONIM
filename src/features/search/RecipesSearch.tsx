@@ -50,6 +50,7 @@ const RecipesSearch = ({ navigation }) => {
   const searchCategories = useAppSelector(
     (state) => state.search.searchCategories
   );
+  const searchText = useAppSelector((state) => state.search.searchPhrase);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   // Keyboard listener
@@ -115,6 +116,7 @@ const RecipesSearch = ({ navigation }) => {
     return (
       <View style={styles.searchbarContainer}>
         <Searchbar
+          valueText={searchText}
           placeHolderText={i18n.t("search.searchPlaceholder")}
           searchHandler={(newText) => {
             dispatch(updateSearchPhrase(newText));

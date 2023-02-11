@@ -38,16 +38,17 @@ const PrepStepsCarousel = ({ preparationSteps }: Props) => {
   return (
     <View style={styles.mainContainer}>
       <FlatList
-        keyExtractor={(item: string) => `${item}`}
         data={preparationSteps}
         extraData={currentStepIndex}
-        horizontal
-        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item: string) => `${item}`}
         renderItem={renderStepCard}
-        scrollEnabled={preparationSteps.length * STEP_CARD_WIDTH > SCREEN_WIDTH}
         onViewableItemsChanged={_onViewableItemsChanged}
-        viewabilityConfig={_viewabilityConfig}
+        scrollEnabled={preparationSteps.length * STEP_CARD_WIDTH > SCREEN_WIDTH}
         pagingEnabled={true}
+        horizontal
+        inverted={preparationSteps.length === 1}
+        showsHorizontalScrollIndicator={false}
+        viewabilityConfig={_viewabilityConfig}
         decelerationRate={"fast"}
         snapToAlignment={"start"}
       />
@@ -59,7 +60,6 @@ export default PrepStepsCarousel;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: colors.white,
     marginVertical: 12,
   },
 });

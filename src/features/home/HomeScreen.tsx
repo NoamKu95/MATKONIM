@@ -40,6 +40,7 @@ import {
 } from "../../constants/sizes";
 import Loader from "../../components/Loader";
 import RegularText from "../../components/text/RegularText";
+import { updateSearchPhrase } from "../search/state/searchActions";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -56,7 +57,11 @@ const Home = () => {
       <View style={styles.searchbarContainer}>
         <Searchbar
           placeHolderText={i18n.t("homepage.search")}
-          searchHandler={() => {}} // TODO: add handler
+          searchHandler={(newText) => {
+            dispatch(updateSearchPhrase(newText));
+            navigate("Search");
+          }}
+          isAutoSearch={false}
         />
       </View>
     );

@@ -27,13 +27,13 @@ const IngredientsCarousel = ({ ingredients }: Props) => {
 
   return (
     <FlatList
-      keyExtractor={(item: Ingredient) => `${item.name}`}
       data={ingredients}
-      horizontal
-      showsHorizontalScrollIndicator={false}
+      keyExtractor={(item: Ingredient) => `${item.name}`}
       renderItem={renderIngredientCard}
-      inverted
       scrollEnabled={ingredients.length * INGREDIENT_CARD_WIDTH > SCREEN_WIDTH}
+      horizontal
+      inverted
+      showsHorizontalScrollIndicator={false}
     />
   );
 };

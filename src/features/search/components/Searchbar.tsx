@@ -10,27 +10,37 @@ import { paddings } from "../../../constants/paddings";
 import { HE } from "../../../models/translations";
 
 interface Props {
+  valueText?: string | null;
   placeHolderText: string;
   searchHandler: (text: string) => void;
+  isAutoSearch?: boolean;
 }
 
-const Searchbar = ({ placeHolderText, searchHandler }: Props) => {
-  const [text, setText] = useState("");
+const Searchbar = ({
+  valueText = null,
+  placeHolderText,
+  searchHandler,
+  isAutoSearch = true,
+}: Props) => {
+  const [text, setText] = useState(valueText ?? "");
   let isTextEmpty = text === null || text === "";
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (!isTextEmpty) {
-        searchHandler(text);
-      }
-    }, 1000);
+    if (isAutoSearch) {
+      const delayDebounceFn = setTimeout(() => {
+        if (!isTextEmpty) {
+          searchHandler(text);
+        }
+      }, 1000);
 
-    return () => clearTimeout(delayDebounceFn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      return () => clearTimeout(delayDebounceFn);
+    }
   }, [text]);
 
   const iconPressed = () => {
-    if (!isTextEmpty) {
+    if (!isAutoSearch) {
+      searchHandler(text);
+    } else if (!isTextEmpty) {
       setText("");
       searchHandler(""); // immediately reset the search results
     }
@@ -48,7 +58,13 @@ const Searchbar = ({ placeHolderText, searchHandler }: Props) => {
       />
       <Pressable onPress={iconPressed} style={styles.iconWrapper}>
         <Image
-          source={isTextEmpty ? icons.search : icons.close}
+          source={
+            !isAutoSearch
+              ? icons.search
+              : isTextEmpty
+              ? icons.search
+              : icons.close
+          }
           style={styles.icon}
         />
       </Pressable>

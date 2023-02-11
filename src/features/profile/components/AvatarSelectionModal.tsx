@@ -37,7 +37,9 @@ interface AvatarModalProps {
 const AvatarSelectionModal = ({ isVisible }: AvatarModalProps) => {
   const dispatch = useAppDispatch();
   const [selectedType, setSelectedType] = useState<AvatarType | null>(null);
-  //   const selectedAvatar = useAppSelector((state) => state.profile.selectedAvatar);
+  const selectedAvatar = useAppSelector(
+    (state) => state.profile.selectedAvatar
+  );
 
   const renderAvatarTypeSelection = () => {
     return (

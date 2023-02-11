@@ -11,6 +11,7 @@ import errorHandlingSlice from "../features/errorHandling/state/errorHandlingSli
 import homeSlice from "../features/home/state/homeSlice";
 import recipeSlice from "../features/recipe/state/recipeSlice";
 import searchSlice from "../features/search/state/searchSlice";
+import profileSlice from "../features/profile/state/profileSlice";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -19,6 +20,7 @@ export const store = configureStore({
     recipe: recipeSlice,
     search: searchSlice,
     addRecipe: addRecipeSlice,
+    profile: profileSlice,
     errorHandling: errorHandlingSlice,
   }),
 });

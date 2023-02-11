@@ -60,6 +60,12 @@ export interface Translation {
     heyUser: string;
     personalText: string;
     numberOfRecipes: string;
+    avatarModal: {
+      chooseType: string;
+      chooseAvatar: string;
+      preview: string;
+      save: string;
+    };
   };
   addRecipe: {
     mainTitle: string;
@@ -120,6 +126,7 @@ export interface Translation {
     };
     FirebaseErrors: {
       invalidImageUrl: string;
+      failedSaveAvatar: string;
     };
   };
 }

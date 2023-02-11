@@ -63,6 +63,12 @@ export const translations: TranslationsUnion = {
       personalText:
         "איזה כיף שבחרת להשתמש באפליקציית מתכונים! אם נהנית זה הזמן לזרוק מילה טובה לחברים :)",
       numberOfRecipes: "כמות מתכונים: ",
+      avatarModal: {
+        chooseType: "בחירת סוג האווטר:",
+        chooseAvatar: "בחירת האווטר:",
+        preview: "תצוגה מקדימה:",
+        save: "שמירת אווטר",
+      },
     },
     addRecipe: {
       mainTitle: "הוספת מתכון חדש",
@@ -127,6 +133,7 @@ export const translations: TranslationsUnion = {
       FirebaseErrors: {
         invalidImageUrl:
           "אופס, נראה שיש בעיה עם ההורדה של אחת או יותר מהתמונות ולכן ייתכן שיופיעו תמונות חסרות",
+        failedSaveAvatar: "משהו השתבש בשמירת האווטר החדש שלך, יש לנסות שנית",
       },
     },
   },
@@ -190,6 +197,12 @@ export const translations: TranslationsUnion = {
       personalText:
         "Happy to see your are using the MATKONIM app :) If you enjoy the app, please recommend to your friends",
       numberOfRecipes: "No. of recipes: ",
+      avatarModal: {
+        chooseType: "Choose avatar type:",
+        chooseAvatar: "Choose avatar:",
+        preview: "Preview:",
+        save: "Save avatar",
+      },
     },
     addRecipe: {
       mainTitle: "Add new recipe",
@@ -252,6 +265,8 @@ export const translations: TranslationsUnion = {
       FirebaseErrors: {
         invalidImageUrl:
           "Seems like there's an issue with one or more of the recipes' images, therefore one or more images may appear missing!",
+        failedSaveAvatar:
+          "Something went wrong saving your new avatar, please try again",
       },
     },
   },

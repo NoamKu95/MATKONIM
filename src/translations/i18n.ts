@@ -131,9 +131,18 @@ export const translations: TranslationsUnion = {
         formIncomplete: "אופס, נראה שיש צורך לתקן משהו בטופס",
       },
       FirebaseErrors: {
+        userNotFound:
+          "נראה שאנחנו לא מצליחים לאתר את היוזר שלך בשרת ולכן הפעולה נכשלה",
+        invalidEmail: "כתובת האימייל שהוזנה אינה תקינה",
+        emailAlreadyExists: "כתובת האימייל שהוזנה כבר קיימת במערכת",
+        invalidPassword: "הסיסמה שהוזנה אינה תקינה",
+        invalidCredentials: "אחד או יותר מפרטי ההתחברות שהוזנו אינם נכונים",
         invalidImageUrl:
           "אופס, נראה שיש בעיה עם ההורדה של אחת או יותר מהתמונות ולכן ייתכן שיופיעו תמונות חסרות",
         failedSaveAvatar: "משהו השתבש בשמירת האווטר החדש שלך, יש לנסות שנית",
+        firebaseInternalError:
+          "התרחשה שגיאה בשרת. זה לא קשור אליך בשום צורה, אבל הפעולה נכשלה בשל כך.",
+        generalUnknownError: "התרחשה שגיאה לא ברורה ולכן הפעולה נכשלה.",
       },
     },
   },
@@ -263,10 +272,22 @@ export const translations: TranslationsUnion = {
         formIncomplete: "Oops, looks like something in the form needs fixing",
       },
       FirebaseErrors: {
+        userNotFound:
+          "Seems like we can't find your user in our database and therefore the action failed.",
+        invalidEmail: "The email address you submitted is invalid.",
+        emailAlreadyExists:
+          "This email address is already registered in our servers.",
+        invalidPassword: "The password you submitted is invalid.",
+        invalidCredentials:
+          "One or more of the login credentials is incorrect.",
         invalidImageUrl:
           "Seems like there's an issue with one or more of the recipes' images, therefore one or more images may appear missing!",
         failedSaveAvatar:
           "Something went wrong saving your new avatar, please try again",
+        firebaseInternalError:
+          "Our server had an internal error. It is definately not your fault, but as a result the action faild.",
+        generalUnknownError:
+          "An unknown error occured and therefore the action failed.",
       },
     },
   },

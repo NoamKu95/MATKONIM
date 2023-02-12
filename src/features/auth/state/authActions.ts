@@ -25,12 +25,17 @@ import {
 } from "../../../managers/firestoreManager";
 import { UserBasicData } from "../../../models/userBasicData";
 import { setSelectedAvatar } from "../../profile/state/profileSlice";
-import { Avatar } from "../../../models/avatar";
 import {
   ANIMAL_AVATARS,
   FEMALE_AVATARS,
   MALE_AVATARS,
 } from "../../../constants/dataArrays";
+import {
+  defineFirebaseErrorObject,
+  generalErrorHandler,
+  handleAuthErrors,
+} from "../../errorHandling/state/errorHandlingActions";
+import { FirebaseErrors, MyErrorData } from "../../../models/errors";
 
 const asyncStorageKeys = {
   IS_DELETE_REQUESTED: "isDeleteUserRequested",
@@ -122,18 +127,19 @@ export const updateAuthSection =
 
 export const logUserIn =
   (email: string | null, password: string | null): AppThunk =>
-  (dispatch) => {
+  async (dispatch) => {
     if (validateEmail(email) && validatePassword(password)) {
       try {
         dispatch(setIsLoading(true));
-        signInToFirebase(email!.trim(), password!.trim());
+        await auth.signInWithEmailAndPassword(email!.trim(), password!.trim());
         getLoggedUserDetails();
       } catch (error) {
-        console.log(error); // TODO: Error Handling - "login failed"
+        handleAuthErrors(error);
         dispatch(setIsLoading(false));
+        console.log(error);
       }
     } else {
-      // TODO: Error Handling - "incorrect login info"
+      handleAuthErrors("invalid-credential");
       return;
     }
   };
@@ -181,8 +187,9 @@ export const registerUser =
           createUserInFirestoreCollection(auth.currentUser?.uid, surname ?? "");
         }
       } catch (error) {
+        handleAuthErrors(error);
         dispatch(setIsLoading(false));
-        console.log(error); // TODO: Error Handling - "registration failed"
+        console.log(error);
       }
     } else {
       return;
@@ -196,26 +203,14 @@ const createUserInFirestoreCollection = (uid: string, userName: string) => {
       userName,
     };
     addFileToCollection(collections.USERS, uid, newUser);
-  } catch (err) {
-    console.log(err); // TODO: Error Handling - "registration not fully completed"
-  }
-};
-
-// =============== AUTH =============== //
-
-export const getCurrentUserID = () => {
-  try {
-    return auth.currentUser?.uid;
   } catch (error) {
-    console.log(error); // TODO: Error Handling
+    handleAuthErrors(error);
+    console.log(error);
   }
 };
 
-export const signInToFirebase = async (email: string, password: string) => {
-  await auth.signInWithEmailAndPassword(email, password);
-};
+// =============== SIGN OUT =============== //
 
-// TODO: why AppThunk fucks this up ???
 export const signOutFromFirebase = (): AppThunk => async (dispatch) => {
   try {
     dispatch(setIsLoading(true));
@@ -223,16 +218,19 @@ export const signOutFromFirebase = (): AppThunk => async (dispatch) => {
     dispatch(resetAuthState());
     resetTo("Login");
   } catch (error) {
-    console.log(error); // TODO: Error Handling
+    handleAuthErrors(error);
+    dispatch(setIsLoading(false));
+    console.log(error);
   }
 };
 
-export const printCurrentUser = () => {
+// =============== GENERAL AUTH =============== //
+
+export const getCurrentUserID = () => {
   try {
-    console.log(auth.currentUser?.email);
-    console.log(auth.currentUser?.displayName);
-    console.log(auth.currentUser?.uid);
+    return auth.currentUser?.uid;
   } catch (error) {
+    handleAuthErrors(error);
     console.log(error);
   }
 };

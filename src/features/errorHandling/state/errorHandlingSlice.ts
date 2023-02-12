@@ -1,18 +1,20 @@
+import { ImageSourcePropType } from "react-native";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MyErrorData, AppErrorsUnion } from "../../../models/errors";
+import { icons } from "../../../constants/icons";
 
 export interface ErrorHandlingState {
   isError: boolean;
   errorType: AppErrorsUnion | null;
   errorMessage: string;
-  errorIcon: any;
+  errorIcon: ImageSourcePropType;
 }
 
 const initialState: ErrorHandlingState = {
   isError: false,
   errorType: null,
   errorMessage: "",
-  errorIcon: "",
+  errorIcon: icons.settings,
 };
 
 export const ErrorHandlingSlice = createSlice({

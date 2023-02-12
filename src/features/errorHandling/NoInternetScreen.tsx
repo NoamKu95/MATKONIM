@@ -2,22 +2,29 @@
 import React from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import i18n from "../../translations/i18n";
 import { useNetInfo } from "@react-native-community/netinfo";
+import i18n from "../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
 import { paddings } from "../../constants/paddings";
 import { icons } from "../../constants/icons";
+import { pop } from "../../navigation/RootNavigation";
+
+// Components:
 import BoldText from "../../components/text/BoldText";
 import RegularText from "../../components/text/RegularText";
 import ActionButton from "../../components/Buttons/ActionButton";
-import { pop } from "../../navigation/RootNavigation";
-import { MyErrorData, GeneralErrorTypes } from "../../models/errors";
+
+// Types:
+import { GeneralErrorTypes } from "../../models/errors";
 
 // Redux:
 import { useAppDispatch } from "../../store/store";
-import { generalErrorHandler } from "./state/errorHandlingActions";
+import {
+  defineGeneralErrorObject,
+  generalErrorHandler,
+} from "./state/errorHandlingActions";
 
 const NoInternetScreen = () => {
   const dispatch = useAppDispatch();
@@ -27,11 +34,7 @@ const NoInternetScreen = () => {
     if (netInfo.isConnected) {
       pop();
     } else {
-      const error: MyErrorData = {
-        type: GeneralErrorTypes.NO_INTERNET,
-        message: i18n.t("errorHandling.noInternetTitle"),
-        icon: icons.no_internet,
-      };
+      const error = defineGeneralErrorObject(GeneralErrorTypes.NO_INTERNET);
       dispatch(generalErrorHandler(error));
     }
   };

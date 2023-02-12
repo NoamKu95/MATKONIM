@@ -1,5 +1,8 @@
+// Outer imports:
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { icons } from "../../../constants/icons";
+// Inner imports:
+import { ANIMAL_AVATARS } from "../../../constants/dataArrays";
+// Types:
 import { Avatar } from "../../../models/avatar";
 
 export interface ProfileState {
@@ -9,7 +12,7 @@ export interface ProfileState {
 }
 
 const initialState: ProfileState = {
-  selectedAvatar: { id: 4, name: "snake", icon: icons.snake },
+  selectedAvatar: ANIMAL_AVATARS[1],
   isModalVisible: false,
   isLoading: false,
 };
@@ -24,8 +27,10 @@ export const ProfileSlice = createSlice({
     setModalVisibility: (state, action: PayloadAction<boolean>) => {
       state.isModalVisible = action.payload;
     },
-    setSelectedAvatar: (state, action: PayloadAction<Avatar>) => {
-      state.selectedAvatar = action.payload;
+    setSelectedAvatar: (state, action: PayloadAction<Avatar | undefined>) => {
+      if (action.payload) {
+        state.selectedAvatar = action.payload;
+      }
     },
   },
 });

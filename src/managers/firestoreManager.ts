@@ -20,19 +20,21 @@ import { generalErrorHandler } from "../features/errorHandling/state/errorHandli
 // Types:
 import { Recipe } from "../models/recipe";
 import { FirebaseErrors } from "../models/errors";
+import { UserBasicData } from "../models/userBasicData";
 
 // MARK: Generic Functions
 export const addFileToCollection = (
   collection: string,
-  file: any,
-  completionHandler: Function
+  fileID: string,
+  file: any
 ) => {
   try {
     firestore()
       .collection(collection)
-      .add(file)
+      .doc(fileID)
+      .set(file)
       .then(() => {
-        completionHandler();
+        console.log("User added!");
       });
   } catch (error) {
     console.log(error); // TODO: Error Handling
@@ -65,8 +67,9 @@ export const readFileFromCollection = async (
   docID: string
 ) => {
   try {
-    const docRef = await firestore().collection(collection).doc(docID).get();
-    return docRef;
+    const ref = firestore().collection<UserBasicData>(collection);
+    const document = await ref.doc(docID).get();
+    return document.data();
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }

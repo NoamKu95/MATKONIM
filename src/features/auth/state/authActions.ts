@@ -13,7 +13,24 @@ import i18n from "../../../translations/i18n";
 import auth from "../../../../firebase";
 import NetInfo from "@react-native-community/netinfo";
 import { HE } from "../../../models/translations";
-import { validateEmail, validatePassword } from "../../../utils/validators";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "../../../utils/validators";
+import { collections } from "../../../models/types";
+import {
+  addFileToCollection,
+  readFileFromCollection,
+} from "../../../managers/firestoreManager";
+import { UserBasicData } from "../../../models/userBasicData";
+import { setSelectedAvatar } from "../../profile/state/profileSlice";
+import { Avatar } from "../../../models/avatar";
+import {
+  ANIMAL_AVATARS,
+  FEMALE_AVATARS,
+  MALE_AVATARS,
+} from "../../../constants/dataArrays";
 
 const asyncStorageKeys = {
   IS_DELETE_REQUESTED: "isDeleteUserRequested",
@@ -110,14 +127,37 @@ export const logUserIn =
       try {
         dispatch(setIsLoading(true));
         signInToFirebase(email!.trim(), password!.trim());
+        getLoggedUserDetails();
       } catch (error) {
-        console.log(error); // TODO: Error Handling
+        console.log(error); // TODO: Error Handling - "login failed"
         dispatch(setIsLoading(false));
       }
     } else {
+      // TODO: Error Handling - "incorrect login info"
       return;
     }
   };
+
+export const getLoggedUserDetails = (): AppThunk => async (dispatch) => {
+  try {
+    const uid = getCurrentUserID();
+    const user = await readFileFromCollection(collections.USERS, uid ?? "");
+
+    if (user) {
+      const avatarsArr =
+        ANIMAL_AVATARS.concat(FEMALE_AVATARS).concat(MALE_AVATARS);
+      const userAvatar = avatarsArr.find((avatar) => {
+        return avatar.name === user.avatar;
+      });
+      dispatch(setSelectedAvatar(userAvatar));
+      dispatch(setUserName(user.userName));
+    }
+  } catch (err) {
+    console.log(err); // TODO: Error Handling
+  }
+};
+
+// =============== REGISTER =============== //
 
 export const registerUser =
   (
@@ -137,16 +177,29 @@ export const registerUser =
           email!.trim(),
           password!.trim()
         );
-        await auth.currentUser?.updateProfile({ displayName: surname });
-        dispatch(setUserName(surname));
+        if (auth.currentUser) {
+          createUserInFirestoreCollection(auth.currentUser?.uid, surname ?? "");
+        }
       } catch (error) {
         dispatch(setIsLoading(false));
-        console.log(error); // TODO: Error Handling
+        console.log(error); // TODO: Error Handling - "registration failed"
       }
     } else {
       return;
     }
   };
+
+const createUserInFirestoreCollection = (uid: string, userName: string) => {
+  try {
+    const newUser: UserBasicData = {
+      avatar: "snake",
+      userName,
+    };
+    addFileToCollection(collections.USERS, uid, newUser);
+  } catch (err) {
+    console.log(err); // TODO: Error Handling - "registration not fully completed"
+  }
+};
 
 // =============== AUTH =============== //
 

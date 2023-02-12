@@ -28,7 +28,10 @@ import {
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { signOutFromFirebase } from "../auth/state/authActions";
+import {
+  getLoggedUserDetails,
+  signOutFromFirebase,
+} from "../auth/state/authActions";
 
 // Components:
 import RegularText from "../../components/text/RegularText";
@@ -38,7 +41,6 @@ import { setModalVisibility } from "./state/profileSlice";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
-
   const userSurname = useAppSelector((state) => state.auth.userEmail);
   const selectedAvatar = useAppSelector(
     (state) => state.profile.selectedAvatar
@@ -53,6 +55,7 @@ const ProfileScreen = () => {
   );
 
   const renderHeader = () => {
+    dispatch(getLoggedUserDetails());
     return (
       <>
         <View style={styles().userDetailsMainContainer}>

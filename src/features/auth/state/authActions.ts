@@ -1,4 +1,9 @@
-import { navigate, resetTo } from "../../../navigation/RootNavigation";
+// Outer imports:
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
+import i18n from "../../../translations/i18n";
+
+// Redux:
 import { AppThunk } from "../../../store/store";
 import {
   resetAuthState,
@@ -8,10 +13,11 @@ import {
   setShowRegister,
   setUserName,
 } from "./authSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "../../../translations/i18n";
-import auth from "../../../../firebase";
-import NetInfo from "@react-native-community/netinfo";
+import { setSelectedAvatar } from "../../profile/state/profileSlice";
+import { handleAuthErrors } from "../../errorHandling/state/errorHandlingActions";
+
+// Inner imports:
+import { navigate, resetTo } from "../../../navigation/RootNavigation";
 import { HE } from "../../../models/translations";
 import {
   validateEmail,
@@ -20,22 +26,20 @@ import {
 } from "../../../utils/validators";
 import { collections } from "../../../models/types";
 import {
-  addFileToCollection,
-  readFileFromCollection,
-} from "../../../managers/firestoreManager";
-import { UserBasicData } from "../../../models/userBasicData";
-import { setSelectedAvatar } from "../../profile/state/profileSlice";
-import {
   ANIMAL_AVATARS,
   FEMALE_AVATARS,
   MALE_AVATARS,
 } from "../../../constants/dataArrays";
+
+// Types:
+import { UserBasicData } from "../../../models/userBasicData";
+
+// Firebase:
+import auth from "../../../../firebase";
 import {
-  defineFirebaseErrorObject,
-  generalErrorHandler,
-  handleAuthErrors,
-} from "../../errorHandling/state/errorHandlingActions";
-import { FirebaseErrors, MyErrorData } from "../../../models/errors";
+  addFileToCollection,
+  readFileFromCollection,
+} from "../../../managers/firestoreManager";
 
 const asyncStorageKeys = {
   IS_DELETE_REQUESTED: "isDeleteUserRequested",
@@ -44,7 +48,7 @@ const asyncStorageKeys = {
 
 const authSections = {
   LOGIN: "login",
-  REGISTer: "registration",
+  REGISTER: "registration",
 };
 
 // =============== APP INIT =============== //

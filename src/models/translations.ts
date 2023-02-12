@@ -125,8 +125,15 @@ export interface Translation {
       formIncomplete: string;
     };
     FirebaseErrors: {
+      userNotFound: string;
+      invalidEmail: string;
+      emailAlreadyExists: string;
+      invalidPassword: string;
+      invalidCredentials: string;
       invalidImageUrl: string;
       failedSaveAvatar: string;
+      firebaseInternalError: string;
+      generalUnknownError: string;
     };
   };
 }

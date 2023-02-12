@@ -217,7 +217,7 @@ const ProfileScreen = () => {
       <Pressable
         style={styles().logoutContainer}
         onPress={() => {
-          dispatch(signOutFromFirebase);
+          dispatch(signOutFromFirebase());
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>

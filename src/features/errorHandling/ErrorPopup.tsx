@@ -10,11 +10,7 @@ import { resetTo } from "../../navigation/RootNavigation";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import {
-  defineFirebaseErrorMessage,
-  defineGeneralErrorMessage,
-  setIsError,
-} from "./state/errorHandlingActions";
+import { setIsError } from "./state/errorHandlingActions";
 
 // Components:
 import {
@@ -22,8 +18,6 @@ import {
   FirebaseErrors,
   GeneralErrorTypes,
 } from "../../models/errors";
-import { icons } from "../../constants/icons";
-import i18n from "../../translations/i18n";
 import BoldText from "../../components/text/BoldText";
 import CloseIcon from "../../assets/icons/svg/closeIcon";
 
@@ -38,19 +32,21 @@ const ErrorPopUp = () => {
 
   const modalContentByErrorType = (error: AppErrorsUnion | null) => {
     switch (error) {
+      // GENERAL ERRORS
       case GeneralErrorTypes.NO_INTERNET:
         return (
           <View style={styles.modalContent}>
             <Image
-              source={errorIcon ? errorIcon : icons.no_internet}
+              source={errorIcon}
               resizeMethod="resize"
               style={{ height: 70, width: 70 }}
             />
-            <BoldText size={15} color={colors.black} textAlign="center">
-              {errorMessage
-                ? errorMessage
-                : defineGeneralErrorMessage(GeneralErrorTypes.NO_INTERNET)}
-            </BoldText>
+            <BoldText
+              children={errorMessage}
+              size={15}
+              color={colors.black}
+              textAlign="center"
+            />
             {/* <BigButton
             buttonLabel={i18n.t("errorHandling.toCustomerService")}
             onPress={() => {
@@ -60,34 +56,53 @@ const ErrorPopUp = () => {
           /> */}
           </View>
         );
+      // FIREBASE ERRORS
       case FirebaseErrors.INVALID_IMAGE_URL:
         return (
           <View style={styles.modalContent}>
             <Image
-              source={errorIcon ? errorIcon : icons.broken_image}
+              source={errorIcon}
               resizeMethod="resize"
               style={{ height: 70, width: 70 }}
             />
-            <BoldText size={15} color={colors.black} textAlign="center">
-              {errorMessage
-                ? errorMessage
-                : defineFirebaseErrorMessage(FirebaseErrors.INVALID_IMAGE_URL)}
-            </BoldText>
+            <BoldText
+              children={errorMessage}
+              size={15}
+              color={colors.black}
+              textAlign="center"
+            />
+          </View>
+        );
+      case FirebaseErrors.USER_NOT_FOUND:
+        return (
+          <View style={styles.modalContent}>
+            <Image
+              source={errorIcon}
+              resizeMethod="resize"
+              style={{ height: 70, width: 70 }}
+            />
+            <BoldText
+              children={errorMessage}
+              size={15}
+              color={colors.black}
+              textAlign="center"
+            />
           </View>
         );
       default:
         return (
           <View style={styles.modalContent}>
             <Image
-              source={errorIcon ? errorIcon : icons.sad_face}
+              source={errorIcon}
               resizeMethod="resize"
               style={{ height: 70, width: 70 }}
             />
-            <BoldText size={15} color={colors.black} textAlign="center">
-              {errorMessage
-                ? errorMessage
-                : i18n.t("errorHandling.somethingWentWrong")}
-            </BoldText>
+            <BoldText
+              children={errorMessage}
+              size={15}
+              color={colors.black}
+              textAlign="center"
+            />
           </View>
         );
     }

@@ -101,6 +101,8 @@ export interface Translation {
     saveButton: string;
     loaderText: string;
     imageUploadingText: string;
+
+    clearForm: string;
   };
   errorHandling: {
     somethingWentWrong: string;

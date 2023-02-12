@@ -24,7 +24,6 @@ import {
   setRecipeIngredientsWarning,
   setRecipePreparationStepsWarning,
 } from "./state/addRecipeSlice";
-import { defineValidationErrorMessage } from "../errorHandling/state/errorHandlingActions";
 
 // Components:
 import RegularText from "../../components/text/RegularText";
@@ -222,7 +221,7 @@ const AddRecipe = () => {
           style={styles.iconWrapper}
           onPress={() => {
             dispatch(resetAddRecipeState());
-            setSnackbarMessage("הטופס נוקה בהצלחה!");
+            setSnackbarMessage(i18n.t("addRecipe.clearForm"));
             setIsSnackbarVisible(true);
           }}
         >

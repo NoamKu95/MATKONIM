@@ -1,3 +1,5 @@
+import i18n from "../translations/i18n";
+// Redux:
 import {
   setEmailWarning,
   setNameWarning,
@@ -7,7 +9,6 @@ import {
 } from "../features/auth/state/authSlice";
 import { InputsValidationErrors } from "../models/errors";
 import { AppThunk } from "../store/store";
-import i18n from "../translations/i18n";
 
 export const validateText = (
   text: string | null
@@ -50,8 +51,10 @@ export const validateEmail =
     if (email) {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
       if (!reg.test(email.trim())) {
+        console.log(i18n.t("errorHandling.validationErrors.invalidEmail"));
+
         dispatch(
-          setEmailWarning(i18n.t("errorHandling.errorValidation.invalidEmail)"))
+          setEmailWarning(i18n.t("errorHandling.validationErrors.invalidEmail"))
         );
         return false;
       } else {
@@ -61,7 +64,7 @@ export const validateEmail =
       }
     } else {
       dispatch(
-        setEmailWarning(i18n.t("errorHandling.errorValidation.emptyEmail)"))
+        setEmailWarning(i18n.t("errorHandling.validationErrors.emptyEmail"))
       );
       return false;
     }
@@ -74,7 +77,7 @@ export const validatePassword =
       if (password === "") {
         dispatch(
           setPasswordWarning(
-            i18n.t("errorHandling.errorValidation.emptyPassword)")
+            i18n.t("errorHandling.validationErrors.emptyPassword")
           )
         );
         return false;
@@ -84,7 +87,7 @@ export const validatePassword =
         if (!reg.test(password.trim())) {
           dispatch(
             setPasswordWarning(
-              i18n.t("errorHandling.errorValidation.weakPassword)")
+              i18n.t("errorHandling.validationErrors.weakPassword")
             )
           );
           return false;
@@ -97,7 +100,7 @@ export const validatePassword =
     } else {
       dispatch(
         setPasswordWarning(
-          i18n.t("errorHandling.errorValidation.emptyPassword)")
+          i18n.t("errorHandling.errorValidation.emptyPassword")
         )
       );
       return false;
@@ -110,12 +113,12 @@ export const validateName =
     if (name) {
       if (name.length === 0) {
         dispatch(
-          setNameWarning(i18n.t("errorHandling.errorValidation.emptyUsername)"))
+          setNameWarning(i18n.t("errorHandling.errorValidation.emptyUsername"))
         );
         return false;
       } else if (name.length < 2) {
         dispatch(
-          setNameWarning(i18n.t("errorHandling.errorValidation.shortUsername)"))
+          setNameWarning(i18n.t("errorHandling.errorValidation.shortUsername"))
         );
         return false;
       } else {
@@ -124,7 +127,7 @@ export const validateName =
       }
     } else {
       dispatch(
-        setNameWarning(i18n.t("errorHandling.errorValidation.emptyUsername)"))
+        setNameWarning(i18n.t("errorHandling.errorValidation.emptyUsername"))
       );
       return false;
     }

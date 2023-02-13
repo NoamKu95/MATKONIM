@@ -1,30 +1,22 @@
 // Outer imports:
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Pressable, Image } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import i18n from "../../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../../constants/colors";
-import { icons } from "../../../constants/icons";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { updateStateValueWithString } from "../state/addRecipeActions";
+
+// Components:
 import ActionButton from "../../../components/Buttons/ActionButton";
 import BottomBorderTextInput from "../../../components/TextInput/BottomBorderTextInput";
-import IngredientsCarousel from "../../../components/Carousels/IngredientsCarousel";
-import { AddRecipeTextInputTypes, measurements } from "../../../models/types";
-import Chip from "../../../components/Chip";
-import {
-  setIngredientAmount,
-  setIngredientMeasurement,
-  setIngredientName,
-  setRecipeIngredientsWarning,
-} from "../state/addRecipeSlice";
-import {
-  addIngredientToNewRecipe,
-  updateStateValueWithString,
-} from "../state/addRecipeActions";
 import PrepStepsCarousel from "../../../components/Carousels/PrepStepsCarousel";
+
+// Types:
+import { AddRecipeTextInputTypes } from "../../../models/types";
 
 interface BasicInfoProps {
   renderTitlesOfSection: (
@@ -55,6 +47,50 @@ const PrepStepsFormPart = ({
     (state) => state.addRecipe.recipePreparationStepsWarning
   );
 
+  const renderTextInput = () => {
+    return (
+      <BottomBorderTextInput
+        textValue={recipePrepStep ?? ""}
+        textSize={16}
+        placeholderText={i18n.t("addRecipe.prepSteps_StepExample")}
+        labelText={i18n.t("addRecipe.prepSteps_StepLabel")}
+        labelTextColor={colors.darkLime}
+        warningText={prepStepTextWarning}
+        onChangeText={(newTxt) => {
+          onChangeText(newTxt, AddRecipeTextInputTypes.PREPARATION_STEP);
+        }}
+      />
+    );
+  };
+
+  const renderActionButton = () => {
+    return (
+      <ActionButton
+        buttonText={i18n.t("addRecipe.prepStepsAddButton")}
+        buttonTextColor={colors.white}
+        buttonTextSize={16}
+        isPressable={recipePrepStep !== null && recipePrepStep !== ""}
+        onPress={() => {
+          dispatch(
+            updateStateValueWithString(
+              recipePrepStep ?? "",
+              AddRecipeTextInputTypes.ADD_PREPARATION_STEP
+            )
+          );
+        }}
+        buttonContainerStyle={styles.addStepButton}
+        buttonColors={[colors.lime, colors.darkGreen]}
+      />
+    );
+  };
+
+  const renderCarousel = () => {
+    if (recipePreparationSteps.length > 0) {
+      return <PrepStepsCarousel preparationSteps={recipePreparationSteps} />;
+    }
+    return <></>;
+  };
+
   return (
     <>
       <View style={styles.infoSectionContainer}>
@@ -62,37 +98,10 @@ const PrepStepsFormPart = ({
           i18n.t("addRecipe.prepStepsTitle"),
           i18n.t("addRecipe.prepStepsSubTitle")
         )}
-        <BottomBorderTextInput
-          textValue={recipePrepStep ?? ""}
-          textSize={16}
-          placeholderText={i18n.t("addRecipe.prepSteps_StepExample")}
-          labelText={i18n.t("addRecipe.prepSteps_StepLabel")}
-          labelTextColor={colors.darkLime}
-          warningText={prepStepTextWarning}
-          onChangeText={(newTxt) => {
-            onChangeText(newTxt, AddRecipeTextInputTypes.PREPARATION_STEP);
-          }}
-        />
-        <ActionButton
-          buttonText={i18n.t("addRecipe.prepStepsAddButton")}
-          buttonTextColor={colors.white}
-          buttonTextSize={16}
-          isPressable={recipePrepStep !== null && recipePrepStep !== ""}
-          onPress={() => {
-            dispatch(
-              updateStateValueWithString(
-                recipePrepStep ?? "",
-                AddRecipeTextInputTypes.ADD_PREPARATION_STEP
-              )
-            );
-          }}
-          buttonContainerStyle={styles.addStepButton}
-          buttonColors={[colors.lime, colors.darkGreen]}
-        />
+        {renderTextInput()}
+        {renderActionButton()}
       </View>
-      {recipePreparationSteps.length > 0 && (
-        <PrepStepsCarousel preparationSteps={recipePreparationSteps} />
-      )}
+      {renderCarousel()}
       {renderWarningTextPlaceholder(recipePreparationStepsWarning, "center")}
     </>
   );

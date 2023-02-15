@@ -90,6 +90,15 @@ const AddRecipe = () => {
     imageUri,
   ]);
 
+  useEffect(() => {
+    if (isSnackbarVisible) {
+      const timer = setTimeout(() => {
+        setIsSnackbarVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSnackbarVisible]);
+
   const validateFormInputs = (): boolean => {
     return (
       recipeName !== null &&
@@ -233,6 +242,7 @@ const AddRecipe = () => {
       </View>
     );
   };
+
   const renderFormSections = () => {
     return (
       <>

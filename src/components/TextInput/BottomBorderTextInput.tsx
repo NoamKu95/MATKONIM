@@ -31,6 +31,8 @@ interface Props {
   backgroundColor?: string;
   onChangeText: (text: string) => void;
   keyboardType?: KeyboardTypeOptions;
+
+  maxTextLength?: number;
 }
 
 const BottomBorderTextInput = ({
@@ -52,6 +54,8 @@ const BottomBorderTextInput = ({
   backgroundColor = colors.white,
   onChangeText,
   keyboardType = "default",
+
+  maxTextLength = 25,
 }: Props) => {
   return (
     <View style={styles.container}>
@@ -65,7 +69,7 @@ const BottomBorderTextInput = ({
         placeholder={placeholderText}
         placeholderTextColor={placeholderTextColor}
         textAlign={i18n.locale === HE ? "right" : "left"}
-        maxLength={25}
+        maxLength={maxTextLength}
         keyboardType={keyboardType}
       />
 

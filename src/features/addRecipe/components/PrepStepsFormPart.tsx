@@ -84,6 +84,7 @@ const PrepStepsFormPart = ({
         onChangeText={(newTxt) => {
           onChangeText(newTxt, AddRecipeTextInputTypes.PREPARATION_STEP);
         }}
+        maxTextLength={50}
       />
     );
   };
@@ -103,6 +104,7 @@ const PrepStepsFormPart = ({
                 AddRecipeTextInputTypes.ADD_PREPARATION_STEP
               )
             );
+            setIsAddIngAvailable(false);
           }
         }}
         buttonContainerStyle={styles.addStepButton}

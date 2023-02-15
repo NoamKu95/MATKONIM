@@ -1,5 +1,5 @@
 // Outer imports:
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import i18n from "../../../translations/i18n";
 
@@ -17,6 +17,9 @@ import PrepStepsCarousel from "../../../components/Carousels/PrepStepsCarousel";
 
 // Types:
 import { AddRecipeTextInputTypes } from "../../../models/types";
+import { validateText } from "../../../utils/validators";
+import { defineValidationErrorMessage } from "../../errorHandling/state/errorHandlingActions";
+import { setRecipePrepStepWarning } from "../state/addRecipeSlice";
 
 interface BasicInfoProps {
   renderTitlesOfSection: (
@@ -33,12 +36,15 @@ const PrepStepsFormPart = ({
   renderWarningTextPlaceholder,
 }: BasicInfoProps) => {
   const dispatch = useAppDispatch();
+  // single step
   const recipePrepStep = useAppSelector(
     (state) => state.addRecipe.recipePrepStep
   );
   const prepStepTextWarning = useAppSelector(
     (state) => state.addRecipe.recipePrepStepWarning
   );
+
+  // entire section
   const recipePreparationSteps = useAppSelector(
     (state) => state.addRecipe.recipePreparationSteps
   );
@@ -46,6 +52,25 @@ const PrepStepsFormPart = ({
   const recipePreparationStepsWarning = useAppSelector(
     (state) => state.addRecipe.recipePreparationStepsWarning
   );
+  const [isAddIngAvailable, setIsAddIngAvailable] = useState(false);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (recipePrepStep != null) {
+        let error = validateText(recipePrepStep);
+        if (error) {
+          let errorMsg = defineValidationErrorMessage(error);
+          dispatch(setRecipePrepStepWarning(errorMsg));
+          setIsAddIngAvailable(false);
+        } else {
+          dispatch(setRecipePrepStepWarning(null));
+          setIsAddIngAvailable(true);
+        }
+      }
+    }, 800);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [recipePrepStep]);
 
   const renderTextInput = () => {
     return (
@@ -69,14 +94,16 @@ const PrepStepsFormPart = ({
         buttonText={i18n.t("addRecipe.prepStepsAddButton")}
         buttonTextColor={colors.white}
         buttonTextSize={16}
-        isPressable={recipePrepStep !== null && recipePrepStep !== ""}
+        isPressable={isAddIngAvailable}
         onPress={() => {
-          dispatch(
-            updateStateValueWithString(
-              recipePrepStep ?? "",
-              AddRecipeTextInputTypes.ADD_PREPARATION_STEP
-            )
-          );
+          if (isAddIngAvailable) {
+            dispatch(
+              updateStateValueWithString(
+                recipePrepStep ?? "",
+                AddRecipeTextInputTypes.ADD_PREPARATION_STEP
+              )
+            );
+          }
         }}
         buttonContainerStyle={styles.addStepButton}
         buttonColors={[colors.lime, colors.darkGreen]}
@@ -88,7 +115,6 @@ const PrepStepsFormPart = ({
     if (recipePreparationSteps.length > 0) {
       return <PrepStepsCarousel preparationSteps={recipePreparationSteps} />;
     }
-    return <></>;
   };
 
   return (

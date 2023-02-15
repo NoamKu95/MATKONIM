@@ -80,7 +80,7 @@ const IngredientsFormPart = ({
           dispatch(setIngredientNameWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [ingredientName]);
@@ -96,7 +96,7 @@ const IngredientsFormPart = ({
           dispatch(setIngredientAmountWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [ingredientAmount]);

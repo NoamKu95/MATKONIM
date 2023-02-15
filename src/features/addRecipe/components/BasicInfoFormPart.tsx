@@ -66,7 +66,7 @@ const BasicInfoFormPart = ({
           dispatch(setRecipeNameWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [recipeName]);
@@ -82,7 +82,7 @@ const BasicInfoFormPart = ({
           dispatch(setRecipeDurationWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [recipeDuration]);
@@ -98,7 +98,7 @@ const BasicInfoFormPart = ({
           dispatch(setRecipeServingsWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [recipeServings]);

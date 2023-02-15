@@ -39,23 +39,8 @@ const CategoryFormPart = ({
     (state) => state.addRecipe.recipeCategoryWarning
   );
 
-  const updateCategoryChip = (chipName: string) => {
-    if (chipName === recipeCategory) {
-      dispatch(setRecipeCategory(null));
-    } else {
-      dispatch(setRecipeCategory(chipName));
-    }
-    if (recipeCategoryWarning !== null) {
-      dispatch(setRecipeCategoryWarning(null));
-    }
-  };
-
-  return (
-    <View style={styles.categorySectionContainer}>
-      {renderTitlesOfSection(
-        i18n.t("addRecipe.categoriesTitle"),
-        i18n.t("addRecipe.categoriesSubTitle")
-      )}
+  const renderCategoriesChips = () => {
+    return (
       <View style={styles.chipsContainer}>
         {CATEGORIES.map((category) => {
           return (
@@ -72,6 +57,25 @@ const CategoryFormPart = ({
           );
         })}
       </View>
+    );
+  };
+
+  const updateCategoryChip = (chipName: string) => {
+    if (chipName === recipeCategory) {
+      dispatch(setRecipeCategory(null));
+    } else {
+      dispatch(setRecipeCategory(chipName));
+      dispatch(setRecipeCategoryWarning(null));
+    }
+  };
+
+  return (
+    <View style={styles.categorySectionContainer}>
+      {renderTitlesOfSection(
+        i18n.t("addRecipe.categoriesTitle"),
+        i18n.t("addRecipe.categoriesSubTitle")
+      )}
+      {renderCategoriesChips()}
       {renderWarningTextPlaceholder(recipeCategoryWarning, "center")}
     </View>
   );

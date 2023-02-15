@@ -144,7 +144,7 @@ const AddRecipe = () => {
         <View style={styles.warningTextContainer}>
           <RegularText
             children={warningText ?? ""}
-            color="red"
+            color={colors.red}
             size={12}
             textAlign={textAlign}
           />

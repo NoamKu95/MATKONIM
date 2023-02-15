@@ -1,32 +1,31 @@
 // Outer imports:
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Pressable, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import i18n from "../../../translations/i18n";
 
 // Inner imports:
 import { colors } from "../../../constants/colors";
-import { icons } from "../../../constants/icons";
+import { HE } from "../../../models/translations";
+import { validateNumber, validateText } from "../../../utils/validators";
+
+// Components:
+import BottomBorderTextInput from "../../../components/TextInput/BottomBorderTextInput";
+import Chip from "../../../components/Chip";
+import ActionButton from "../../../components/Buttons/ActionButton";
+import IngredientsCarousel from "../../../components/Carousels/IngredientsCarousel";
+
+// Types:
+import { AddRecipeTextInputTypes, measurements } from "../../../models/types";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
-import ActionButton from "../../../components/Buttons/ActionButton";
-import BottomBorderTextInput from "../../../components/TextInput/BottomBorderTextInput";
-import IngredientsCarousel from "../../../components/Carousels/IngredientsCarousel";
-import { AddRecipeTextInputTypes, measurements } from "../../../models/types";
-import Chip from "../../../components/Chip";
 import {
-  setIngredientAmount,
   setIngredientAmountWarning,
   setIngredientMeasurement,
-  setIngredientName,
   setIngredientNameWarning,
-  setRecipeIngredientsWarning,
 } from "../state/addRecipeSlice";
 import { addIngredientToNewRecipe } from "../state/addRecipeActions";
-import { validateNumber, validateText } from "../../../utils/validators";
-import { InputsValidationErrors } from "../../../models/errors";
 import { defineValidationErrorMessage } from "../../errorHandling/state/errorHandlingActions";
-import { HE } from "../../../models/translations";
 
 interface BasicInfoProps {
   renderTitlesOfSection: (
@@ -43,13 +42,6 @@ const IngredientsFormPart = ({
   renderWarningTextPlaceholder,
 }: BasicInfoProps) => {
   const dispatch = useAppDispatch();
-  const ingredients = useAppSelector(
-    (state) => state.addRecipe.recipeIngredients
-  );
-  // e.g. no ingredients were added
-  const ingredientsWarning = useAppSelector(
-    (state) => state.addRecipe.recipeIngredientsWarning
-  );
   const ingredientName = useAppSelector(
     (state) => state.addRecipe.ingredientName
   );
@@ -68,6 +60,13 @@ const IngredientsFormPart = ({
   const ingredientMeasurementWarning = useAppSelector(
     (state) => state.addRecipe.ingredientMeasurementWarning
   );
+  const ingredients = useAppSelector(
+    (state) => state.addRecipe.recipeIngredients
+  );
+  // e.g. no ingredients were added
+  const ingredientsWarning = useAppSelector(
+    (state) => state.addRecipe.recipeIngredientsWarning
+  );
   const [isAddIngAvailable, setIsAddIngAvailable] = useState(false);
 
   useEffect(() => {
@@ -81,10 +80,9 @@ const IngredientsFormPart = ({
           dispatch(setIngredientNameWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientName]);
 
   useEffect(() => {
@@ -98,20 +96,18 @@ const IngredientsFormPart = ({
           dispatch(setIngredientAmountWarning(null));
         }
       }
-    }, 1500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientAmount]);
 
-  // Disable / Enable ingredient button
+  // Disable / Enable add button
   useEffect(() => {
     if (validateIngredientInputs()) {
       setIsAddIngAvailable(true);
     } else {
       setIsAddIngAvailable(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientName, ingredientAmount, ingredientMeasure]);
 
   const validateIngredientInputs = (): boolean => {
@@ -125,21 +121,9 @@ const IngredientsFormPart = ({
     );
   };
 
-  const updateMeasureChip = (measure: string) => {
-    if (measure === ingredientMeasure) {
-      dispatch(setIngredientMeasurement(null));
-    } else {
-      dispatch(setIngredientMeasurement(measure));
-    }
-  };
-
-  return (
-    <>
-      <View style={styles.ingredientsSectionContainer}>
-        {renderTitlesOfSection(
-          i18n.t("addRecipe.ingredientsTitle"),
-          i18n.t("addRecipe.ingredientsSubTitle")
-        )}
+  const renderTextInputs = () => {
+    return (
+      <>
         <BottomBorderTextInput
           textValue={ingredientName ?? ""}
           textSize={16}
@@ -152,7 +136,7 @@ const IngredientsFormPart = ({
           }}
         />
         <BottomBorderTextInput
-          textValue={`${ingredientAmount ?? ""}`}
+          textValue={ingredientAmount ?? ""} // TODO: find solution. This: (ingredientAmount ? `${ingredientAmount}` : "") prevents input of 0 or lower
           textSize={16}
           placeholderText={i18n.t("addRecipe.ingredientAmountExample")}
           labelText={i18n.t("addRecipe.ingredientAmountLabel")}
@@ -163,34 +147,53 @@ const IngredientsFormPart = ({
           }}
           keyboardType={"number-pad"}
         />
-        <View style={styles.ingsChipsContainer}>
-          {measurements.map((item: { name: string; englishName: string }) => {
-            return (
-              <Chip
-                key={item.name}
-                text={i18n.locale === HE ? item.name : item.englishName}
-                isSelected={
-                  item.name === ingredientMeasure ||
-                  item.englishName === ingredientMeasure
-                }
-                onPress={() => {
-                  updateMeasureChip(
-                    i18n.locale === HE ? item.name : item.englishName
-                  );
-                }}
-                bgColor={colors.lightGreen}
-                selectedBgColor={colors.darkLime}
-              />
-            );
-          })}
-        </View>
-        {renderWarningTextPlaceholder(ingredientMeasurementWarning, "center")}
-        <ActionButton
-          buttonText={i18n.t("addRecipe.ingredientAddButton")}
-          buttonTextColor={colors.white}
-          buttonTextSize={16}
-          isPressable={isAddIngAvailable}
-          onPress={() => {
+      </>
+    );
+  };
+
+  const updateMeasureChip = (measure: string) => {
+    if (measure === ingredientMeasure) {
+      dispatch(setIngredientMeasurement(null));
+    } else {
+      dispatch(setIngredientMeasurement(measure));
+    }
+  };
+
+  const renderMeasurementChips = () => {
+    return (
+      <View style={styles.ingsChipsContainer}>
+        {measurements.map((item: { name: string; englishName: string }) => {
+          return (
+            <Chip
+              key={item.name}
+              text={i18n.locale === HE ? item.name : item.englishName}
+              isSelected={
+                item.name === ingredientMeasure ||
+                item.englishName === ingredientMeasure
+              }
+              onPress={() => {
+                updateMeasureChip(
+                  i18n.locale === HE ? item.name : item.englishName
+                );
+              }}
+              bgColor={colors.lightGreen}
+              selectedBgColor={colors.darkLime}
+            />
+          );
+        })}
+      </View>
+    );
+  };
+
+  const renderSaveButton = () => {
+    return (
+      <ActionButton
+        buttonText={i18n.t("addRecipe.ingredientAddButton")}
+        buttonTextColor={colors.white}
+        buttonTextSize={16}
+        isPressable={isAddIngAvailable}
+        onPress={() => {
+          if (isAddIngAvailable) {
             dispatch(
               addIngredientToNewRecipe(
                 ingredientName,
@@ -198,14 +201,33 @@ const IngredientsFormPart = ({
                 ingredientMeasure
               )
             );
-          }}
-          buttonContainerStyle={styles.addIngredientButton}
-          buttonColors={[colors.lime, colors.darkGreen]}
-        />
+          }
+        }}
+        buttonContainerStyle={styles.addIngredientButton}
+        buttonColors={[colors.lime, colors.darkGreen]}
+      />
+    );
+  };
+
+  const renderIngredientsCarousel = () => {
+    if (ingredients.length > 0) {
+      return <IngredientsCarousel ingredients={ingredients} />;
+    }
+  };
+
+  return (
+    <>
+      <View style={styles.ingredientsSectionContainer}>
+        {renderTitlesOfSection(
+          i18n.t("addRecipe.ingredientsTitle"),
+          i18n.t("addRecipe.ingredientsSubTitle")
+        )}
+        {renderTextInputs()}
+        {renderMeasurementChips()}
+        {renderWarningTextPlaceholder(ingredientMeasurementWarning, "center")}
+        {renderSaveButton()}
       </View>
-      {ingredients.length > 0 && (
-        <IngredientsCarousel ingredients={ingredients} />
-      )}
+      {renderIngredientsCarousel()}
       {renderWarningTextPlaceholder(ingredientsWarning, "center")}
     </>
   );

@@ -1,15 +1,22 @@
+// Outer imports:
+import { launchImageLibrary } from "react-native-image-picker";
+
+// Inner imports:
+import { validateNumber, validateText } from "../../../utils/validators";
 import {
   addFileToCollection,
   downloadImageFromStorage,
   uploadImageToStorage,
 } from "../../../managers/firestoreManager";
-import { Ingredient } from "../../../models/ingredient";
+
+// Types:
 import { Recipe } from "../../../models/recipe";
+import { Ingredient } from "../../../models/ingredient";
 import { AddRecipeTextInputTypes, collections } from "../../../models/types";
+
+// Redux:
 import { AppThunk } from "../../../store/store";
-import { validateNumber, validateText } from "../../../utils/validators";
 import { getCurrentUserID } from "../../auth/state/authActions";
-import { launchImageLibrary } from "react-native-image-picker";
 import {
   addIngredient,
   addRecipePreparationStep,
@@ -30,42 +37,6 @@ import {
 export const clearForm = (): AppThunk => async (dispatch) => {
   dispatch(resetAddRecipeState());
 };
-
-// MARK: Validations
-export const validateInputText =
-  (input: string | null, textInputType: string): AppThunk =>
-  async () => {
-    if (input) {
-      if (input.length < 5) {
-        // TODO: display "text too short" alert
-      } else {
-        let reg = /^[^!-\/:-@\[-`{-~]+$/;
-        if (!reg.test(input.trim())) {
-          // TODO: display "text contains illegal characters" alert
-        } else {
-          console.log("hi 2");
-
-          updateStateValueWithString(input, textInputType);
-        }
-      }
-    } else {
-      // TODO: display "text was left empty" alert
-    }
-  };
-
-export const validateInputNumber =
-  (input: number | null, textInputType: string): AppThunk =>
-  async () => {
-    if (input) {
-      if (input === 0) {
-        // TODO: display "value must not be zero" alert
-      } else {
-        updateStateValueWithNumber(input, textInputType);
-      }
-    } else {
-      // TODO: display "text was left empty" alert
-    }
-  };
 
 // MARK: State Updates
 export const updateStateValueWithString =

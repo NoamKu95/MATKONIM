@@ -41,10 +41,12 @@ import { setModalVisibility } from "./state/profileSlice";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
-  const userSurname = useAppSelector((state) => state.auth.userEmail);
+  const userSurname = useAppSelector((state) => state.auth.userName);
+  const userEmail = useAppSelector((state) => state.auth.userEmail);
   const selectedAvatar = useAppSelector(
     (state) => state.profile.selectedAvatar
   );
+
   const xAxisCategoriesLabels =
     i18n.locale === HE ? CATEGORIES_HEBREW_NAMES : CATEGORIES_ENGLISH_NAMES;
   const groupedRecipes = useAppSelector(
@@ -61,11 +63,12 @@ const ProfileScreen = () => {
         <View style={styles().userDetailsMainContainer}>
           <View style={styles().userDetailsTextsContainer}>
             <BoldText
-              children={userSurname ?? "נעם קורצר"}
-              size={32}
+              children={userSurname ?? userEmail ?? ""}
+              size={userSurname ? 32 : 21}
               color={colors.white}
               textAlign="left"
-              lineHeight={32}
+              lineHeight={userSurname ? 32 : 21}
+              letterSpacing={userSurname ? 2 : 0}
             />
             <View style={styles().recipesNumberWrapper}>
               <RegularText
@@ -110,7 +113,7 @@ const ProfileScreen = () => {
         <View style={styles().textsContainer}>
           <View style={styles().heyUser}>
             <BoldText
-              children={`${i18n.t("profile.heyUser")} ${userSurname ?? ""}`}
+              children={i18n.t("profile.heyUser")}
               size={21}
               color={colors.darkLime}
               textAlign="left"

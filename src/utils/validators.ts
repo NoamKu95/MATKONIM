@@ -14,14 +14,18 @@ export const validateText = (
   text: string | null
 ): InputsValidationErrors | null => {
   if (text !== null) {
-    if (text.length < 2) {
-      return InputsValidationErrors.TOO_SHORT;
+    if (text === "") {
+      return InputsValidationErrors.NULL_VALUE;
     } else {
-      let reg = /^[^!-\/:-@\[-`{-~]+$/;
-      if (!reg.test(text.trim())) {
-        return InputsValidationErrors.SPECIAL_CHARACTERS;
+      if (text.length < 2) {
+        return InputsValidationErrors.TOO_SHORT;
       } else {
-        return null;
+        let reg = /^[^!-\/:-@\[-`{-~]+$/;
+        if (!reg.test(text.trim())) {
+          return InputsValidationErrors.SPECIAL_CHARACTERS;
+        } else {
+          return null;
+        }
       }
     }
   } else {
@@ -32,7 +36,7 @@ export const validateText = (
 export const validateNumber = (
   value: number | null
 ): InputsValidationErrors | null => {
-  if (value !== null) {
+  if (value !== null && !isNaN(value)) {
     if (value <= 0) {
       return InputsValidationErrors.BELOW_ZERO;
     } else {

@@ -106,6 +106,8 @@ export const translations: TranslationsUnion = {
       saveButton: "שמירת מתכון",
       loaderText: "עובדים על לשמור לך את המתכון!",
       imageUploadingText: "מעלים את התמונה שלך לענן - ",
+
+      clearForm: "הטופס נוקה בהצלחה",
     },
     errorHandling: {
       somethingWentWrong: "אופס, נראה שמשהו השתבש",
@@ -248,6 +250,8 @@ export const translations: TranslationsUnion = {
       saveButton: "Save recipe",
       loaderText: "Working on saving your new recipe!",
       imageUploadingText: "uploading your image to the could",
+
+      clearForm: "Form cleared successfully!",
     },
     errorHandling: {
       somethingWentWrong: "Oops, Something went wrong",

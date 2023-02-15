@@ -24,7 +24,6 @@ import {
   setRecipeIngredientsWarning,
   setRecipePreparationStepsWarning,
 } from "./state/addRecipeSlice";
-import { defineValidationErrorMessage } from "../errorHandling/state/errorHandlingActions";
 
 // Components:
 import RegularText from "../../components/text/RegularText";
@@ -81,7 +80,6 @@ const AddRecipe = () => {
     } else {
       setIsSaveAvailable(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     recipeName,
     recipeDuration,
@@ -91,6 +89,15 @@ const AddRecipe = () => {
     recipeCategory,
     imageUri,
   ]);
+
+  useEffect(() => {
+    if (isSnackbarVisible) {
+      const timer = setTimeout(() => {
+        setIsSnackbarVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSnackbarVisible]);
 
   const validateFormInputs = (): boolean => {
     return (
@@ -146,7 +153,7 @@ const AddRecipe = () => {
         <View style={styles.warningTextContainer}>
           <RegularText
             children={warningText ?? ""}
-            color="red"
+            color={colors.red}
             size={12}
             textAlign={textAlign}
           />
@@ -222,7 +229,7 @@ const AddRecipe = () => {
           style={styles.iconWrapper}
           onPress={() => {
             dispatch(resetAddRecipeState());
-            setSnackbarMessage("הטופס נוקה בהצלחה!");
+            setSnackbarMessage(i18n.t("addRecipe.clearForm"));
             setIsSnackbarVisible(true);
           }}
         >
@@ -235,6 +242,7 @@ const AddRecipe = () => {
       </View>
     );
   };
+
   const renderFormSections = () => {
     return (
       <>
@@ -263,6 +271,7 @@ const AddRecipe = () => {
       </>
     );
   };
+
   const renderSaveButton = () => {
     return (
       <View style={styles.saveBtnContainer}>

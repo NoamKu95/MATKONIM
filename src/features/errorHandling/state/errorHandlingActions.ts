@@ -1,6 +1,9 @@
 // Outer imports:
 import i18n from "../../../translations/i18n";
 
+// Inner imports:
+import { icons } from "../../../constants/icons";
+
 // Types:
 import {
   FirebaseErrors,
@@ -12,7 +15,6 @@ import {
 // Redux:
 import store, { AppThunk } from "../../../store/store";
 import { setError, setIsError } from "./errorHandlingSlice";
-import { icons } from "../../../constants/icons";
 
 export const generalErrorHandler =
   (error: MyErrorData): AppThunk =>

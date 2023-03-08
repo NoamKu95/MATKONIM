@@ -23,19 +23,9 @@ import { FirebaseErrors } from "../models/errors";
 import { UserBasicData } from "../models/userBasicData";
 
 // MARK: Generic Functions
-export const addFileToCollection = (
-  collection: string,
-  fileID: string,
-  file: any
-) => {
+export const addFileToCollection = async (collection: string, file: any) => {
   try {
-    firestore()
-      .collection(collection)
-      .doc(fileID)
-      .set(file)
-      .then(() => {
-        console.log("User added!");
-      });
+    await firestore().collection(collection).add(file);
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }
@@ -101,14 +91,12 @@ export const fetchRecipesOfUser = async (
           r.image = url ?? null;
           items.push(r);
         } catch (err) {
-          console.log("log error x");
           console.log(err); // TODO: Error Handling
         }
       })
     );
     return items;
   } catch (error) {
-    console.log("log error y");
     console.log(error); // TODO: Error Handling
     return [];
   }
@@ -168,6 +156,6 @@ export const downloadImageFromStorage = async (
         icon: icons.broken_image,
       })
     );
-    console.log(error);
+    console.log(error); // TODO: Error Handling
   }
 };

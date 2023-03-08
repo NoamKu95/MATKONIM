@@ -136,17 +136,16 @@ export const saveRecipe = (): AppThunk => async (dispatch, getState) => {
 export const addRecipeToUserCollection =
   (recipe: Recipe): AppThunk =>
   async (dispatch, getState) => {
+    console.log(recipe);
+
     recipe.image = getState().addRecipe.recipeImageURL ?? "";
     try {
-      addFileToCollection(
+      await addFileToCollection(
         `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
-        recipe,
-        () => {
-          dispatch(resetAddRecipeState());
-          dispatch(setIsLoading(false));
-          downloadImageFromStorage(recipe.image);
-        }
+        recipe
       );
+      dispatch(resetAddRecipeState());
+      dispatch(setIsLoading(false));
     } catch (error) {
       console.log(error); // TODO: Error Handling
       dispatch(setIsLoading(false));

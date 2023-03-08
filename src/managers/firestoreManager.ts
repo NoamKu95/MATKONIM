@@ -22,19 +22,10 @@ import { Recipe } from "../models/recipe";
 import { FirebaseErrors } from "../models/errors";
 import { UserBasicData } from "../models/userBasicData";
 
-export const addFileToCollection = (
-  collection: string,
-  fileID: string,
-  file: any
-) => {
+// MARK: Generic Functions
+export const addFileToCollection = async (collection: string, file: any) => {
   try {
-    firestore()
-      .collection(collection)
-      .doc(fileID)
-      .set(file)
-      .then(() => {
-        console.log("User added!");
-      });
+    await firestore().collection(collection).add(file);
   } catch (error) {
     console.log(error); // TODO: Error Handling
   }
@@ -159,6 +150,6 @@ export const downloadImageFromStorage = async (
         icon: icons.broken_image,
       })
     );
-    console.log(error);
+    console.log(error); // TODO: Error Handling
   }
 };

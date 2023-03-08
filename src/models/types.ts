@@ -47,6 +47,10 @@ export const measurements: { name: string; englishName: string }[] = [
     englishName: "unit",
   },
   {
+    name: "חבילה",
+    englishName: "package",
+  },
+  {
     name: "ליטר",
     englishName: "liter",
   },

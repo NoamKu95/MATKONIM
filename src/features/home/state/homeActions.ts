@@ -3,38 +3,32 @@ import { Recipe } from "../../../models/recipe";
 import { collections } from "../../../models/types";
 
 // Redux:
-import { AppThunk } from "../../../store/store";
-import {
-  setCategorizedRecipes,
-  setIsFetching,
-  setRecipes,
-  setUnsubscribeSnapshotFunction,
-} from "./homeSlice";
+import store, { AppThunk } from "../../../store/store";
+import { setCategorizedRecipes, setIsFetching, setRecipes } from "./homeSlice";
 import { getCurrentUserID } from "../../auth/state/authActions";
 import { setFilteredRecipes } from "../../search/state/searchSlice";
 import { subscribeToRecipes } from "../../../managers/firestoreManager";
 
-export const getRecipesForHomepage =
-  (): AppThunk => async (dispatch, getState) => {
-    try {
-      const unsubscribe = subscribeToRecipes(
-        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
-        (recipes: Recipe[]) => {
-          dispatch(setRecipes(recipes ?? []));
-          dispatch(setFilteredRecipes(recipes ?? []));
-          dispatch(
-            setCategorizedRecipes(groupRecipesByCategory(recipes ?? []))
-          );
-        }
-      );
-
-      dispatch(setUnsubscribeSnapshotFunction(unsubscribe));
-    } catch (error) {
-      console.log(error); // TODO: Error Handling
-    } finally {
-      dispatch(setIsFetching(false));
-    }
-  };
+export const getRecipesForHomepage = (): (() => void) => {
+  try {
+    const unsubscribe = subscribeToRecipes(
+      `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
+      (recipes: Recipe[]) => {
+        store.dispatch(setRecipes(recipes ?? []));
+        store.dispatch(setFilteredRecipes(recipes ?? []));
+        store.dispatch(
+          setCategorizedRecipes(groupRecipesByCategory(recipes ?? []))
+        );
+      }
+    );
+    return unsubscribe;
+  } catch (error) {
+    console.log(error); // TODO: Error Handling
+    return () => {};
+  } finally {
+    store.dispatch(setIsFetching(false));
+  }
+};
 
 const groupRecipesByCategory = (
   recipes: Recipe[]

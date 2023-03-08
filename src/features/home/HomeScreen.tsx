@@ -1,5 +1,5 @@
 // Outer imports:
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getRecipesForHomepage } from "./state/homeActions";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
 import { setCategoryFilter } from "../search/state/searchSlice";
+import { updateSearchPhrase } from "../search/state/searchActions";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
@@ -40,22 +41,22 @@ import {
 } from "../../constants/sizes";
 import Loader from "../../components/Loader";
 import RegularText from "../../components/text/RegularText";
-import { updateSearchPhrase } from "../search/state/searchActions";
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const recipes = useAppSelector((state) => state.home.recipes);
   const isLoading = useAppSelector((state) => state.home.isFetching);
-  const unsubscribeSnapshot = useAppSelector(
-    (state) => state.home.unsubscribeSnapshotFunction
-  );
+
   useEffect(() => {
-    dispatch(getRecipesForHomepage());
+    let unsubscribe: () => void;
+    const fetchRecipes = async () => {
+      unsubscribe = await getRecipesForHomepage();
+    };
+
+    fetchRecipes();
 
     return () => {
-      if (unsubscribeSnapshot) {
-        unsubscribeSnapshot();
-      }
+      unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

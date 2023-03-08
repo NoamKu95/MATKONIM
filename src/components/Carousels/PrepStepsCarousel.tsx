@@ -1,9 +1,8 @@
 // Outer imports:
-import React, { useCallback, useState } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet, View, FlatList, ViewToken } from "react-native";
 
 // Inner imports:
-import { colors } from "../../constants/colors";
 import { SCREEN_WIDTH, STEP_CARD_WIDTH } from "../../constants/sizes";
 
 // Components:
@@ -14,34 +13,34 @@ interface Props {
 }
 
 const PrepStepsCarousel = ({ preparationSteps }: Props) => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
 
-  const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
-    setCurrentStepIndex(viewableItems[0].index);
-  }, []);
+  const _onViewableItemsChanged = useCallback(
+    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
+      setCurrentStepIndex(info?.viewableItems[0]?.index ?? 0);
+    },
+    []
+  );
 
   const _viewabilityConfig = {
     itemVisiblePercentThreshold: 60,
   };
 
-  const renderStepCard = (row: { item: string; index: number }) => {
-    return (
-      <PreparationStepCard
-        stepNumber={row.index + 1}
-        stepText={row.item}
-        isLastIndex={row.index === preparationSteps.length - 1}
-        isCardFocused={currentStepIndex === row.index}
-      />
-    );
-  };
-
   return (
     <View style={styles.mainContainer}>
       <FlatList
+        ref={(ref) => (flatList = ref)}
         data={preparationSteps}
         extraData={currentStepIndex}
         keyExtractor={(item: string) => `${item}`}
-        renderItem={renderStepCard}
+        renderItem={({ item, index }) => (
+          <PreparationStepCard
+            stepNumber={index + 1}
+            stepText={item}
+            isLastIndex={index === preparationSteps.length - 1}
+            isCardFocused={currentStepIndex === index}
+          />
+        )}
         onViewableItemsChanged={_onViewableItemsChanged}
         scrollEnabled={preparationSteps.length * STEP_CARD_WIDTH > SCREEN_WIDTH}
         pagingEnabled={true}
@@ -51,6 +50,7 @@ const PrepStepsCarousel = ({ preparationSteps }: Props) => {
         viewabilityConfig={_viewabilityConfig}
         decelerationRate={"fast"}
         snapToAlignment={"start"}
+        onContentSizeChange={() => flatList.scrollToEnd({ animated: true })}
       />
     </View>
   );

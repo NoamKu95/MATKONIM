@@ -250,20 +250,24 @@ const AddRecipe = () => {
           renderTitlesOfSection={renderTitlesOfSection}
           onChangeText={onChangeText}
         />
+        {renderDivider()}
         <IngredientsFormPart
           renderTitlesOfSection={renderTitlesOfSection}
           onChangeText={onChangeText}
           renderWarningTextPlaceholder={renderWarningTextPlaceholder}
         />
+        {renderDivider()}
         <PrepStepsFormPart
           renderTitlesOfSection={renderTitlesOfSection}
           onChangeText={onChangeText}
           renderWarningTextPlaceholder={renderWarningTextPlaceholder}
         />
+        {renderDivider()}
         <CategoryFormPart
           renderTitlesOfSection={renderTitlesOfSection}
           renderWarningTextPlaceholder={renderWarningTextPlaceholder}
         />
+        {renderDivider()}
         <ImageSelectionFormPart
           renderTitlesOfSection={renderTitlesOfSection}
           renderWarningTextPlaceholder={renderWarningTextPlaceholder}
@@ -298,6 +302,10 @@ const AddRecipe = () => {
         />
       </View>
     );
+  };
+
+  const renderDivider = () => {
+    return <View style={styles.divider} />;
   };
 
   return (
@@ -394,5 +402,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: "center",
     marginBottom: 12,
+  },
+
+  // DIVIDER
+  divider: {
+    borderTopWidth: 1.5,
+    borderStyle: "dashed",
+    borderTopColor: colors.lightLime,
+    marginVertical: 8,
   },
 });

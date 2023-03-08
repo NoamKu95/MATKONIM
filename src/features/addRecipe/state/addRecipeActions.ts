@@ -55,11 +55,6 @@ export const updateStateValueWithString =
       case AddRecipeTextInputTypes.PREPARATION_STEP:
         dispatch(setRecipePrepStep(newText));
         break;
-      case AddRecipeTextInputTypes.ADD_PREPARATION_STEP:
-        dispatch(addRecipePreparationStep(newText));
-        dispatch(setRecipePrepStep(null));
-        dispatch(setRecipePreparationStepsWarning(null));
-        break;
       default:
         break;
     }
@@ -84,7 +79,7 @@ export const addIngredientToNewRecipe =
     amount: number | null,
     measure: string | null
   ): AppThunk =>
-  async (dispatch) => {
+  (dispatch) => {
     if (
       validateText(name) === null &&
       validateText(measure) === null &&
@@ -101,6 +96,19 @@ export const addIngredientToNewRecipe =
       dispatch(setIngredientMeasurement(null));
     } else {
       // TODO: Error Handling
+    }
+  };
+
+export const addPrepStepToNewRecipe =
+  (newStep: string): AppThunk =>
+  (dispatch) => {
+    if (validateText(newStep) === null) {
+      dispatch(addRecipePreparationStep(newStep));
+      dispatch(setRecipePrepStep(null));
+      dispatch(setRecipePreparationStepsWarning(null));
+    } else {
+      // TODO: Error Handling
+      console.log("cant add new step as it fails validateText");
     }
   };
 

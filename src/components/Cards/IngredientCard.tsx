@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.lightGray,
 
-    marginRight: 10,
-    marginLeft: 20,
+    marginRight: 8,
+    marginLeft: 10,
 
     shadowColor: colors.lightGray2,
     shadowOffset: {
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   containerForLastIndex: {
-    marginRight: 20,
-    marginLeft: 10,
+    marginRight: 10,
+    marginLeft: 8,
   },
 
   measurementContainer: {

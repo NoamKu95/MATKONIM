@@ -1,5 +1,5 @@
 // Outer imports:
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import i18n from "../../../translations/i18n";
 
@@ -8,7 +8,10 @@ import { colors } from "../../../constants/colors";
 
 // Redux:
 import { useAppDispatch, useAppSelector } from "../../../store/store";
-import { updateStateValueWithString } from "../state/addRecipeActions";
+import {
+  addPrepStepToNewRecipe,
+  updateStateValueWithString,
+} from "../state/addRecipeActions";
 
 // Components:
 import ActionButton from "../../../components/Buttons/ActionButton";
@@ -98,12 +101,7 @@ const PrepStepsFormPart = ({
         isPressable={isAddIngAvailable}
         onPress={() => {
           if (isAddIngAvailable) {
-            dispatch(
-              updateStateValueWithString(
-                recipePrepStep ?? "",
-                AddRecipeTextInputTypes.ADD_PREPARATION_STEP
-              )
-            );
+            dispatch(addPrepStepToNewRecipe(recipePrepStep ?? ""));
             setIsAddIngAvailable(false);
           }
         }}

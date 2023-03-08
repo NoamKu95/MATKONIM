@@ -4,21 +4,31 @@ import { collections } from "../../../models/types";
 
 // Redux:
 import { AppThunk } from "../../../store/store";
-import { setCategorizedRecipes, setIsFetching, setRecipes } from "./homeSlice";
+import {
+  setCategorizedRecipes,
+  setIsFetching,
+  setRecipes,
+  setUnsubscribeSnapshotFunction,
+} from "./homeSlice";
 import { getCurrentUserID } from "../../auth/state/authActions";
 import { setFilteredRecipes } from "../../search/state/searchSlice";
-import { fetchRecipesOfUser } from "../../../managers/firestoreManager";
+import { subscribeToRecipes } from "../../../managers/firestoreManager";
 
 export const getRecipesForHomepage =
   (): AppThunk => async (dispatch, getState) => {
     try {
-      dispatch(setIsFetching(true));
-      let recipes = await fetchRecipesOfUser(
-        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`
+      const unsubscribe = subscribeToRecipes(
+        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
+        (recipes: Recipe[]) => {
+          dispatch(setRecipes(recipes ?? []));
+          dispatch(setFilteredRecipes(recipes ?? []));
+          dispatch(
+            setCategorizedRecipes(groupRecipesByCategory(recipes ?? []))
+          );
+        }
       );
-      dispatch(setRecipes(recipes ?? []));
-      dispatch(setFilteredRecipes(recipes ?? []));
-      dispatch(setCategorizedRecipes(groupRecipesByCategory(recipes ?? [])));
+
+      dispatch(setUnsubscribeSnapshotFunction(unsubscribe));
     } catch (error) {
       console.log(error); // TODO: Error Handling
     } finally {

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import firebase from "../../../../firebase";
 import { Recipe } from "../../../models/recipe";
 
 export interface HomeState {
@@ -8,6 +9,7 @@ export interface HomeState {
     [key: string]: Recipe[];
   };
   isFetching: boolean;
+  unsubscribeSnapshotFunction: Function | null;
 }
 
 const initialState: HomeState = {
@@ -15,6 +17,7 @@ const initialState: HomeState = {
   filteredRecipes: [],
   categorizedRecipes: {},
   isFetching: false,
+  unsubscribeSnapshotFunction: null,
 };
 
 export const HomeSlice = createSlice({
@@ -39,6 +42,12 @@ export const HomeSlice = createSlice({
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
+    setUnsubscribeSnapshotFunction: (
+      state,
+      action: PayloadAction<Function | null>
+    ) => {
+      state.unsubscribeSnapshotFunction = action.payload;
+    },
     addRecipe: (state, action: PayloadAction<Recipe>) => {
       console.log("lets add recipe: " + action.payload.name);
 
@@ -53,6 +62,7 @@ export const {
   setCategorizedRecipes,
   setIsFetching,
   setFilteredRecipes,
+  setUnsubscribeSnapshotFunction,
 } = HomeSlice.actions;
 
 export default HomeSlice.reducer;

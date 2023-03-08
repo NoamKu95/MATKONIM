@@ -1,5 +1,5 @@
 // Outer imports:
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -46,9 +46,17 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const recipes = useAppSelector((state) => state.home.recipes);
   const isLoading = useAppSelector((state) => state.home.isFetching);
-
+  const unsubscribeSnapshot = useAppSelector(
+    (state) => state.home.unsubscribeSnapshotFunction
+  );
   useEffect(() => {
     dispatch(getRecipesForHomepage());
+
+    return () => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -65,41 +65,34 @@ export const readFileFromCollection = async (
   }
 };
 
-// MARK: Recipes Functions:
-export const fetchRecipesOfUser = async (
-  collectionPath: string
-): Promise<Recipe[] | undefined> => {
-  try {
-    let items: Recipe[] = [];
-    const ref = firestore().collection<Recipe>(collectionPath);
-    const documents = (await ref.get()).docs;
-    await Promise.all(
-      documents.map(async (doc) => {
-        let data = doc.data();
-        try {
-          let r: Recipe = {
-            id: doc.id,
-            name: data.name,
-            image: data.image,
-            duration: data.duration,
-            serving: data.serving,
-            category: data.category,
-            ingredients: data.ingredients,
-            preparationSteps: data.preparationSteps,
-          };
-          let url = await downloadImageFromStorage(data.image ?? "");
-          r.image = url ?? null;
-          items.push(r);
-        } catch (err) {
-          console.log(err); // TODO: Error Handling
-        }
-      })
-    );
-    return items;
-  } catch (error) {
-    console.log(error); // TODO: Error Handling
-    return [];
-  }
+export const subscribeToRecipes = (
+  collectionPath: string,
+  callback: (recipes: Recipe[]) => void
+): (() => void) => {
+  const unsubscribe = firestore()
+    .collection(collectionPath)
+    .onSnapshot(async (querySnapshot) => {
+      let recipes: Recipe[] = [];
+      for (const doc of querySnapshot.docs) {
+        const data = doc.data();
+        let r: Recipe = {
+          id: doc.id,
+          name: data.name,
+          image: data.image,
+          duration: data.duration,
+          serving: data.serving,
+          category: data.category,
+          ingredients: data.ingredients,
+          preparationSteps: data.preparationSteps,
+        };
+        const url = await downloadImageFromStorage(r.image ?? "");
+        r.image = url ?? null;
+        recipes.push(r);
+      }
+      callback(recipes);
+    });
+
+  return unsubscribe;
 };
 
 export const uploadImageToStorage =

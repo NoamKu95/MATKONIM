@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getRecipesForHomepage } from "./state/homeActions";
 import { setSelectedRecipe } from "../recipe/state/recipeSlice";
 import { setCategoryFilter } from "../search/state/searchSlice";
+import { updateSearchPhrase } from "../search/state/searchActions";
 
 // Inner imports:
 import { colors } from "../../constants/colors";
@@ -40,7 +41,6 @@ import {
 } from "../../constants/sizes";
 import Loader from "../../components/Loader";
 import RegularText from "../../components/text/RegularText";
-import { updateSearchPhrase } from "../search/state/searchActions";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -48,7 +48,16 @@ const Home = () => {
   const isLoading = useAppSelector((state) => state.home.isFetching);
 
   useEffect(() => {
-    dispatch(getRecipesForHomepage());
+    let unsubscribe: () => void;
+    const fetchRecipes = async () => {
+      unsubscribe = dispatch(getRecipesForHomepage());
+    };
+
+    fetchRecipes();
+
+    return () => {
+      unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,7 +159,7 @@ const Home = () => {
         snapToInterval={RECIPE_CARD_WIDTH}
         snapToAlignment={i18n.locale === HE ? "start" : "end"}
         decelerationRate="fast"
-        // inverted={i18n.locale === HE}
+        inverted
         showsHorizontalScrollIndicator={false}
         renderItem={renderRecipeCard}
         scrollEnabled={recipes.length * RECIPE_CARD_WIDTH > SCREEN_WIDTH}

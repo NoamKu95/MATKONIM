@@ -68,12 +68,11 @@ export const readFileFromCollection = async (
 export const subscribeToRecipes = (
   collectionPath: string,
   callback: (recipes: Recipe[]) => void
-) => {
+): (() => void) => {
   const unsubscribe = firestore()
     .collection(collectionPath)
     .onSnapshot(async (querySnapshot) => {
       let recipes: Recipe[] = [];
-
       for (const doc of querySnapshot.docs) {
         const data = doc.data();
         let r: Recipe = {

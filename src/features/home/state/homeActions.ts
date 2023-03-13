@@ -9,26 +9,33 @@ import { getCurrentUserID } from "../../auth/state/authActions";
 import { setFilteredRecipes } from "../../search/state/searchSlice";
 import { subscribeToRecipes } from "../../../managers/firestoreManager";
 
-export const getRecipesForHomepage = (): (() => void) => {
-  try {
-    const unsubscribe = subscribeToRecipes(
-      `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
-      (recipes: Recipe[]) => {
-        store.dispatch(setRecipes(recipes ?? []));
-        store.dispatch(setFilteredRecipes(recipes ?? []));
-        store.dispatch(
-          setCategorizedRecipes(groupRecipesByCategory(recipes ?? []))
-        );
-      }
-    );
-    return unsubscribe;
-  } catch (error) {
-    console.log(error); // TODO: Error Handling
-    return () => {};
-  } finally {
-    store.dispatch(setIsFetching(false));
-  }
-};
+export const getRecipesForHomepage =
+  (): AppThunk<() => void> => async (dispatch, getState) => {
+    try {
+      const unsubscribe = subscribeToRecipes(
+        // collection path
+        `${collections.USERS}/${getCurrentUserID()}/${collections.RECIPES}`,
+        // callback to handle fetched recipes
+        (recipes: Recipe[]) => {
+          store.dispatch(saveFetchedRecipes(recipes));
+        }
+      );
+      return unsubscribe;
+    } catch (error) {
+      console.log(error); // TODO: Error Handling
+      return () => {};
+    } finally {
+      store.dispatch(setIsFetching(false));
+    }
+  };
+
+const saveFetchedRecipes =
+  (recipes: Recipe[]): AppThunk =>
+  async (dispatch, getState) => {
+    dispatch(setRecipes(recipes ?? []));
+    dispatch(setFilteredRecipes(recipes ?? []));
+    dispatch(setCategorizedRecipes(groupRecipesByCategory(recipes ?? [])));
+  };
 
 const groupRecipesByCategory = (
   recipes: Recipe[]

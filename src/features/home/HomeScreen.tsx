@@ -50,7 +50,7 @@ const Home = () => {
   useEffect(() => {
     let unsubscribe: () => void;
     const fetchRecipes = async () => {
-      unsubscribe = await getRecipesForHomepage();
+      unsubscribe = dispatch(getRecipesForHomepage());
     };
 
     fetchRecipes();
@@ -159,7 +159,7 @@ const Home = () => {
         snapToInterval={RECIPE_CARD_WIDTH}
         snapToAlignment={i18n.locale === HE ? "start" : "end"}
         decelerationRate="fast"
-        // inverted={i18n.locale === HE}
+        inverted
         showsHorizontalScrollIndicator={false}
         renderItem={renderRecipeCard}
         scrollEnabled={recipes.length * RECIPE_CARD_WIDTH > SCREEN_WIDTH}

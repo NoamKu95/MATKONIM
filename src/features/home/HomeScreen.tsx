@@ -280,6 +280,7 @@ const styles = StyleSheet.create({
   // CATEGORIES
   categoriesWrapper: {
     paddingHorizontal: paddings._8px,
+    paddingBottom: paddings._8px,
   },
   categoryRowContainer: {
     flexDirection: "row",
